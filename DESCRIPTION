@@ -1,0 +1,39 @@
+Package: predomics
+Type: Package
+Title: Ternary Prediction in large Omics Dataests
+Version: 1.0.1
+Date: 2020-01-12
+Author: Edi Prifti, Lucas Robin, Shasha Cui, Blaise Hanczar, Yann Chevaleyre, Jean-Daniel Zucker
+Maintainer: Edi Prifti <edi.prifti@gmail.com>
+Depends:
+    R (>= 2.15.0),
+    doSNOW
+Imports:
+    reshape2,
+    plyr,
+    BioQC,
+    foreach,
+    snow,
+    doRNG,
+    yaml,
+    ggplot2,
+    gridExtra,
+    grid,
+    gtools,
+    RColorBrewer,
+    glmnet,
+    pROC,
+    viridis,
+    kernlab,
+    randomForest
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+Description: The predomics package offers access to a novel framework implementing several heuristics that allow to find 
+    sparse and interpretable models in large datasets. These models are efficient and adopted for 
+    classification and regression in metagenomics and other commensurable datasets. We introduce the BTR (BIN, TER, RATIO) 
+    languages that describe different types of associations between variables. Moreover, in the same framework we implemented several 
+    state-of-the-art methods (SOTA) including RF, ENET and SVM.
+License: GPL-3.0-only
+LazyData: TRUE
+RoxygenNote: 7.0.2
+Encoding: UTF-8

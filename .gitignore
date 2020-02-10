@@ -1,0 +1,10 @@
+.Rproj.user
+.RData
+.Ruserdata
+desktop.ini
+vignettes/*_cache
+NAMESPACE
+Profiling_*
+*.yml
+man/
+.Rhistory

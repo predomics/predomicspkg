@@ -1,0 +1,3 @@
+load("/Users/eprifti/Research/predOpt/predomics/test30EspMetahitLeanObese_N10.RData")
+ls()
+BESTAUC

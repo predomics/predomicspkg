@@ -1,8 +1,8 @@
 Package: predomics
 Type: Package
-Title: Ternary Prediction in large Omics Dataests
-Version: 1.0.1
-Date: 2020-01-12
+Title: Interpretable Prediction in large Omics Dataests
+Version: 1.0.2
+Date: 2020-06-18
 Author: Edi Prifti, Lucas Robin, Shasha Cui, Blaise Hanczar, Yann Chevaleyre, Jean-Daniel Zucker
 Maintainer: Edi Prifti <edi.prifti@gmail.com>
 Depends:
@@ -35,5 +35,5 @@ Description: The predomics package offers access to a novel framework implementi
     state-of-the-art methods (SOTA) including RF, ENET and SVM.
 License: GPL-3.0-only
 LazyData: TRUE
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Encoding: UTF-8

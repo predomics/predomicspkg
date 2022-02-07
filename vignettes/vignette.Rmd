@@ -123,7 +123,7 @@ class(clf)  # the class of the classifier object
 After setting the classifier, we can run the learning experiment. For this we simply run `?fit()` along with `X`, `y` and `clf` as specified in the code below. The algorithm logs out details on the execution steps (each dot corresponds to a generation (i.e. an iteration of the genetic algorithm) and each line to a cross-validation step, including the first which is the learning in the whole dataset).
 
 ```{r running experiment, echo=TRUE, fig.width=5}
-runit = FALSE
+runit = TRUE
 if(runit)
 {
   res_clf <- fit(X = X, y = y, clf = clf, cross.validate = TRUE, nfolds = 10); # class(res_clf)

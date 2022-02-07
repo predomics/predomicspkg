@@ -118,7 +118,7 @@ evaluateAdditionnalMetrics <- function(mod, X, y, clf, mode = "train")
   #mod$recall_    <- mod$confusionMatrix[1, 1] / (mod$confusionMatrix[1, 1] + mod$confusionMatrix[1, 2])
   mod$recall_    <- mod$confusionMatrix[2, 2] / (mod$confusionMatrix[2, 2] + mod$confusionMatrix[1, 2])
   
-  mod$f1_       <- (mod$precision_ * mod$recall_) / (mod$precision_ + mod$recall_)
+  mod$f1_       <- 2 * (mod$precision_ * mod$recall_) / (mod$precision_ + mod$recall_)
   
   return(mod)
 }

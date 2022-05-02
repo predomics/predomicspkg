@@ -3276,7 +3276,7 @@ listOfModelsToDenseCoefMatrix <- function(clf, X, y, list.models, rm.empty = TRU
   if(order.row)
   { 
     pop.dense.noz <- pop.dense[order(rowSums(pop.dense !=0 , na.rm = TRUE), decreasing = TRUE),]
-    if(class(pop.dense.noz) == "numeric") # if a single model
+    if(any(class(pop.dense.noz) == "numeric")) # if a single model
     {
       pop.dense.noz <- as.matrix(as.data.frame(pop.dense.noz))
     }
@@ -3297,7 +3297,7 @@ listOfModelsToDenseCoefMatrix <- function(clf, X, y, list.models, rm.empty = TRU
     features.ord <- rownames(pop.dense.noz)
     ind.tokeep <- rowSums(pop.dense.noz != 0, na.rm = TRUE) != 0
     pop.dense.noz <- pop.dense.noz[ind.tokeep,]
-    if(class(pop.dense.noz) == "numeric") # if a single model
+    if(any(class(pop.dense.noz) == "numeric")) # if a single model
     {
       pop.dense.noz <- as.matrix(as.data.frame(pop.dense.noz))
       rownames(pop.dense.noz) <- features.ord[ind.tokeep]

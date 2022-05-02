@@ -718,9 +718,12 @@ evolve <- function(X, y, clf, pop, seed = NULL)
 
     if (clf$params$plot)  
     { 
-      plot(trace_evolution[!is.na(trace_evolution)], ylab = "AUC score",  
-           pch = 20,col = "red",type = "l",ylim = c(0,1), 
-           main = paste("Best score evolution: k=",length(pop[[1]]),sep = "")) 
+      if(!all(is.na(trace_evolution))) # For k = 1 in ter language there is no valid models so it won't be able to plot
+      {
+        plot(trace_evolution[!is.na(trace_evolution)], ylab = "AUC score",  
+             pch = 20,col = "red",type = "l",ylim = c(0,1), 
+             main = paste("Best score evolution: k=",length(pop[[1]]),sep = ""))   
+      }
     }
   }
   return(evolved_pop)

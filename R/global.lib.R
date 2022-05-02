@@ -4424,7 +4424,7 @@ filterfeaturesK <- function(data,
   }
   
   # fix to correlation if not specified
-  if(class(trait)=="numeric")
+  if(any(class(trait)=="numeric"))
   {
     if(!(type=="spearman" | type=="pearson"))
     {
@@ -4794,12 +4794,12 @@ filterFeaturesByPrevalence <- function(X, y = NULL, nb.prevalence = NULL, perc.p
     
   }else
   {
-    if(class(y) == "numeric")
+    if(any(class(y) == "numeric"))
     {
       y <- as.factor(as.character(y))
     }
     
-    if(class(y) == "character")
+    if(any(class(y) == "character"))
     {
       y <- as.factor(y)
     }

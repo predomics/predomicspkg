@@ -212,10 +212,10 @@ fit <- function(X,
   {
     
     # convert from list to a vector
-    if(class(clf$params$seed)=="list")
+    if(is.list(clf$params$seed))
     {
       clf$params$seed <- unlist(clf$params$seed)
-      if(class(clf$params$seed)!="numeric")
+      if(any(class(clf$params$seed)!="numeric"))
       {
         stop("fit: convertion of seed from list to numeric vector failed.")
       }

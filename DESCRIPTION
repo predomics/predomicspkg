@@ -1,8 +1,8 @@
 Package: predomics
 Type: Package
 Title: Interpretable Prediction in large Omics Dataests
-Version: 1.0.2
-Date: 2020-06-18
+Version: 1.0.3
+Date: 2021-05-02
 Author: Edi Prifti, Lucas Robin, Shasha Cui, Blaise Hanczar, Yann Chevaleyre, Jean-Daniel Zucker
 Maintainer: Edi Prifti <edi.prifti@gmail.com>
 Depends:
@@ -28,12 +28,12 @@ Imports:
     randomForest
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
-Description: The predomics package offers access to a novel framework implementing several heuristics that allow to find 
-    sparse and interpretable models in large datasets. These models are efficient and adopted for 
-    classification and regression in metagenomics and other commensurable datasets. We introduce the BTR (BIN, TER, RATIO) 
-    languages that describe different types of associations between variables. Moreover, in the same framework we implemented several 
-    state-of-the-art methods (SOTA) including RF, ENET and SVM.
-License: GPL-3.0-only
+Description: The predomics package offers access to a novel framework implementing several heuristics that allow finding
+    sparse and interpretable models in large datasets. These models are efficient and adopted for classification and regression 
+    in metagenomics and other commensurable datasets. We introduce the BTR (BIN, TER, RATIO) languages that describe different 
+    types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods 
+    (SOTA) including RF, ENET and SVM.
+License: LICENSE
 LazyData: TRUE
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8

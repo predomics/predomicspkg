@@ -154,7 +154,7 @@ population <- function(clf, size_ind, size_world, best_ancestor = NULL, size_pop
   # if we have a seeding ancestor
   if (!is.null(best_ancestor)) 
   {
-    if(class(best_ancestor) == "list")
+    if(is.list(best_ancestor))
     {
       best_ancestor_genes <- unique(unlist(best_ancestor))
     }else

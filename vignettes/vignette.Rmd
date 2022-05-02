@@ -52,25 +52,28 @@ A *predomics* model is coded in R as a S3 object, which contains a certain numbe
 `predomics` package is available on Integromics' GitLab and can be installed on your computer through the following instructions. For this first is needed the `devtools` package if not already installed. Finally the package will be loaded to be used.
 
 ```{r install packages, eval=FALSE, message=F, warning=FALSE, include=FALSE, paged.print=TRUE}
-# # Load "devtools" library (install it if needed)
-# ip <- installed.packages()
-# library(devtools)
-# if(!("predomics" %in% rownames(ip)))
-# {
-#   #creds = git2r::cred_user_pass("eprifti", getPass::getPass())
-#   creds = git2r::cred_ssh_key("/home/eprifti/.ssh/id_rsa.pub",
-#                             "/home/eprifti/.ssh/id_rsa")
-# 
-#   # Install "predomics" from the gitlab
-#   install_git(url = "https://git.integromics.fr/Predomics/predomics", 
-#               credentials = creds
-#   )
-#   rm(creds)
-# }
-# rm(ip)
+# Load "devtools" library (install it if needed)
+ip <- installed.packages()
+
+if(!("devtools" %in% rownames(ip)))
+{
+  install.packages("devtools", dependencies = TRUE)
+}
+
+if(!("predomics" %in% rownames(ip)))
+{
+  # dependencies from bioconductor
+  if (!require("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+  BiocManager::install("BioQC")
+  
+  # install predomics
+  library(devtools)
+  install_github("predomics/predomicspkg")
+}
+rm(ip)
 ```
 
-```{r load the packages}
+```{r load the packages, message=FALSE, warning=FALSE}
 # load the library
 library(predomics)
 library(ggplot2)
@@ -109,8 +112,8 @@ Now that the dataset is ready, we need to prepare the learner context. This is t
 
 ```{r setting the classifier}
 # Terga2
-clf <- terga2(nCores = 1, 
-              seed = 1, 
+clf <- terga2(nCores = 1,
+              seed = 1,
               plot = TRUE
 )
 printy(clf) # print the object for more information

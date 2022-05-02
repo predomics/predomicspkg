@@ -1360,7 +1360,7 @@ plotModel <- function(mod, X, y,
       theme(legend.position="none", axis.text=element_text(size=9)) + 
       scale_fill_manual("Sign", values = col.sign) +
       geom_hline(yintercept = 0, col="gray") +
-      theme_bw() + guides(fill=FALSE) +
+      theme_bw() + guides(fill = "none") +
       coord_flip() + 
       theme(
         panel.grid.major = element_blank(),
@@ -1437,7 +1437,7 @@ plotModel <- function(mod, X, y,
           scale_fill_manual("Sign", values = "black") +
           xlab("") +
           geom_hline(yintercept = 0, col="gray") +
-          theme_bw() + guides(fill=FALSE) +
+          theme_bw() + guides(fill = "none") +
           coord_flip() + 
           theme(
             panel.grid.major = element_blank(),
@@ -1517,7 +1517,7 @@ plotModel <- function(mod, X, y,
         ggtitle(main) +
         #theme(legend.position="none", axis.text=element_text(size=9)) + 
         scale_fill_manual("Sign", values = "lightgray") +
-        theme_bw() + guides(fill=FALSE) +
+        theme_bw() + guides(fill = "none") +
         theme(axis.text = element_blank(),
               axis.ticks = element_blank(),
               axis.title.x=element_blank(),
@@ -1994,7 +1994,7 @@ plotAUCg <- function(mod = NULL, score, y, main = "", ci = TRUE, show.intercept 
              x = 0.75,
              y = 0.1,
              label = legend, hjust = 0) +
-    guides(fill=FALSE) +
+    guides(fill = "none") +
     ggtitle(main) +
     theme(
       aspect.ratio = 1,

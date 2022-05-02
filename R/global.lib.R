@@ -5221,7 +5221,7 @@ digest <- function(obj,
           theme_bw() +
           #geom_hline(yintercept = unique(maj.class), col = "gray", linetype = "dashed") +
           theme(legend.position="bottom", legend.direction="horizontal") +
-          guides(colour=FALSE)
+          guides(colour = "none")
         
         
         # overall testing accuracy learner results
@@ -5245,7 +5245,7 @@ digest <- function(obj,
           theme_bw() +
           #geom_hline(yintercept = unique(maj.class), col = "gray", linetype = "dashed") +
           theme(legend.position="bottom", legend.direction="horizontal") +
-          guides(colour=FALSE)
+          guides(colour = "none")
 
       }else
       {
@@ -5271,7 +5271,7 @@ digest <- function(obj,
         theme_bw() +
         geom_hline(yintercept = mean(maj.class), col = "gray", linetype = "dashed") +
         theme(legend.position="bottom", legend.direction="horizontal") +
-        guides(colour=FALSE)
+        guides(colour = "none")
       
       # RSQ Empirical (R squared)
       v <- res$best$scores$rsq_
@@ -5291,7 +5291,7 @@ digest <- function(obj,
         theme_bw() +
         geom_hline(yintercept = mean(maj.class), col = "gray", linetype = "dashed") +
         theme(legend.position="bottom", legend.direction="horizontal") +
-        guides(colour=FALSE)
+        guides(colour = "none")
       
       # SER Empirical (Standar error of the regression)
       v <- res$best$scores$ser_
@@ -5311,7 +5311,7 @@ digest <- function(obj,
         theme_bw() +
         geom_hline(yintercept = mean(maj.class), col = "gray", linetype = "dashed") +
         theme(legend.position="bottom", legend.direction="horizontal") +
-        guides(colour=FALSE)
+        guides(colour = "none")
       
       
       grid.arrange(g.cor.emp.cv, g.cor.gen.cv, 
@@ -5357,7 +5357,7 @@ digest <- function(obj,
             theme_bw() +
             geom_hline(yintercept = unique(maj.class), col = "gray", linetype = "dashed") +
             theme(legend.position="bottom", legend.direction="horizontal") +
-            guides(colour=FALSE)
+            guides(colour = "none")
 
         # overall testing accuracy learner results
         dat <- res$cv$scores$generalization.acc
@@ -5380,7 +5380,7 @@ digest <- function(obj,
             theme_bw() +
             geom_hline(yintercept = unique(maj.class), col = "gray", linetype = "dashed") +
             theme(legend.position="bottom", legend.direction="horizontal") +
-            guides(colour=FALSE)
+            guides(colour = "none")
 
         #-----------------------------------------------------
         # AUC
@@ -5406,7 +5406,7 @@ digest <- function(obj,
             theme_bw() +
             geom_hline(yintercept = 0.5, col = "gray", linetype = "dashed") +
             theme(legend.position="bottom", legend.direction="horizontal") +
-            guides(colour=FALSE)
+            guides(colour = "none")
         
         # overall testing accuracy learner results
         dat <- res$cv$scores$generalization.auc
@@ -5429,7 +5429,7 @@ digest <- function(obj,
             theme_bw() +
             geom_hline(yintercept = 0.5, col = "gray", linetype = "dashed") +
             theme(legend.position="bottom", legend.direction="horizontal") +
-            guides(colour=FALSE)
+            guides(colour = "none")
       }else
       {
         g.accuracy.emp.cv <- g.empty
@@ -5464,7 +5464,7 @@ digest <- function(obj,
           theme_bw() +
           geom_hline(yintercept = mean(maj.class), col = "gray", linetype = "dashed") +
           theme(legend.position="bottom", legend.direction="horizontal") +
-          guides(colour=FALSE)
+          guides(colour = "none")
           
         
         # AUC Empirical
@@ -5485,7 +5485,7 @@ digest <- function(obj,
           theme_bw() +
           geom_hline(yintercept = mean(maj.class), col = "gray", linetype = "dashed") +
           theme(legend.position="bottom", legend.direction="horizontal") +
-          guides(colour=FALSE)
+          guides(colour = "none")
         
         # RECALL Empirical
         v <- res$best$scores$recall_
@@ -5505,7 +5505,7 @@ digest <- function(obj,
           theme_bw() +
           geom_hline(yintercept = 0.5, col = "gray", linetype = "dashed") +
           theme(legend.position="bottom", legend.direction="horizontal") +
-          guides(colour=FALSE)
+          guides(colour = "none")
         
         # PRECISION Empirical
         v <- res$best$scores$precision_
@@ -5525,7 +5525,7 @@ digest <- function(obj,
           theme_bw() +
           geom_hline(yintercept = 0.5, col = "gray", linetype = "dashed") +
           theme(legend.position="bottom", legend.direction="horizontal") +
-          guides(colour=FALSE)
+          guides(colour = "none")
         
       } # end existing scores
       
@@ -6628,7 +6628,7 @@ mergeMeltImportanceCV <- function(list.results, filter.cv.prev = 0.5, min.kfold.
         geom_errorbar(aes(ymin = value - se, ymax = value + se, color = sign), width=.1, position=pd) +
         #geom_line(aes(group = feature, color = sign), position=pd) +
         geom_point(position = pd, size=2, shape=19, aes(color = sign)) + # 21 is filled circle
-        guides(colour = FALSE, fill = FALSE)
+        guides(colour = "none", fill = "none")
     }else
     {
       g <- ggplot(cv.res.summary, aes(x=feature, y=value, color = sign)) + 
@@ -6645,7 +6645,7 @@ mergeMeltImportanceCV <- function(list.results, filter.cv.prev = 0.5, min.kfold.
         theme_bw() +
         coord_flip() +
         scale_color_manual("Dataset", values = col) +
-        guides(colour = FALSE, fill = FALSE)
+        guides(colour = "none", fill = "none")
     }
     
     

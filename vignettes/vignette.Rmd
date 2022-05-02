@@ -266,7 +266,7 @@ g.before <- ggplot(data = pop.df.melt, aes(y = accuracy_, x = eval.sparsity)) +
   ggtitle("Original population") +
   theme_bw() +
   theme(legend.position="bottom", legend.direction="horizontal") +
-  guides(colour=FALSE)
+  guides(colour="none")
 
 # select the best 
 fbm <- selectBestPopulation(pop)
@@ -282,7 +282,7 @@ g.after <- ggplot(data = fbm.df.melt, aes(y = accuracy_, x = eval.sparsity)) +
   ggtitle("FBM") +
   theme_bw() +
   theme(legend.position="bottom", legend.direction="horizontal") +
-  guides(colour=FALSE)
+  guides(colour="none")
 
 grid.arrange(g.before, g.after, ncol =2)
 ```

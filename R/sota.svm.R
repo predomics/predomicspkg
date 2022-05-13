@@ -276,6 +276,8 @@ sota.svm_fit <- function(X, y, clf)
     # match the index
     mod.res$indices_         <- match(selected.features, rownames(X))
     mod.res$coeffs_          <- NA
+    # add the objective in the model, needed for visualization
+    mod.res$objective        <- clf$params$objective
     
     #mod.res$indices_         <- which(rownames(X) %in% selected.features)
     mod.res$eval.sparsity    <- length(unique(mod.res$names_))

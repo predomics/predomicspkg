@@ -1,8 +1,8 @@
 Package: predomics
 Type: Package
 Title: Interpretable Prediction in large Omics Dataests
-Version: 1.0.4
-Date: 2021-05-02
+Version: 1.0.5
+Date: 2021-05-13
 Author: Edi Prifti, Lucas Robin, Shasha Cui, Blaise Hanczar, Yann Chevaleyre, Jean-Daniel Zucker
 Maintainer: Edi Prifti <edi.prifti@gmail.com>
 Depends:
@@ -26,7 +26,7 @@ Imports:
     viridis,
     kernlab,
     randomForest
-Suggests: knitr, rmarkdown
+Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 Description: The predomics package offers access to a novel framework implementing several heuristics that allow finding
     sparse and interpretable models in large datasets. These models are efficient and adopted for classification and regression 

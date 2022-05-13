@@ -3005,6 +3005,12 @@ analyzeImportanceFeatures <- function(clf_res, X, y, makeplot = TRUE, name = "",
                                          nb.top.features = nb.top.features, 
                                          make.plot = TRUE)
     
+    if(is.null(feat.import))
+    {
+      warning("analyzeImportantFeatures: These learners have no feature importance as implemented in the BTR ones. Sending an empty plot.")
+      return(ggplot() + theme_void())
+    }
+    
     # the most important features along with the order
     features.import <- rev(levels(feat.import$summary$feature))
     

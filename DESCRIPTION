@@ -1,7 +1,7 @@
 Package: predomics
 Type: Package
 Title: Interpretable Prediction in large Omics Dataests
-Version: 1.0.3
+Version: 1.0.4
 Date: 2021-05-02
 Author: Edi Prifti, Lucas Robin, Shasha Cui, Blaise Hanczar, Yann Chevaleyre, Jean-Daniel Zucker
 Maintainer: Edi Prifti <edi.prifti@gmail.com>

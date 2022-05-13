@@ -79,7 +79,7 @@ generateAllCombinations <- function(X, y, clf, ind.features.to.keep, sparsity, a
   }
   
   # if no more models are found
-  if(class(pop_vec) != "matrix")
+  if(any(class(pop_vec) != "matrix"))
   {
     return(NULL)
   }

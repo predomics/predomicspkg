@@ -5208,6 +5208,7 @@ digest <- function(obj,
         }
         df <- data.frame(parsimony = rownames(dat),dat)
         df.melt <- melt(df, id.vars = "parsimony")
+        df.melt$parsimony <- as.factor(df.melt$parsimony)
         df.melt$parsimony <- factor(df.melt$parsimony,
                                     levels = levels(df.melt$parsimony)[order(as.numeric(gsub("k_","",levels(df.melt$parsimony))))]
         )
@@ -5232,6 +5233,7 @@ digest <- function(obj,
         }
         df <- data.frame(parsimony = rownames(dat),dat)
         df.melt <- melt(df, id.vars = "parsimony")
+        df.melt$parsimony <- as.factor(df.melt$parsimony)
         df.melt$parsimony <- factor(df.melt$parsimony,
                                     levels = levels(df.melt$parsimony)[order(as.numeric(gsub("k_","",levels(df.melt$parsimony))))]
         )
@@ -5344,6 +5346,7 @@ digest <- function(obj,
         }
         df <- data.frame(parsimony = rownames(dat),dat)
         df.melt <- melt(df, id.vars = "parsimony")
+        df.melt$parsimony <- as.factor(df.melt$parsimony)
         df.melt$parsimony <- factor(df.melt$parsimony,
                                     levels = levels(df.melt$parsimony)[order(as.numeric(gsub("k_","",levels(df.melt$parsimony))))]
         )
@@ -5367,6 +5370,7 @@ digest <- function(obj,
         }
         df <- data.frame(parsimony = rownames(dat),dat)
         df.melt <- melt(df, id.vars = "parsimony")
+        df.melt$parsimony <- as.factor(df.melt$parsimony)
         df.melt$parsimony <- factor(df.melt$parsimony,
                                     levels = levels(df.melt$parsimony)[order(as.numeric(gsub("k_","",levels(df.melt$parsimony))))]
         )
@@ -5393,6 +5397,7 @@ digest <- function(obj,
         }
         df <- data.frame(parsimony = rownames(dat),dat)
         df.melt <- melt(df, id.vars = "parsimony")
+        df.melt$parsimony <- as.factor(df.melt$parsimony)
         df.melt$parsimony <- factor(df.melt$parsimony,
                                     levels = levels(df.melt$parsimony)[order(as.numeric(gsub("k_","",levels(df.melt$parsimony))))]
         )
@@ -5416,6 +5421,7 @@ digest <- function(obj,
         }
         df <- data.frame(parsimony = rownames(dat),dat)
         df.melt <- melt(df, id.vars = "parsimony")
+        df.melt$parsimony <- as.factor(df.melt$parsimony)
         df.melt$parsimony <- factor(df.melt$parsimony,
                                     levels = levels(df.melt$parsimony)[order(as.numeric(gsub("k_","",levels(df.melt$parsimony))))]
         )
@@ -5449,6 +5455,7 @@ digest <- function(obj,
         # ACCURACY Empirical
         v <- res$best$scores$accuracy_
         df <- data.frame(value = v, parsimony = names(v))
+        df$parsimony <- as.factor(df$parsimony)
         df$parsimony <- factor(df$parsimony,
                                     levels = levels(df$parsimony)[order(as.numeric(gsub("k_","",levels(df$parsimony))))]
         )
@@ -5470,6 +5477,7 @@ digest <- function(obj,
         # AUC Empirical
         v <- res$best$scores$auc_
         df <- data.frame(value = v, parsimony = names(v))
+        df$parsimony <- as.factor(df$parsimony)
         df$parsimony <- factor(df$parsimony,
                                levels = levels(df$parsimony)[order(as.numeric(gsub("k_","",levels(df$parsimony))))]
         )
@@ -5490,6 +5498,7 @@ digest <- function(obj,
         # RECALL Empirical
         v <- res$best$scores$recall_
         df <- data.frame(value = v, parsimony = names(v))
+        df$parsimony <- as.factor(df$parsimony)
         df$parsimony <- factor(df$parsimony,
                                levels = levels(df$parsimony)[order(as.numeric(gsub("k_","",levels(df$parsimony))))]
         )
@@ -5510,6 +5519,7 @@ digest <- function(obj,
         # PRECISION Empirical
         v <- res$best$scores$precision_
         df <- data.frame(value = v, parsimony = names(v))
+        df$parsimony <- as.factor(df$parsimony)
         df$parsimony <- factor(df$parsimony,
                                levels = levels(df$parsimony)[order(as.numeric(gsub("k_","",levels(df$parsimony))))]
         )

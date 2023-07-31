@@ -11,7 +11,7 @@ The **predomics** package contains three methods for suppervised learning based 
 * 1/06/2016: New population (denseVect) for terGA and different rewritten operators.
 * 3/06/2016: Digesting and comparative plot capability added.
 
-
+```{r}
 ## install dependencies
 install.packages(c("doSNOW", "foreach", "snow", "doRNG", "gtools", "glmnet", "pROC", "viridis", "kernlab", "randomForest"))
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -19,3 +19,4 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("BioQC)
 # install.packages("testthat")
 # install.packages("roxygen2")
+```

@@ -58,3 +58,77 @@
 # save(cir_train_count, file="cir_train_count.rda", compress = TRUE, compression_level = 9)
 # rm(list=ls()); gc()
 
+# # # =====================================================================================
+# # # 29/08/2023: create the pre-computed results for testing new visualization functions
+# # # =====================================================================================
+# # # (1) cirrhosis stage 1
+# # Prepare the data
+# X <- cir_train$X; y <- cir_train$y # set global variables
+# X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+# X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+# # Run prediction model; Terga2 + terinter
+# clf.terga2.terinter <- terga2(nCores = 1, 
+#                               seed = 1, 
+#                               plot = TRUE, language = "terinter"
+# )
+# res_clf_terinter <- fit(X = X, y = y, clf = clf.terga2.terinter, cross.validate = TRUE, nfolds = 10)
+# # Run prediction model; Terga2 + bininter
+# clf.terga2.bininter <- terga2(nCores = 1, 
+#                               seed = 1, 
+#                               plot = TRUE, language = "bininter"
+# )
+# res_clf_bininter <- fit(X = X, y = y, clf = clf.terga2.bininter, cross.validate = TRUE, nfolds = 10)
+# # Save results in list
+# list.results_cir_train <- list()
+# list.results_cir_train[["terinter"]] <- res_clf_terinter
+# list.results_cir_train[["bininter"]] <- res_clf_bininter
+# save(list.results_cir_train, file="data/list.results_cir_train.rda")
+# 
+# # # (2) t2d
+# # Prepare data
+# X <- t2d$X; y <- t2d$y # set global variables
+# X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+# X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+# # Run prediction model; Terga2 + terinter
+# clf.terga2.terinter <- terga2(nCores = 1, 
+#                               seed = 1, 
+#                               plot = TRUE, language = "terinter"
+# )
+# res_clf_terinter <- fit(X = X, y = y, clf = clf.terga2.terinter, cross.validate = TRUE, nfolds = 10)
+# # Run prediction model; Terga2 + bininter
+# clf.terga2.bininter <- terga2(nCores = 1, 
+#                               seed = 1, 
+#                               plot = TRUE, language = "bininter"
+# )
+# res_clf_bininter <- fit(X = X, y = y, clf = clf.terga2.bininter, cross.validate = TRUE, nfolds = 10)
+# # Save results in list
+# list.results.t2d <- list()
+# list.results.t2d[["terinter"]] <- res_clf_terinter
+# list.results.t2d[["bininter"]] <- res_clf_bininter
+# save(list.results.t2d, file="data/list.results.t2d.rda")
+# 
+# # # (3) ibd
+# # Prepare data
+# X <- ibd$X; y <- ibd$y # set global variables
+# X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+# X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+# # Run prediction model; Terga2 + terinter
+# clf.terga2.terinter <- terga2(nCores = 1, 
+#                               seed = 1, 
+#                               plot = TRUE, language = "terinter"
+# )
+# res_clf_terinter <- fit(X = X, y = y, clf = clf.terga2.terinter, cross.validate = TRUE, nfolds = 10, parallelize.folds = TRUE)
+# # run prediction model; Terga2 + bininter
+# clf.terga2.bininter <- terga2(nCores = 1, 
+#                               seed = 1, 
+#                               plot = TRUE, language = "bininter"
+# )
+# res_clf_bininter <- fit(X = X, y = y, clf = clf.terga2.bininter, cross.validate = TRUE, nfolds = 10)
+# # Save results in list
+# list.results.ibd <- list()
+# list.results.ibd[["terinter"]] <- res_clf_terinter
+# list.results.ibd[["bininter"]] <- res_clf_bininter
+# save(list.results.ibd, file="data/list.results.ibd.rda")
+# 
+# # Clean workspace
+# rm(list=ls()); gc()

@@ -240,7 +240,12 @@ analyzeImportanceFeaturesFBM <- function(clf_res, X, y, makeplot = TRUE, saveplo
                       "featImp"=g6,
                       "effectSizes"=g8,
                       "featPrevGroups"=g7)
-    
+    #Save plotlist object if specified
+    if(saveplotobj)
+    {
+      save(plot.list, file=paste("population features",name,".Rda", sep=""))
+    }
+    #plotting statements
     if(makeplot)
     {
       if(verbose) print(paste("Making plots in a dedicated pdf"))
@@ -255,17 +260,15 @@ analyzeImportanceFeaturesFBM <- function(clf_res, X, y, makeplot = TRUE, saveplo
       #Save the plot with cowplot::ggsave2
       cowplot::ggsave2(filename = fname, 
                        plot = fname.plot, width = as.numeric(pdf.dims[1]), height = as.numeric(pdf.dims[2]))
+      #Return the plot
+      return(patchwork::wrap_plots(plot.list, design = layout))
     }else
     {
       layout <- "
       AAABBCD
       "
-      patchwork::wrap_plots(plot.list, design = layout)
+      return(patchwork::wrap_plots(plot.list, design = layout))
       # return(plot.list)
-    }
-    if(saveplotobj)
-    {
-      save(plot.list, file=paste("population features",name,".Rda", sep=""))
     }
   }else # multiple experiments
   {
@@ -455,6 +458,12 @@ analyzeImportanceFeaturesFBM <- function(clf_res, X, y, makeplot = TRUE, saveplo
                       "featImp"=g6,
                       "effectSizes"=g8,
                       "featPrevGroups"=g7)
+    #Save the plotobject if specified
+    if(saveplotobj)
+    {
+      save(plot.list, file=paste("population features",name,".Rda", sep=""))
+    }
+    #Plotting
     if(makeplot)
     {
       if(verbose) print(paste("Making plots in a dedicated pdf"))
@@ -469,16 +478,14 @@ analyzeImportanceFeaturesFBM <- function(clf_res, X, y, makeplot = TRUE, saveplo
       #Save the plot with cowplot::ggsave2
       cowplot::ggsave2(filename = fname, 
                        plot = fname.plot, width = as.numeric(pdf.dims[1]), height = as.numeric(pdf.dims[2]))
-    }else
+      #Return the plot
+      return(patchwork::wrap_plots(plot.list, design = layout))
+    } else
     {
       layout <- "
       AAABBCD
       "
-      patchwork::wrap_plots(plot.list, design = layout)
-    }
-    if(saveplotobj)
-    {
-      save(plot.list, file=paste("population features",name,".Rda", sep=""))
+      return(patchwork::wrap_plots(plot.list, design = layout))
     }
   } # end multiple experiments
 }
@@ -859,11 +866,13 @@ plotImportanceFeaturesFBMobjects <- function(FBMobjList,
     #Save the plot with cowplot::ggsave2
     cowplot::ggsave2(filename = fname, 
                      plot = fname.plot, width = as.numeric(pdf.dims[1]), height = as.numeric(pdf.dims[2]))
+    #Return the plot
+    return(patchwork::wrap_plots(plot.list, design = layout))
   }else
   {
     layout <- "
       AAABBCD
       "
-    patchwork::wrap_plots(plot.list, design = layout)
+    return(patchwork::wrap_plots(plot.list, design = layout))
   }
 }

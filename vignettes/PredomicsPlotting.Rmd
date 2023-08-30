@@ -1,0 +1,189 @@
+---
+title: "PredomicsPlotting"
+author: "Eugeni Belda & Edi Prifti & Jean-Daniel Zucker, Institute of Research for Development (IRD), France"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PredomicsPlotting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This vignette will shown how to use several functions that allows to visualize the features included in the Family of Best Models (FBM) derived from different predomics results. These models can be derived from the same reference dataset (X,y data; p.ex runned prediction models with different algorithms/languages) or can be product of running predomics algorigthms on different reference datasets (different X,y data).
+
+# Visualization of features in FBM from different predomics models runned on the same X,y dataset
+
+Here we start with the cirrhosis train data available in predomics, for which we would like to compare the features retained in the FBM derived from *terinter* and *biniter* models learned with the Terga2 learner. For this purpose, we start by building a classifier for the bininter experiment and run the experiment with the *fit* function, saving the results in the *res_clr_bininter* object.
+
+```{r}
+library(devtools)
+library(reshape2)
+library(plyr)
+library(ggplot2)
+load_all()
+data("cir_train")
+X <- cir_train$X; y <- cir_train$y # set global variables
+X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+# Terga2; bininter; build the classifier
+clf.terga2.bininter <- terga2(nCores = 1, 
+                              seed = 1, 
+                              plot = TRUE, language = "bininter"
+)
+```
+
+```{r, eval=FALSE}
+# Run the prediction experiment
+res_clf_bininter <- fit(X = X, y = y, clf = clf.terga2.bininter, cross.validate = TRUE, nfolds = 10)
+```
+
+We do the same for the terinter experiment (build the classifier object + run the experiment)
+
+```{r, eval=FALSE}
+# Terga2; terinter; build the classifier
+clf.terga2.terinter <- terga2(nCores = 1, 
+                              seed = 1, 
+                              plot = TRUE, language = "terinter"
+)
+# Run the prediction experiment
+res_clf_terinter <- fit(X = X, y = y, clf = clf.terga2.terinter, cross.validate = TRUE, nfolds = 10)
+```
+
+Let's say we want to visualize the results of both experiments runned on the cirrhosis train dataset in terms of the features included in the FBM. For this purpose we just need to combine both experiment objects in single list and use this list as input to the new predomics function *analyzeImportanceFeaturesFBM*. In the chunk below we show how to do this (both experiments will be included in the R list *list.results_cir_train*).
+
+```{r, eval=FALSE}
+list.results_cir_train <- list()
+list.results_cir_train[["terinter"]] <- res_clf_terinter
+list.results_cir_train[["bininter"]] <- res_clf_bininter
+```
+
+Below we source this *list.results_cir_train* object that is provied with the package `data(package = "predomics")` and we will run the *analyzeImportanceFeaturesFBM* function
+
+```{r, fig.align="center", fig.height=10, fig.width=20, warning=FALSE}
+data("list.results_cir_train")
+#both classification tasks
+analyzeImportanceFeaturesFBM(clf_res = list.results_cir_train, 
+                             X = X, 
+                             y=cir_train$y, 
+                             makeplot = FALSE,
+                             saveplotobj = FALSE,
+                             nb.top.features = 100, 
+                             pdf.dims = c(width = 20, height = 10), 
+                             name = "cir_train")
+```
+
+The summary plot visualize 4 panels corresponding to feature prevalence in FBM, feature importance, effect sizes of feature abundances vs y-variable (cliff's delta for binary y; spearman rho for continuous y) and feature prevalence in groups and the entire cohort. In this case (different predomics experiments runned on the same reference dataset) the feature prevalence in FBM and the feature importance panels are facetted by experiment, whereas the panels corresponding to the effect sizes of abundance changes and prevalence of features across study groups are unique. 
+
+The function tooks the following parameters:
+
+* *clf_res*:  The result of an experiment or multiple experiments (list of experiments)
+* *X*: The feature table used as input of fit function behind experiments in clf_res
+* *y*: The target class (binary/continuous)
+* *makeplot*:  make a pdf file with the resulting plots (default:TRUE)
+* *saveplotobj*: make a .Rda file with a list of the individual plots (default:TRUE)
+* *name*: the suffix of the pdf file (default:"")
+* *verbose*: print out information
+* *pdf.dims*: dimensions of the pdf object (default: c(w = 25, h = 20))
+* *filter.cv.prev*: keep only features found in at least (default: 0.25, i.e 25 percent) of the cross validation experiments 
+* *nb.top.features*: the maximum number (default: 100) of most important features to be shown; If the number of features in FBM < nb.top.features, the number of features in FBM will be shown instead
+* *scaled.importance*: the scaled importance is the importance multiplied by the prevalence in the folds. If (default = TRUE) this will be used, the mean mda will be scaled by the prevalence of the feature in the folds and ordered subsequently 
+* *k_penalty*: the sparsity penalty needed to select the best models of the population (default:0.75/100).
+* *k_max*: select the best population below a given threshold. If (default:0) no selection is performed.
+
+In the chunk above, the function has been runned specifying a maximum of 100 features to display. From the message displayed during function execution, the FBM of the two experiments contains 146 features, so what is shown in the plot are the 100 features with the highest mean feature importance (mda) across the two experiments.
+
+We can run this function with a single predomics experiment. For example, in the chunk below we re-execute the *analyzeImportanceFeaturesFBM* function with only the results of the *terinter* experiment.
+
+```{r, fig.align="center", fig.height=10, fig.width=20, warning=FALSE}
+analyzeImportanceFeaturesFBM(clf_res = list.results_cir_train$terinter, 
+                             X = X, 
+                             y=cir_train$y, 
+                             makeplot = FALSE,
+                             saveplotobj = FALSE,
+                             nb.top.features = 100, 
+                             pdf.dims = c(width = 20, height = 10), 
+                             name = "cir_train")
+```
+
+In a second example, we visualize in a similar way the features in FBM of predomics experiments for *bininter* and *teriniter* models learned with *Terga2* learner on the t2d dataset provied with the package `data(package = "predomics")`.
+
+```{r}
+##build a test prediction task from T2D dataset
+data("t2d")
+X <- t2d$X; y <- t2d$y # set global variables
+X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+```
+
+```{r, eval=FALSE}
+#Run the experiments (not executed in the context of the vignette)
+res_clf_terinter <- fit(X = X, y = y, clf = clf.terga2.terinter, cross.validate = TRUE, nfolds = 10)
+res_clf_bininter <- fit(X = X, y = y, clf = clf.terga2.bininter, cross.validate = TRUE, nfolds = 10)
+#Save the results in list
+list.results.t2d <- list()
+list.results.t2d[["terinter"]] <- res_clf_terinter
+list.results.t2d[["bininter"]] <- res_clf_bininter
+```
+
+```{r, fig.align="center", fig.height=10, fig.width=20, warning=FALSE}
+##Source the list.results.t2d available in data folder
+data("list.results.t2d")
+analyzeImportanceFeaturesFBM(clf_res = list.results.t2d, 
+                             X = X, 
+                             y=t2d$y, 
+                             makeplot = FALSE,
+                             saveplotobj = FALSE,
+                             nb.top.features = 100, 
+                             pdf.dims = c(width = 20, height = 10), 
+                             name = "t2d")
+
+```
+
+
+# Visualization of features in FBM from different predomics models runned different X,y dataset
+
+Let's say we want to integrate the results of predomics experiments above runned on cir_train and t2d datasets. For this, we will proceed in three steps. First, we will extract the individual objects in each experiment that we will integrate in the final visualization. We do this with the function *getImportanceFeaturesFBMobjects* that takes as input the predomics results object and the corresponding X and y object over which the experiment has been runned and return a list with the 4 dataframes that we will combine in the final visualization. We do this below for the individual experiments (bininter and terinter) saved in *list.results.t2d* (for T2D) and *list.results_cir_train* (for cirrhosis train).
+
+```{r, warning=FALSE}
+##T2D; get FBM plotting objects
+X <- t2d$X; y <- t2d$y # set global variables
+X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+t2d_terinter.fmbObj <- getImportanceFeaturesFBMobjects(clf_res = list.results.t2d$terinter, X = X, y = y, verbose = TRUE)
+t2d_bininter.fmbObj <- getImportanceFeaturesFBMobjects(clf_res = list.results.t2d$bininter, X = X, y = y, verbose = TRUE)
+
+##cirrhosis; get FBM plotting objects 
+X <- cir_train$X; y <- cir_train$y # set global variables
+X <- X[rowSums(X)!=0,]; dim(X) # filter out variables with only zero values
+X <- filterNoSignal(X = X, side = 1, threshold = "auto", verbose = FALSE); dim(X) 
+cir_train_terinter.fmbObj <- getImportanceFeaturesFBMobjects(clf_res = list.results_cir_train$terinter, X = X, y = y, verbose = TRUE)
+cir_train_bininter.fmbObj <- getImportanceFeaturesFBMobjects(clf_res = list.results_cir_train$bininter, X = X, y = y, verbose = TRUE)
+```
+
+Second, we will combine the outputs of the *getImportanceFeaturesFBMobjects* function on the different experiments in a single list
+
+```{r}
+#build list of objects to combine
+testlist <- list("t2d_terinter"=t2d_terinter.fmbObj,
+                 "t2d_bininter"=t2d_bininter.fmbObj,
+                 "cir_terinter"=cir_train_terinter.fmbObj,
+                 "cir_bininter"=cir_train_bininter.fmbObj)
+```
+
+Third, we will pass the list with the outputs of the *getImportanceFeaturesFBMobjects* function to combine to the function *plotImportanceFeaturesFBMobjects* together with the number of features to display (100 by default)
+
+```{r, fig.align="center", fig.height=10, fig.width=30}
+plotImportanceFeaturesFBMobjects(FBMobjList = testlist, verbose = TRUE, nb.top.features = 100, makeplot = FALSE)
+```
+
+# Session Info
+
+```{r}
+sessionInfo()
+```

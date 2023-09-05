@@ -3,7 +3,7 @@
 .Ruserdata
 desktop.ini
 vignettes/*_cache
-NAMESPACE
+#NAMESPACE
 Profiling_*
 *.yml
 man/

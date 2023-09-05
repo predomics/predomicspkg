@@ -39,5 +39,5 @@ Description: The predomics package offers access to a novel framework implementi
     (SOTA) including RF, ENET and SVM.
 License: LICENSE
 LazyData: TRUE
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Encoding: UTF-8

@@ -518,7 +518,7 @@ computeEffectSizes <- function(X,y,mode)
     names(y.factor) <- colnames(X)
     y.factor <- data.frame(y.factor)
     #melt the X
-    X.melt <- X
+    X.melt <- as.data.frame(X)
     X.melt$feature <- rownames(X) ; X.melt <- melt(X.melt)
     X.melt <- merge(X.melt, y.factor, by.x="variable", by.y=0, all.x=TRUE)
     #Do the univariate tests + cliff delta calculations
@@ -540,7 +540,7 @@ computeEffectSizes <- function(X,y,mode)
     names(y.cont) <- colnames(X)
     y.cont <- data.frame(y.cont)
     #melt the X
-    X.melt <- X
+    X.melt <- as.data.frame(X)
     X.melt$feature <- rownames(X) ; X.melt <- melt(X.melt)
     X.melt <- merge(X.melt, y.cont, by.x="variable", by.y=0, all.x=TRUE)
     #Do the univariate tests + cliff delta calculations

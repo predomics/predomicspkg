@@ -13,7 +13,6 @@ Imports:
     reshape2,
     logger,
     data.table,
-    BioQC,
     foreach,
     snow,
     doRNG,

@@ -1,11 +1,12 @@
+man/
+debug/
 .Rproj.user
 .RData
 .Ruserdata
+.Rhistory
+..Rcheck/
 desktop.ini
 vignettes/*_cache
 #NAMESPACE
 Profiling_*
 *.yml
-man/
-.Rhistory
-debug/

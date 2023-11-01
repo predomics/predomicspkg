@@ -4376,9 +4376,7 @@ create.folds <- function (y, k = 10, list = TRUE, returnTrain = FALSE, seed = NU
 #' Selects a the top k features that are significantly associated with the class to predict
 #' 
 #' @description Runs statistics on the data and selects a subset of k features that are the most significant. 
-#' An accelerated version is implemented based on the BioQC package for the Mann-Whittney tests. Besides filtering 
-#' this function can be used in a more larger statistical context.
-#' @import BioQC
+#' Besides filtering this function can be used in a more larger statistical context.
 #' @param data: the dataset X
 #' @param trait: is the equivalent of y (class, or numerical)
 #' @param k: the number of features (default:10)
@@ -4390,7 +4388,6 @@ create.folds <- function (y, k = 10, list = TRUE, returnTrain = FALSE, seed = NU
 #' @param verbose: print out information indicating progress (default:FALSE)
 #' @param verbose.step: Showing a 1 percent progress.
 #' @param return.data: if (default:FALSE) this returns the statistics of X, otherwise the restricted data subset
-#' @param accelarate: use a turbo method developped by bioQC (default:FALSE). There is an issue when executing in batch.
 #' @export
 filterfeaturesK <- function(data, 
                             trait, 
@@ -4402,8 +4399,7 @@ filterfeaturesK <- function(data,
                             sort = TRUE,
                             verbose = FALSE,
                             verbose.step = NULL,
-                            return.data = FALSE, 
-                            accelerate = FALSE
+                            return.data = FALSE
 ) 
 {
   if(!type %in% c("spearman","pearson","wilcoxon","t.test"))
@@ -4603,7 +4599,7 @@ filterfeaturesK <- function(data,
             try(tmp <- stats::wilcox.test(vd ~ vt, paired = paired), silent = TRUE)
             try(res[i, "p"] <- tmp$p.value, silent = TRUE)
           }
-          
+
           # determine the status
           if (mean(vd[trait == trait.val[1]], na.rm = TRUE) > mean(vd[trait == trait.val[2]], na.rm = TRUE)) 
           {
@@ -4738,15 +4734,15 @@ filterfeaturesK <- function(data,
   
   if(verbose) cat("|\n") # end progress bar
   
-  if(accelerate)
-  {
-    # OPTIMIZATION particular case of the optimized wilcoxon
-    if(mean.test & type == "wilcoxon")
-    {
-      res[, 3] <- wmwTest(x = t(data), indexList = (trait==names(table(trait))[1]), valType="p.two.sided", simplify = TRUE)
-      res[!validity, 3] <- NA # to make sure we don't keep non valid data that we won't select as feature selection
-    }
-  }
+  # if(accelerate)
+  # {
+  #   # OPTIMIZATION particular case of the optimized wilcoxon
+  #   if(mean.test & type == "wilcoxon")
+  #   {
+  #     res[, 3] <- wmwTest(x = t(data), indexList = (trait==names(table(trait))[1]), valType="p.two.sided", simplify = TRUE)
+  #     res[!validity, 3] <- NA # to make sure we don't keep non valid data that we won't select as feature selection
+  #   }
+  # }
   
   # multiple adjustment
   res[, 4] <- stats::p.adjust(res[, "p"], method = multiple.adjust)

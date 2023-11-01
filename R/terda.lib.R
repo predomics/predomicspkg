@@ -1309,10 +1309,10 @@ error.rate <- function(x,y,wb) {
 #' @param k.sparse is the sparsity (non-negative real value). Default value is \code{k.sparse = NULL} - no constraint.
 #' @param gamma is the hinge loss parameter.. Defines the margin
 #' @param vartype is the type of coefficients : \code{cplexAPI::CPX_INTEGER, cplexAPI::CPX_BINARY, cplexAPI::CPX_CONTINUOUS}. Default \code{vartype = cplexAPI::CPX_INTEGER}
-#' @examples
-#' library(PredOmics)
-#' findk(DATAMETA1[, -1], DATAMETA1[, 1], nfolds = 1)
-#' findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  cplexAPI::CPX_CONTINUOUS, lb = -1.0, ub = 1.0)
+# @examples
+# library(predomics)
+# findk(DATAMETA1[, -1], DATAMETA1[, 1], nfolds = 1)
+# findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  cplexAPI::CPX_CONTINUOUS, lb = -1.0, ub = 1.0)
 findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  "real", lb = -1.0, ub = 1.0)
 {
   check.input(x = x, y = y, gamma = gamma, k.sparse = k.sparse, vartype = vartype)

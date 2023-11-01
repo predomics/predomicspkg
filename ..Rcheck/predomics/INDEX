@@ -1,0 +1,287 @@
+AnalyseStableModels_LOO
+                        analyse stability of models from digest
+LPO_best_models         Compute the cross-validation of leave one out
+                        for test stability
+analyzeImportanceFeatures
+                        Prints as text the detail on a given experiment
+                        along with summarized results (if computed)
+analyzeImportanceFeaturesFBM
+                        Visualize a summary of an experiment/set of
+                        experiments
+analyzePopulationFeatures
+                        Prints as text the detail on a given experiment
+                        along with summarized results (if computed)
+bestModelFeatureStability
+                        analyse stability of models from digest
+bestModelStability      analyse stability of models from digest
+cir_test                Cirhosis stage 2 (frequencies)
+cir_train               Cirhosis stage 1 (frequencies)
+cleanPopulation         cleanPopulation
+computeCardEnrichment   computeCardEnrichment
+computeCoeffSVMLin      Compute other prediction scores such as
+                        precision, recall and f-score
+computeConfusionMatrix
+                        Evaluates the confusion Matrix of the predicted
+                        class and the class to predict
+computeEffectSizes      Compute effect sizes for features in binary
+                        classification/regression tasks
+computeFeatureMetrics   Computes different metrics for a given
+                        distributions
+computeIntercept        Computes the best intercept for the model while
+                        minimizing error
+counter                 The counter for the experiment id (used in the
+                        clf builders)
+crossing                Creates new combinations of features based from
+                        a parents.
+denseVecToModel         denseVecToModel
+digest                  Summarize the results from an experiment object
+digestModelCollection   digestModelCollection
+disectModel             Analyzes the score construction and model
+estimateFeatureImportance
+                        Estimates the importance of each feature in the
+                        model object
+evaluateAUC             Computes the AUC of a model
+evaluateAccuracy        Evaluates the accuracy of a model
+evaluateAdditionnalMetrics
+                        Compute other prediction scores such as
+                        precision, recall and f-score
+evaluateFeatureImportanceInPopulation
+                        evaluates the feature importance in a
+                        population of models
+evaluateFit             Evaluates the fitting score of a model object
+evaluateIntercept       Evaluates the fitting score of a model object
+evaluateModel           Evaluates the fitting score of a model object
+evaluateModelRegression
+                        Evaluates the fitting coefficents of a model
+                        object
+evaluatePopulation      evaluatePopulation
+evaluatePrevalence      Evaluate the prevalence of a given model
+evaluateYhat            Computes the predected classification using a
+                        given model
+evolve                  Creates new combinations of features based from
+                        a parents.
+evolve2m                Second version of the evolve method
+evolve3m                Another version of the evolve method that
+                        distingishes the different lanugages
+filterFeaturesByPrevalence
+                        Selects the most prevalent features in the
+                        dataset baset on the provided thresholds.
+filterNoSignal          filterNoSignal: Omits the variables with no
+                        information
+filterfeaturesK         Selects a the top k features that are
+                        significantly associated with the class to
+                        predict
+fit                     fit: runs the classifier on a dataset
+generateAllCombinations
+                        generateAllCombinations
+generator_metal         #' Computes best model of a metal clf #' #'
+                        @description Get best metal model #' @param X:
+                        dataset to classify #' @param y: variable to
+                        predict #' @param clf: an object containing the
+                        different parameters of the classifier #'
+                        @param clf_res: the result of metal #' @param
+                        k_penalty: penalty for k #' @return A list of
+                        result of best model for each k, their
+                        importance feature of each best model,
+                        individuels wrongly classified #' @export
+                        getTheBestMetalModel<- function(clf, clf_res,
+                        X, k_penalty=0.01,
+                        evalToOrder="accuracy_",selected=1)
+                        if(length(clf_res)==3)
+                        clf_res<-clf_res$classifier
+                        pop<-modelCollectionToPopulation(clf_res$models)
+                        acc <- populationGet_X(evalToOrder)(pop) k <-
+                        populationGet_X("eval.sparsity")(pop)
+                        acc.penalty <- acc-(k*k_penalty) best.acc <-
+                        max(acc.penalty) epsilon <-
+                        sqrt(best.acc*(1-best.acc)/ncol(X)) pop2 <-
+                        pop[acc.penalty>(best.acc - epsilon)] mod <-
+                        getMaxMinPrevalenceModel(pop2,X,selected=selected)
+                        return(mod) Generate a metal list of clfs
+                        containing information on the generators and
+                        unificators
+getFeaturePrevalence    Evaluates the prevalence of a list of features
+                        in the whole dataset and per each class
+getFitIndividual        Get the fitting score of an individual object
+getFitModel             Get the fitting score of a model object
+getFitModels            Get the fitting score of a list a models
+getFitPopulation        Get the fitting score of a list of individuals
+getGraph                getGraph
+getImportanceFeaturesFBMobjects
+                        Get objects needed for a merged visualization
+                        task combining different experiments from
+                        different datasets (different X and y)
+getIndicesIndividual    Get the index of the features in a given
+                        individual
+getIndicesPopulation    Get the indices of the features used in a
+                        population of individuals
+getMaxMinPrevalenceModel
+                        Get the model that has the highest minimal
+                        prevalence in its features
+getModelScore           Computes the ^y score of the model
+getNBestModels          Get the models from a classifier result for
+                        each k-sparsity
+getSign                 Evaluates the sign for a given feature this is
+                        the old getMgsVsTraitSignDiscr function
+get_IndividualToBeMutated
+                        Return list of individuals to mutate
+get_Parents             Return list of parents
+glmnetRR                Solve with GLMNET and create models
+ibd                     Inflammatory Bowel Disease (frequencies) from
+                        the MetaHIT study
+index2names             index2names
+individual              Creates an object individual
+isClf                   Evaluates wether an object is a classifier
+isExperiment            Evaluates wether an object is an experiment
+isLearnerSota           Evaluates wether an object is a model SOTA SVM
+isModel                 Evaluates wether an object is a model
+isModelBTR              Evaluates wether an object is a model BTR
+isModelCollection       Evaluates wether an object is a model
+                        collection objecct
+isModelSota             Evaluates wether an object is a model SOTA
+isModelSotaGLMNET       Evaluates wether an object is a model SOTA
+                        GLMNET
+isModelSotaRF           Evaluates wether an object is a model SOTA RF
+isModelSotaSVM          Evaluates wether an object is a model SOTA SVM
+isModelTerda            Evaluates wether an object is a model BTR Terda
+isPopulation            Evaluates wether an object is a population of
+                        models
+isclose                 tests weather two values are close
+listOfDenseVecToListOfModels
+                        Builds a model object from a list of vector
+                        coefficients
+listOfDenseVecToModelCollection
+                        Builds a list of dense vector coefficients from
+                        a list of models
+listOfModels2ModelCollection
+                        listOfModels2ModelCollection
+listOfModelsToDenseCoefMatrix
+                        listOfModelsToDenseCoefMatrix
+listOfModelsToListOfDenseVec
+                        Builds a list of dense vector coefficients from
+                        a list of models
+listOfModelsToListOfSparseVec
+                        Builds a list of sparse vector coefficients
+                        from a list of models
+listOfSparseVecToListOfModels
+                        listOfSparseVecToListOfModels
+loadPopulation          Load a population from a file
+loadResults             Load the results of a fit
+make.counter            Function used to create the counter for
+                        building clf$experiment$id
+makeFeatureAnnot        Prints as text the detail on a given experiment
+                        along with summarized results (if computed)
+makeFeatureModelPrevalenceNetworkCooccur
+                        Prints as text the detail on a given experiment
+                        along with summarized results (if computed)
+makeFeatureModelPrevalenceNetworkMiic
+                        Prints as text the detail on a given experiment
+                        along with summarized results (if computed)
+mergeMeltBestScoreCV    mergeMeltBestScoreCV
+mergeMeltImportanceCV   mergeMeltImportanceCV
+mergeMeltScoreCV        mergeMeltScoreCV
+mergeMeltScoreEmpirical
+                        mergeMeltScoreEmpirical
+mergeResults            mergeResults
+metal                   metal: metal searching algorithm
+modelCollectionToPopulation
+                        Transform a model collection to a population
+                        (or list of model objects)
+modelToDenseVec         Transform the model object onto dense format
+                        (long) one
+multipleRR              multipleRR
+multipleRR_par          multipleRR_par
+mutate                  Changes feature indexes in a given percentage
+                        of models.
+myAssert                Asserts a condition and prints a message or
+                        stops the block
+myAssertNotNullNorNa    Asserts the existance of an object and prints a
+                        message or stops the block
+names2index             names2index
+normModelCoeffs         Normalize the model coefficients needed for the
+                        plot
+obesity                 Obesity (frequencies) from the MetaHIT study
+plotAUC                 Analyze the results from a given classifier
+plotAUCg                Plot the AUC of a given classifier
+plotAbundanceByClass    Plots the prevalence of a list of features in
+                        the whole dataset and per each class
+plotComparativeBestCV   Plots a graph for a given score
+plotComparativeCV       Plots a graph for a given score
+plotComparativeEmpiricalScore
+                        Plots a graph for a given score
+plotComparativeResults
+                        Plot performance scores for multiple learners
+plotComparativeResultsBest
+                        Plot performance scores for multiple learners
+plotFeatureModelCoeffs
+                        Plots the prevalence of a list of features in
+                        the whole dataset and per each class
+plotImportanceFeaturesFBMobjects
+                        Visualize a list containing outouts of
+                        getImportanceFeaturesFBMobjects
+plotModel               Plots a model or a population of model
+                        objectsas barplots of scaled coefficients.
+plotModelScore          Plots a model or a population of model
+                        objectsas barplots of scaled coefficients.
+plotPopulation          Plots a population of models (or a single
+                        model) objects as barplots of scaled
+                        coefficients.
+plotPrevalence          Plots the prevalence of a list of features in
+                        the whole dataset and per each class
+plotScoreBarcode        Plots the barcode of the total score as well as
+                        positive and negative components
+population              Creates a population of index models.
+populationGet_X         Get the best model from a classifier result
+populationSet_X         Set models with a given liist of objects
+populationToDataFrame   populationToDataFrame
+printClassifier         Prints as text the detail on a given Classifier
+                        object
+printExperiment         Prints as text the detail on a given Experiment
+                        object
+printModel              # plot a horizontal barplot #' @export
+                        plotBarplot <- function(v, rev=TRUE,
+                        xlim=range(v), main="") if(rev) v <- rev(v)
+                        barplot(v, las=2, horiz=TRUE, col="black",
+                        main=main, xlim=xlim) Prints a model object as
+                        text.
+printModelCollection    Prints as text the detail on a given
+                        ModelCollection object
+printPopulation         Prints a population of model objects as text.
+printy                  Prints as text the detail on a given object
+                        from the predomics package.
+resetTags               Resets selection, mutation and mate tags to
+                        inactive
+runClassifier           Runs the learning on a dataset
+runCrossval             Compute the cross-validation emprirical and
+                        generalization scores
+savePopulation          Save a population to a file
+saveResults             Save the results of the fit function
+scoreRatio              Computes the ^y score of the model as a ratio
+selectBestPopulation    Select the top significant best part of the
+                        population
+selector_v1             Does an elite selection on a population
+sim_inter               compare stability of different modeles (inter
+                        k)
+sim_intra               compare stability of different modeles (intra
+                        k)
+sortPopulation          sortPopulation
+sota.glmnet             sota.glmnet
+sota.rf                 sota.rf
+sota.svm                sota.svm
+sparseVecToModel        sparseVecToModel
+summarySE               Plot performance scores for multiple learners.
+t2d                     Type 2 diabetes (frequencies) BGI
+t2dw                    Type 2 diabetes (frequencies) Women Sweden
+tag_Couples             Tag the couples
+tag_SelectElite         Tag individuals for parenting
+tag_SelectRandom        Randomly tag selected individuals parenting
+tag_ToBeMutated         Tag individuals for mutation
+tag_select              Add 'selected' tag using elite and random
+                        selection
+terBeam                 terbeam
+terda                   terda
+terga1                  terga1
+terga2                  Model search algorithm based on genetic
+                        algorithms (GA).
+updateModelIndex        updateModelIndex
+updateObjectIndex       updateObjectIndex

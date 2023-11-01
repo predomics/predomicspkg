@@ -4,11 +4,7 @@ The **predomics** package offers access to an original Machine Learning framewor
 
 ## Badges
 
-Build status, license, etc.
-
-![Build Status](https://github.com/predomics/predomicspkg/actions/workflows/main.yml/badge.svg) ![R Package](https://github.com/predomics/predomicspkg/workflows/R/badge.svg) ![License](https://img.shields.io/github/license/predomics/predomicspkg) ![GitHub issues](https://img.shields.io/github/issues/predomics/predomicspkg) [![GitHub forks](https://img.shields.io/github/forks/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/network/members) [![GitHub stars](https://img.shields.io/github/stars/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/stargazers)
-
-Predomics is a comprehensive R package designed for ...
+![R Package](https://github.com/predomics/predomicspkg/workflows/R/badge.svg) ![License](https://img.shields.io/github/license/predomics/predomicspkg) ![GitHub issues](https://img.shields.io/github/issues/predomics/predomicspkg) [![GitHub forks](https://img.shields.io/github/forks/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/network/members) [![GitHub stars](https://img.shields.io/github/stars/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/stargazers)
 
 ## Table of Contents
 

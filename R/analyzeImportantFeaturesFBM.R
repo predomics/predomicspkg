@@ -22,8 +22,14 @@
 #' @export
 #'
 #' @examples
-analyzeImportanceFeaturesFBM <- function(clf_res, X, y, makeplot = TRUE, saveplotobj=TRUE, name = "", 
-                                         verbose = TRUE, pdf.dims = c(width = 25, height = 20), 
+analyzeImportanceFeaturesFBM <- function(clf_res, 
+                                         X, 
+                                         y, 
+                                         makeplot = TRUE, 
+                                         saveplotobj=TRUE, 
+                                         name = "", 
+                                         verbose = TRUE, 
+                                         pdf.dims = c(width = 25, height = 20), 
                                          filter.cv.prev = 0.25, 
                                          nb.top.features = 100, 
                                          scaled.importance = FALSE, 

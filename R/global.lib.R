@@ -54,7 +54,7 @@ computeConfusionMatrix <- function(mod, X, y, clf)
   {
     return(NULL)
   }
-  yhat <- factor(yhat, levels = names(table(y)))
+  # yhat <- factor(yhat, levels = names(table(clf$data$y)))
   
   if(length(yhat) != length(y))
   {
@@ -189,7 +189,7 @@ evaluateYhat <- function(mod = NULL, X, y, clf, score=NULL, intercept=NULL, sign
     if(!myAssertNotNullNorNa(intercept, "missing intercept from evaluateYhat", stop = FALSE)) return(NULL)
     if(!myAssertNotNullNorNa(sign, "missing sign from evaluateYhat", stop = FALSE)) return(NULL)
     
-    lev   <- levels(as.factor(y))
+    lev   <- levels(as.factor(clf$data$y))
     
     # NOTE: in the score we may have infite values that come for instance from the ratio language
     # This means that whatever the intercept these examples are positive ones. As such we can omit
@@ -924,10 +924,13 @@ evaluateAUC <- function(score, y, sign = '>')
   score <- score[!ind.filter]
   y     <- y[!ind.filter]
   
-  if(any(table(y)==0))
+  # if y does not contain exactly 2 levels, and if these don't have at least 
+  # 1 count then we don't compute the AUC
+  if(length(table(y)) != 2 | any(table(y)==0))
   {
     auc <- NA
-  }else
+    
+  }else # otherwise we compute it
   {
     rocobj <- suppressMessages(roc(response = y, predictor = score, direction = sign))
     auc <- as.numeric(rocobj$auc)
@@ -1116,22 +1119,31 @@ evaluateFit <- function(mod, X, y, clf, force.re.evaluation = FALSE, mode = "tra
                aucg                 <- evaluateAUC(score = mod$score, y = y, sign = ">")
                aucl                 <- evaluateAUC(score = mod$score, y = y, sign = "<")
                mod$auc_             <- max(aucg, aucl)
-               mod$unpenalized_fit_ <- mod$auc_             
+               mod$unpenalized_fit_ <- mod$auc_      
+               
+               # compute the accuracy as it won't be computed elsewhere
+               mod <- evaluateAccuracy(mod, X, y, clf, force.re.evaluation = force.re.evaluation, mode = mode)
+               
              }
              
              # in case it is accuracy
              if(clf$params$evalToFit == "accuracy_") # in this case the auc will be computed in evaluate other metrics
              {
                mod <- evaluateAccuracy(mod, X, y, clf, force.re.evaluation = force.re.evaluation, mode = mode)
-               mod$unpenalized_fit_ <- mod$accuracy_             
+               mod$unpenalized_fit_ <- mod$accuracy_
+               
+               # compute also the AUC as otherwise it won't be computed anywhere
+               aucg                 <- evaluateAUC(score = mod$score, y = y, sign = ">")
+               aucl                 <- evaluateAUC(score = mod$score, y = y, sign = "<")
+               mod$auc_             <- max(aucg, aucl)
              }
              
-             # otherwise compute the rest 
+             # otherwise compute the rest when evalToFit is not auc_ nor accuracy_
              if(clf$params$evalToFit != "auc_" & clf$params$evalToFit != "accuracy_")
              {
                mod <- evaluateAdditionnalMetrics(mod = mod, X = X, y = y, clf = clf, mode = mode)
                mod$unpenalized_fit_ <- mod[[clf$params$evalToFit]]
-               # compte accuracy also
+               # compute accuracy also
                mod <- evaluateAccuracy(mod, X, y, clf, force.re.evaluation = force.re.evaluation, mode = mode)
                # and auc, since these are helpful information
                aucg                 <- evaluateAUC(score = mod$score, y = y, sign = ">")
@@ -1229,7 +1241,7 @@ evaluateFit <- function(mod, X, y, clf, force.re.evaluation = FALSE, mode = "tra
 #' @param plot: if TRUE, the score will be visialized (default:FALSE)
 #' @return the intercept, the sign and the accuracy
 #' @export
-computeIntercept <- function(score, y, verbose=FALSE, sign="auto", plot = FALSE) {
+computeIntercept <- function(score, y, verbose = FALSE, sign = "auto", plot = FALSE) {
   # make vectors of 0/1 to identify positive labels and negative labels
   
   if(!is.factor(y))
@@ -1238,7 +1250,7 @@ computeIntercept <- function(score, y, verbose=FALSE, sign="auto", plot = FALSE)
   }
   
   lev <- levels(y)
-  if(length(lev) !=2)
+  if(length(lev) != 2)
   {
     stop("computeIntercept: please make sure the y class has only two levels.")
   }
@@ -1249,8 +1261,8 @@ computeIntercept <- function(score, y, verbose=FALSE, sign="auto", plot = FALSE)
   # }
   
   if(sign == "auto") {
-    sup_res = computeIntercept(score, y, verbose, sign=">")
-    inf_res = computeIntercept(score, y, verbose, sign="<")
+    sup_res = computeIntercept(score, y, verbose, sign = ">")
+    inf_res = computeIntercept(score, y, verbose, sign = "<")
     
     if(sup_res$accuracy > inf_res$accuracy)
     {
@@ -1264,7 +1276,7 @@ computeIntercept <- function(score, y, verbose=FALSE, sign="auto", plot = FALSE)
   # PosClass <- (y== 1)+0
   # NegClass <- (y==-1)+0
   
-  # remplacé le 21/02/18
+  # replaced on 21/02/18
   PosClass <- (y == lev[1])+0
   NegClass <- (y == lev[2])+0
   
@@ -3700,7 +3712,7 @@ meltScoreList <- function(v=v.prop, prepare.for.graph=TRUE, topdown=TRUE)
 #' @param na.rm: a boolean that indicates whether to ignore NA's
 #' @param conf.interval: the percent range of the confidence interval (default is 95\%)
 #' @return A transformed data frame with information on the different errors and confidence.
-#' @import plyr
+## @import plyr
 summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.interval=.95, .drop=TRUE) 
 {
   # This was taken from 'http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
@@ -4424,11 +4436,11 @@ filterfeaturesK <- function(data,
   }
   
   # fix to correlation if not specified
-  if(any(class(trait)=="numeric"))
+  if(any(class(trait) == "numeric"))
   {
-    if(!(type=="spearman" | type=="pearson"))
+    if(!(type == "spearman" | type == "pearson"))
     {
-      if(length(table(trait))==2)
+      if(length(table(trait)) == 2)
       {
         trait <- as.factor(trait)
         trait.val <- names(table(trait))
@@ -4567,7 +4579,7 @@ filterfeaturesK <- function(data,
         if(mean.test.t) 
         {
           # apply test
-          try(tmp <- t.test(vd ~ vt, paired = paired), silent = TRUE)
+          try(tmp <- stats::t.test(vd ~ vt, paired = paired), silent = TRUE)
           try(res[i, "p"] <- tmp$p.value, silent = TRUE) # store results
           # determine the status
           if (mean(vd[trait == trait.val[1]], na.rm = TRUE) > mean(vd[trait == trait.val[2]], na.rm = TRUE)) 
@@ -4586,7 +4598,7 @@ filterfeaturesK <- function(data,
           if (!accelerate)
           {
             # apply test
-            try(tmp <- wilcox.test(vd ~ vt, paired = paired), silent = TRUE)
+            try(tmp <- stats::wilcox.test(vd ~ vt, paired = paired), silent = TRUE)
             try(res[i, "p"] <- tmp$p.value, silent = TRUE)
           }
           
@@ -4621,7 +4633,7 @@ filterfeaturesK <- function(data,
         if(cor.spearman) 
         {
           # run test and store results
-          try(tmp <- cor.test(rank(vd[cl1.ind]), rank(vd[cl2.ind]), method = "pearson"), silent = TRUE)
+          try(tmp <- stats::cor.test(rank(vd[cl1.ind]), rank(vd[cl2.ind]), method = "pearson"), silent = TRUE)
           try(res[i, 1] <- tmp$estimate, silent = TRUE)
           if (!is.na(res[i, 1])) 
           {
@@ -4643,7 +4655,7 @@ filterfeaturesK <- function(data,
         }else # PEARSON
         {
           # run test and store results
-          try(tmp <- cor.test(vd[cl1.ind], vd[cl2.ind], method = "pearson"), silent = TRUE)
+          try(tmp <- stats::cor.test(vd[cl1.ind], vd[cl2.ind], method = "pearson"), silent = TRUE)
           try(res[i, 1] <- tmp$estimate, silent = TRUE)
           if (!is.na(res[i, 1])) 
           {
@@ -4669,7 +4681,7 @@ filterfeaturesK <- function(data,
         # SPEARMAN
         if(cor.spearman) 
         {
-          try(tmp <- cor.test(rank(vd), vt, method = "pearson"), silent = TRUE)
+          try(tmp <- stats::cor.test(rank(vd), vt, method = "pearson"), silent = TRUE)
           try(res[i, 1] <- tmp$estimate, silent = TRUE)
           if (!is.na(res[i, 1])) 
           {
@@ -4691,7 +4703,7 @@ filterfeaturesK <- function(data,
           
         }else # PEARSON
         {
-          try(tmp <- cor.test(vd, vt, method = "pearson"), silent = TRUE)
+          try(tmp <- stats::cor.test(vd, vt, method = "pearson"), silent = TRUE)
           try(res[i, 1] <- tmp$estimate, silent = TRUE)
           if (!is.na(res[i, 1])) 
           {
@@ -4735,7 +4747,7 @@ filterfeaturesK <- function(data,
   }
   
   # multiple adjustment
-  res[, 4] <- p.adjust(res[, "p"], method = multiple.adjust)
+  res[, 4] <- stats::p.adjust(res[, "p"], method = multiple.adjust)
   
   # if the result is sorted 
   if(sort)
@@ -4913,8 +4925,8 @@ filterNoSignal <- function(X, side = 1, threshold = "auto", verbose = FALSE)
   }
   
   # compute the standard deviation
-  s <- apply(res, 1, sd, na.rm = TRUE)
-  s.median <- median(s, na.rm = TRUE)
+  s <- apply(res, 1, stats::sd, na.rm = TRUE)
+  s.median <- stats::median(s, na.rm = TRUE)
   
   if(verbose) 
   {
@@ -5048,6 +5060,7 @@ cleanPopulation <- function(pop, clf)
 #' @description Sumarizes the results of an experiment object of the type 
 #' `obj$classifier` and `obj$crossval`. This is different from the digestMC(),
 #' which sumarizes a model collection obj$models
+#' @import ggplot2
 #' @param obj: The experiment object resulting from the learning process `fit()`
 #' @param penalty: A coefficient between 0 and 1, which is applied to penalize 
 #' the performance of models as a consequence of model-size. We use this to select
@@ -6349,6 +6362,7 @@ mergeResults <- function(list.results, sparsity = NULL, penalty = 0.001, best.k 
 #' Merge a list of cross validation scores form digest results
 #' 
 #' @import reshape2
+#' @import ggplot2
 #' @title mergeMeltImportanceCV
 #' @description mergeMeltImportanceCV returns a list of data frames that contain the feature importance of the different learners without any focus on sparsity.
 #' @param list.results.digest: a list of digest objects one for each learner used. For example, list(res.terda.digest, res.terga.digest, res.terbeam.digest) 
@@ -6768,7 +6782,7 @@ counter <- make.counter()
 # Comparative results (Blaise + Edi)
 ################################################################
 
-# Calcul des rangs et des modèles équivalet au meilleur
+# Computing the ranks of the models that are equivalent to the best
 compare.perf <- function(result, paired = FALSE, verbose = TRUE)
 {
   res <- apply(result, c(1, 2), mean, na.rm=T, na.last=FALSE, verbose = FALSE)
@@ -6827,7 +6841,7 @@ compare.perf <- function(result, paired = FALSE, verbose = TRUE)
 }
 
 
-# Calcul des rangs et des modèles équivalet au meilleur
+# Compute the ranks of the models that are equivalent to the best
 compare.perf2dim <- function(result, paired = TRUE, verbose = TRUE)
 {
   res <- apply(result, c(1), mean, na.rm=T, na.last=FALSE, verbose = FALSE)
@@ -6885,7 +6899,7 @@ compare.perf2dim <- function(result, paired = TRUE, verbose = TRUE)
 
 
 
-# Returnes le k le plus petit avec une accuracy équivalent à la meilleur
+# Returns the smallest k with an equivalent accuracy to the best model
 find.best.k <- function(res)
 {
   best.k <- which.max( apply(res, 1, mean, na.rm=TRUE) )
@@ -6898,7 +6912,7 @@ find.best.k <- function(res)
     
     if(is.nan(pval)) 
     {
-      print(paste("warning : t-test non apparié en i=",i))
+      print(paste("warning : t-test unpaired in i=",i))
       try(pval <- t.test(as.numeric(res[i,]),as.numeric(res[best.k,]),paired=F)$p.value, silent = TRUE)
       
       if(is.nan(pval)) 
@@ -6917,7 +6931,7 @@ find.best.k <- function(res)
 
 
 
-# # r = le taux d’erreur ; n = le nombre d’exemple sur lequel est estimé le taux d’erreur ; p le seuil de significativité
+# # r = the error rate ; n = the number of examples on which the error rate is estimated; p the significant threshold
 # conf.inter <- function (r, n, p=0.05)
 # {
 #   t = -qnorm(p/2)

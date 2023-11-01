@@ -76,7 +76,7 @@ rm(ip)
 ```{r load the packages, message=FALSE, warning=FALSE}
 # load the library
 library(predomics)
-library(ggplot2)
+library(tidyverse)
 library(gridExtra)
 library(pROC)
 library(reshape2)

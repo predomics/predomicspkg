@@ -1,34 +1,41 @@
 Package: predomics
 Type: Package
 Title: Interpretable Prediction in large Omics Dataests
-Version: 1.1.0
-Date: 2023-07-31
-Author: Edi Prifti, Lucas Robin, Shasha Cui, Blaise Hanczar, Yann Chevaleyre, Jean-Daniel Zucker
-Maintainer: Edi Prifti <edi.prifti@gmail.com>
+Version: 1.2.0
+Date: 2023-10-31
+Author: Edi Prifti, 
+        Eugeni Belda,
+        Lucas Robin, 
+        Shasha Cui, 
+        Blaise Hanczar, 
+        Yann Chevaleyre, 
+        Jean-Daniel Zucker
+Maintainer: Edi Prifti <edi.prifti@ird.fr>
 Depends:
     R (>= 2.15.0),
-    doSNOW
 Imports:
+    ggplot2,
     reshape2,
-    plyr,
+    logger,
+    data.table,
     BioQC,
     foreach,
     snow,
     doRNG,
+    doSNOW,
     yaml,
-    ggplot2,
+    cowplot,
+    patchwork,
     gridExtra,
     grid,
     gtools,
     RColorBrewer,
-    glmnet,
-    pROC,
     viridis,
+    pROC,  
+    caTools,
+    glmnet,
     kernlab,
     randomForest,
-    data.table,
-    cowplot,
-    patchwork,
     effsize
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
@@ -37,7 +44,7 @@ Description: The predomics package offers access to a novel framework implementi
     in metagenomics and other commensurable datasets. We introduce the BTR (BIN, TER, RATIO) languages that describe different 
     types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods 
     (SOTA) including RF, ENET and SVM.
-License: LICENSE
+License: GPL-3
 LazyData: TRUE
 RoxygenNote: 7.2.3
 Encoding: UTF-8

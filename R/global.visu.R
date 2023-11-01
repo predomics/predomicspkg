@@ -15,7 +15,10 @@
 # @author: Lucas Robin
 # @author: Yann Chevaleyre
 # @author: Jean-Daniel Zucker
-# @date: August 2016                                         
+# @date: August 2016                            
+# @date: October 2023
+
+
 ################################################################
 # CONTENTS
 # ========= PLOT EVALUATION RESULTS
@@ -834,6 +837,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 #' Plots the prevalence of a list of features in the whole dataset and per each class
 #'
 #' @description Plots the prevalence of a given number of features
+#' @import ggplot2
 #' @param features: a list of features or features indexes for which we wish to compute prevalence
 #' @param X: dataset where to compute the prevalence
 #' @param y: if provided it will also compute hte prevalence per each class (default:NULL)
@@ -915,6 +919,7 @@ plotPrevalence <- function(features, X, y, topdown = TRUE, main = "", plot = TRU
 #'
 #' @description Plots the abundance of a given number of features for each class and tests significance
 #' @import reshape2
+#' @import ggplot2
 #' @param features: a list of features or features indexes for which we wish to compute prevalence
 #' @param X: dataset where to compute the prevalence
 #' @param y: if provided it will also compute hte prevalence per each class (default:NULL)
@@ -925,7 +930,10 @@ plotPrevalence <- function(features, X, y, topdown = TRUE, main = "", plot = TRU
 #' @param col.bg: colors for the point fill (-1:deepskyblue1, 1:firebrick1)
 #' @return a ggplot object
 #' @export
-plotAbundanceByClass <- function(features, X, y, topdown = TRUE, main = "", plot = TRUE, col.pt = c("deepskyblue4", "firebrick4"), col.bg = c("deepskyblue1", "firebrick1"))
+plotAbundanceByClass <- function(features, X, y, topdown = TRUE, 
+                                 main = "", plot = TRUE, 
+                                 col.pt = c("deepskyblue4", "firebrick4"), 
+                                 col.bg = c("deepskyblue1", "firebrick1"))
 {
   check.X_y_w(X,y)
   
@@ -1243,6 +1251,7 @@ plotPopulation <- function(pop, X, y,
 #' @title Plots a model or a population of model objectsas barplots of scaled coefficients.
 #'
 #' @description Plots a model or a population of models as a barplots, representing each feature, the length being the coefficient
+#' @import ggplot2
 #' @param mod: a model to plot
 #' @param X: the data matrix with variables in the rows and observations in the columns
 #' @param y: the class vector
@@ -1952,6 +1961,7 @@ plotAUC <- function(score, y, main="", ci = TRUE, percent = TRUE)
 #'
 #' @description Analyze the results from a given classifier.
 #' @import pROC
+#' @import ggplot2
 #' @param mod: a predomics model object (default = NULL)
 #' @param score: this is the y^ of a given model
 #' @param y: the class to be predicted
@@ -3133,7 +3143,11 @@ makeFeatureAnnot <- function(pop, X, y, clf)
 #' @param layout: the network layout by default is circular (layout_in_circle) and will be a weighted Fruchterman-Reingold otherwise
 #' @return plots a graph
 #' @export
-makeFeatureModelPrevalenceNetworkCooccur <- function(pop.noz, feature.annot, alpha = 0.05, verbose = TRUE, layout = "circlular")
+makeFeatureModelPrevalenceNetworkCooccur <- function(pop.noz, 
+                                                     feature.annot, 
+                                                     alpha = 0.05, 
+                                                     verbose = TRUE, 
+                                                     layout = "circlular")
 {
   require(igraph)
   require(cooccur)
@@ -3200,7 +3214,7 @@ makeFeatureModelPrevalenceNetworkCooccur <- function(pop.noz, feature.annot, alp
   dsAll <- similarity.dice(gD, vids = V(gD), mode = "all")
   # The following function will transform a square matrix to an edge driven one and add values to each edge
   F1 <- function(x) {data.frame(dice = dsAll[which(V(gD)$name == as.character(x$from)), which(V(gD)$name == as.character(x$to))])}
-  library(plyr)
+  # library(plyr) => took this out to force changing to tidyr
   edges.ext <- ddply(edges, .variables=c("from", "to"), function(x) data.frame(F1(x))); dim(edges.ext)
   
   gD <- set.edge.attribute(gD, "similarity", index = E(gD), value = 0)
@@ -3248,7 +3262,11 @@ makeFeatureModelPrevalenceNetworkCooccur <- function(pop.noz, feature.annot, alp
 #' @param layout: the network layout by default is circular (layout_in_circle) and will be a weighted Fruchterman-Reingold otherwise
 #' @return plots a graph
 #' @export
-makeFeatureModelPrevalenceNetworkMiic <- function(pop.noz, feature.annot, cor.th = 0.3, verbose = TRUE, layout = "circlular")
+makeFeatureModelPrevalenceNetworkMiic <- function(pop.noz, 
+                                                  feature.annot, 
+                                                  cor.th = 0.3, 
+                                                  verbose = TRUE, 
+                                                  layout = "circlular")
 {
   require(igraph)
   require(miic)
@@ -3303,7 +3321,7 @@ makeFeatureModelPrevalenceNetworkMiic <- function(pop.noz, feature.annot, cor.th
   dsAll <- similarity.dice(gD, vids = V(gD), mode = "all")
   # The following function will transform a square matrix to an edge driven one and add values to each edge
   F1 <- function(x) {data.frame(dice = dsAll[which(V(gD)$name == as.character(x$from)), which(V(gD)$name == as.character(x$to))])}
-  library(plyr)
+  # library(plyr) => took this out to force changing to tidyr
   edges.ext <- ddply(edges, .variables=c("from", "to"), function(x) data.frame(F1(x))); dim(edges.ext)
   
   gD <- set.edge.attribute(gD, "similarity", index = E(gD), value = 0)

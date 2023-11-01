@@ -1297,23 +1297,22 @@ error.rate <- function(x,y,wb) {
 
 
 #######################################################################
-# Find the number of weights not yet integer.
-#
-# This method retunr a maximum number of weights of the model not yet integer.
-# @param x matrix or dataframe of predictors, of dimension n*p; each row is an observation vector.
-# @param y response variable (1 or -1)
-# @param nfolds k-folds cross-validation that we want test. Dedault value is 1.
-# @return An integer is number of coefficients not yet integer.
-# @param lb is the lower bound of coefficients
-# @param ub is the upper bound of coefficients
-# @param k.sparse is the sparsity (non-negative real value). Default value is \code{k.sparse = NULL} - no constraint.
-# @param gamma is the hinge loss parameter.. Defines the margin
-# @param vartype is the type of coefficients : \code{cplexAPI::CPX_INTEGER, cplexAPI::CPX_BINARY, cplexAPI::CPX_CONTINUOUS}. Default \code{vartype = cplexAPI::CPX_INTEGER}
-# @examples
-# library(PredOmics)
-# findk(DATAMETA1[, -1], DATAMETA1[, 1], nfolds = 1)
-# #15
-# findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  cplexAPI::CPX_CONTINUOUS, lb = -1.0, ub = 1.0)
+#' Find the number of weights not yet integer.
+#'
+#' This method return a maximum number of weights of the model not yet integer.
+#' @param x matrix or dataframe of predictors, of dimension n*p; each row is an observation vector.
+#' @param y response variable (1 or -1)
+#' @param nfolds k-folds cross-validation that we want test. Dedault value is 1.
+#' @return An integer is number of coefficients not yet integer.
+#' @param lb is the lower bound of coefficients
+#' @param ub is the upper bound of coefficients
+#' @param k.sparse is the sparsity (non-negative real value). Default value is \code{k.sparse = NULL} - no constraint.
+#' @param gamma is the hinge loss parameter.. Defines the margin
+#' @param vartype is the type of coefficients : \code{cplexAPI::CPX_INTEGER, cplexAPI::CPX_BINARY, cplexAPI::CPX_CONTINUOUS}. Default \code{vartype = cplexAPI::CPX_INTEGER}
+#' @examples
+#' library(PredOmics)
+#' findk(DATAMETA1[, -1], DATAMETA1[, 1], nfolds = 1)
+#' findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  cplexAPI::CPX_CONTINUOUS, lb = -1.0, ub = 1.0)
 findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  "real", lb = -1.0, ub = 1.0)
 {
   check.input(x = x, y = y, gamma = gamma, k.sparse = k.sparse, vartype = vartype)
@@ -1325,7 +1324,7 @@ findk <- function(x, y, nfolds = 1, gamma = 1, k.sparse = NULL, vartype =  "real
   v_k = c()
   count = 1
   if (nfolds == 1) {
-    wb <- buildlp(x,y, vartype = vartype, gamma = gamma, k.sparse = k.sparse, lb = lb, ub = ub)
+    wb <- buildlp(x, y, vartype = vartype, gamma = gamma, k.sparse = k.sparse, lb = lb, ub = ub)
     fidx = which(is.wholenumber(wb[-length(wb)]))
     fidx_res = c(1:dim_x2)[-fidx]
     v_k[count] = length(fidx_res)
@@ -1448,6 +1447,7 @@ terDA.rr <- function(w)
 
 # Compute AUC for terDA 
 # added the 20.9.2015
+#' @import caTools
 terDA.AUC <- function(wb, x, y){
   w_no_zero = which(wb[-length(wb)] != 0, arr.ind = TRUE)
   tAUC = 0

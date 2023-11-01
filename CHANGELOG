@@ -1,5 +1,10 @@
-* 17/05/2016: package creation and compilation
-* 18/05/2016: git project creation and merging of Lucas and Edi's version
-* 1/06/2016: New population (denseVect) for terGA and different rewritten operators.
-* 3/06/2016: Digesting and comparative plot capability added.
+* 31/10/2023: Version 1.2.0 numerous changes have been brought to the package to modernize it
 * 19/04/2019: First release version 1.0 after extensive recoding of backend and frontend functions.
+* 3/06/2016: Digesting and comparative plot capability added.
+* 1/06/2016: New population (denseVect) for terGA and different rewritten operators.
+* 18/05/2016: git project creation and merging of Lucas and Edi's version
+* 17/05/2016: package creation and compilation
+
+
+
+

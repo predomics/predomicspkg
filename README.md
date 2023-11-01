@@ -13,10 +13,11 @@ The **predomics** package contains three methods for suppervised learning based 
 
 ```{r}
 ## install dependencies
-install.packages(c("doSNOW", "foreach", "snow", "doRNG", "gtools", "glmnet", "pROC", "viridis", "kernlab", "randomForest"))
+install.packages(c("doSNOW", "foreach", "snow", "doRNG", "gtools", "glmnet", "pROC", "viridis", "kernlab", "randomForest","effsize"))
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("BioQC)
+BiocManager::install("BioQC")
 # install.packages("testthat")
 # install.packages("roxygen2")
 ```
+

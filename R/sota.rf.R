@@ -171,7 +171,7 @@ sota.rf_fit <- function(X, y, clf) {
   # compute the feature correlation for feature selection
   #feature.cor <- filterfeaturesK(data = t(x), trait = y, k = nrow(X), sort = TRUE) # to avoid having to recompute this all the time
   
-  # initialize some parameteres
+  # initialize some parameters
   if(is.null(clf$params$mtry))
   {
     clf$params$mtry = if(!is.null(y) && !is.factor(y))
@@ -206,19 +206,19 @@ sota.rf_fit <- function(X, y, clf) {
     ### Launch randomForest with the parameters from the clf
     set.seed(clf$params$seed)
     rf <- randomForest(x = x.reduced, y=y,
-                       ntree=clf$params$ntree,
-                       mtry=clf$params$mtry, 
-                       replace=clf$params$replace, 
-                       classwt=clf$params$classwt,  
+                       ntree = clf$params$ntree,
+                       mtry = clf$params$mtry, 
+                       replace = clf$params$replace, 
+                       classwt = clf$params$classwt,  
                        maxnodes = clf$params$maxnodes,
-                       importance=clf$params$importance, 
-                       localImp=clf$params$localImp,  
-                       nPerm=nPerm,
-                       norm.votes=clf$params$norm.votes, 
-                       do.trace=clf$params$do.trace, 
-                       keep.forest=clf$params$keep.forest, 
-                       corr.bias=clf$params$corr.bias, 
-                       keep.inbag=clf$params$keep.inbag
+                       importance = clf$params$importance, 
+                       localImp = clf$params$localImp,  
+                       nPerm = nPerm,
+                       norm.votes = clf$params$norm.votes, 
+                       do.trace = clf$params$do.trace, 
+                       keep.forest = clf$params$keep.forest, 
+                       corr.bias = clf$params$corr.bias, 
+                       keep.inbag = clf$params$keep.inbag
     )
     
     
@@ -269,7 +269,7 @@ sota.rf_fit <- function(X, y, clf) {
 }
 
 
-# NOTE to print a random forrest object we used the code written by Rafael Zambrano here in stacks exchange https://stats.stackexchange.com/questions/41443/how-to-actually-plot-a-sample-tree-from-randomforestgettree
+# NOTE to print a random forest object we used the code written by Rafael Zambrano here in stacks exchange https://stats.stackexchange.com/questions/41443/how-to-actually-plot-a-sample-tree-from-randomforestgettree
 
 #**************************
 #return the rules of a tree

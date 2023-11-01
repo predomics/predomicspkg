@@ -1,24 +1,39 @@
 #' Visualize a summary of an experiment/set of experiments
 #'
-#' @description Visualization of 4 panels corresponding to feature prevalence in FBM, feature importance, feature prevalence in groups, effect sizes of feature abundances vs y-variable (cliff's delta for binary y; spearman rho for continuous y)
-#' Can be applied to single classification task or to multiple classification tasks carried out on the same X-y dataset
-#' @param clf_res The result of an experiment or multiple experiments (list of experiments)
-#' @param X The feature table used as input of fit function behind experiments in clf_res
+#' @description Visualization of 4 panels corresponding to feature prevalence 
+#' in FBM, feature importance, feature prevalence in groups, effect sizes of 
+#' feature abundances vs y-variable (cliff's delta for binary y; 
+#' spearman rho for continuous y). Can be applied to single classification task 
+#' or to multiple classification tasks carried out on the same X-y dataset
+#' @import ggplot2
+#' @param clf_res The result of an experiment or multiple experiments 
+#' (list of experiments)
+#' @param X The feature table used as input of fit function behind experiments 
+#' in clf_res
 #' @param y The target class (binary/continuous)
 #' @param makeplot  make a pdf file with the resulting plots (default:TRUE)
-#' @param saveplotobj make a .Rda file with a list of the individual plots (default:TRUE)
+#' @param saveplotobj make a .Rda file with a list of the individual plots 
+#' (default:TRUE)
 #' @param name the suffix of the pdf file (default:"")
 #' @param verbose print out informaiton
 #' @param pdf.dims dimensions of the pdf object (default: c(w = 25, h = 20))
-#' @param filter.cv.prev keep only features found in at least (default: 0.25, i.e 25 percent) of the cross validation experiments 
-#' @param nb.top.features the maximum number (default: 100) of most important features to be shown.
-#' If the number of features in FBM < nb.top.features, the number of features in FBM will be shown instead
-#' @param scaled.importance the scaled importance is the importance multipied by the prevalence in the folds. If (default = TRUE) this will be used, the mean mda 
-#' will be scaled by the prevalence of the feature in the folds and ordered subsequently 
-#' @param k_penalty the sparsity penalty needed to select the best models of the population (default:0.75/100).
-#' @param k_max select the best population below a given threshold. If (default:0) no selection is performed.
+#' @param filter.cv.prev keep only features found in at least (default: 0.25, 
+#' i.e 25 percent) of the cross validation experiments 
+#' @param nb.top.features the maximum number (default: 100) of most important 
+#' features to be shown.
+#' If the number of features in FBM < nb.top.features, the number of features 
+#' in FBM will be shown instead
+#' @param scaled.importance the scaled importance is the importance multiplied 
+#' by the prevalence in the folds. If (default = TRUE) this will be used, the 
+#' mean mda will be scaled by the prevalence of the feature in the folds and 
+#' ordered subsequently 
+#' @param k_penalty the sparsity penalty needed to select the best models of 
+#' the population (default:0.75/100).
+#' @param k_max select the best population below a given threshold. 
+#' If (default:0) no selection is performed.
 #'
-#' @return plots if makeplot is FALSE; plot.list list object saved locally with individual plots (including source data) if saveplotobj
+#' @return plots if makeplot is FALSE; plot.list list object saved locally with 
+#' individual plots (including source data) if saveplotobj
 #' @export
 #'
 #' @examples
@@ -26,7 +41,7 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
                                          X, 
                                          y, 
                                          makeplot = TRUE, 
-                                         saveplotobj=TRUE, 
+                                         saveplotobj = TRUE, 
                                          name = "", 
                                          verbose = TRUE, 
                                          pdf.dims = c(width = 25, height = 20), 
@@ -43,7 +58,7 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
   {
     if(any(!unlist(lapply(clf_res, isExperiment))))
     {
-      stop("analyzeLearningFeatures: please provide a valid experiment results!")  
+      stop("analyzeImportanceFeaturesFBM: please provide a valid experiment results!")  
     }
     multiple.experiments <- TRUE
     
@@ -71,29 +86,36 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     cat(paste("... Estimating mode: ", mode,"\n"))
   }else
   {
-    stop("analyzeImportanceFeatures: mode not founding stopping ...")
+    stop("analyzeImportanceFeaturesFBM: mode not founding stopping ...")
   }
   
+  # If this is a single experiment
   if(!multiple.experiments)
   {
     # get the final population
     pop <- modelCollectionToPopulation(clf_res$classifier$models)
     if(verbose) print(paste("There are",length(pop), "models in this population"))
     # select the best population
-    pop <- selectBestPopulation(pop = pop, score = clf_res$classifier$params$evalToFit, p = 0.05, k_penalty = k_penalty, k_max = k_max)
-    if(verbose) print(paste("There are",length(pop), "models in this population after selection of the best"))
+    pop <- selectBestPopulation(pop = pop, 
+                                score = clf_res$classifier$params$evalToFit, 
+                                p = 0.05, k_penalty = k_penalty, k_max = k_max)
+    if(verbose) print(paste("There are",length(pop), 
+                            "models in this population after selection of the best"))
     
     if(length(pop) == 1)
     {
-      print("analyzeImportanceFeatures: only one model after filtering. Plot can not be built... returing empty handed.")
+      print("analyzeImportanceFeatures: only one model after filtering. 
+            Plot can not be built... returing empty handed.")
       return(NULL)
     }
     
     # get the population information into a dataframe
     pop.df <- populationToDataFrame(pop = pop)
     # get the feature to model dataframe
-    pop.noz <- listOfModelsToDenseCoefMatrix(clf = clf_res$classifier, X = X, y = y, list.models = pop)
-    if(verbose) print(paste("Pop noz object is created with", nrow(pop.noz), "features and", ncol(pop.noz), "models"))
+    pop.noz <- listOfModelsToDenseCoefMatrix(clf = clf_res$classifier, 
+                                             X = X, y = y, list.models = pop)
+    if(verbose) print(paste("Pop noz object is created with", nrow(pop.noz), 
+                            "features and", ncol(pop.noz), "models"))
     
     # make the feature annots
     fa <- makeFeatureAnnot(pop = pop, X = X, y = y, clf = clf_res$classifier)
@@ -122,22 +144,30 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     feat.import.dcast <- data.table::dcast(data = feat.import$summary, formula = feature~method, value.var="value")
     rownames(feat.import.dcast) <- feat.import.dcast$feature ; feat.import.dcast <- feat.import.dcast[,-1,drop=FALSE]
     feat.import.dcast$meanval <- rowMeans(feat.import.dcast, na.rm = TRUE)
-    feat.import.dcast$feature <- factor(rownames(feat.import.dcast), levels=rownames(feat.import.dcast)[order(feat.import.dcast$meanval, decreasing = TRUE)])
+    feat.import.dcast$feature <- factor(rownames(feat.import.dcast), levels = rownames(feat.import.dcast)[order(feat.import.dcast$meanval, decreasing = TRUE)])
     
-    #Do the selection of features from feat.import.dcast
+    # Do the selection of features from feat.import.dcast
     features.import <- feat.import.dcast[rownames(pop.noz),]
     features.import$feature <- droplevels(features.import$feature)
-    if(nrow(features.import)>nb.top.features) #if the number of features in FBM higher than the nb.top.features, select the top nb.top.features in FBM based on feature importance
+    
+    # if the number of features in FBM is higher than the nb.top.features, 
+    # select the top nb.top.features in FBM based on feature importance
+    if(nrow(features.import) > nb.top.features) 
     {
-      print(paste(nrow(features.import), " features in FBM vs ", nb.top.features, " nb.top.features; select the ", nb.top.features, " top features with higher feature importance", sep = ""))
+      print(paste(nrow(features.import), " features in FBM vs ", nb.top.features, 
+                  " nb.top.features; select the ", nb.top.features, 
+                  " top features with higher feature importance", sep = ""))
       features.import.vec <- levels(features.import$feature)[1:nb.top.features]
-    } else #else, keep all features in FBM
+    } else # else, keep all features in FBM
     {
-      print(paste(nrow(features.import), " features in FBM vs ", nb.top.features, " nb.top.features; reporting all features in FBM", sep = ""))
+      print(paste(nrow(features.import), " features in FBM vs ", nb.top.features, 
+                  " nb.top.features; reporting all features in FBM", sep = ""))
       features.import.vec <- levels(features.import$feature)
     }
     
-    #Build the feature prevalence plot
+    # ----------------------------------
+    # Build the feature prevalence plot
+    # ----------------------------------
     g1.df <- data.frame(pop.noz)
     g1.df$feature <- rownames(g1.df) ; g1.df <- melt(g1.df)
     g1.df$learner <- unlist(lapply(strsplit(as.character(g1.df$variable), split="_"), function(x){x[1]}))
@@ -162,7 +192,10 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
             axis.text.x = element_blank(),
             axis.ticks.x = element_blank())
     
+    
+    # ----------------------------------
     # get the importance graphic
+    # ----------------------------------
     g6.df <- feat.import$summary
     g6.df <- g6.df[g6.df$feature %in% features.import.vec,]
     g6.df$feature <- factor(g6.df$feature, levels=rev(features.import.vec))
@@ -192,7 +225,9 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     g6 <- g6 + theme(axis.text.y = element_blank(),
                      strip.background = element_rect(fill = NA))
     
+    # ----------------------------------
     # get the prevalence graphic
+    # ----------------------------------
     if(mode == "regression")
     {
       g7 <- plotPrevalence(features = features.import.vec, X, y = NULL)
@@ -203,13 +238,17 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     g7 <- g7 + theme(axis.title.y=element_blank(),
                      axis.text.y=element_blank(),
                      axis.ticks.y=element_blank())
+    
+    
+    # ----------------------------------
     # get the effect size graphic
+    # ----------------------------------
     g8.df <- computeEffectSizes(X = X, y = y, mode = mode)
     #subset g8 to features.import
     g8.df <- g8.df[g8.df$feature %in% features.import.vec,]
     g8.df$feature <- factor(g8.df$feature, levels=rev(features.import.vec))
-    #add FDR adjustment + labels
-    if(mode=="classification")
+    # add FDR adjustment + labels
+    if(mode == "classification")
     {
       g8.df$fdr <- stats::p.adjust(g8.df$pval.wilcox, method = "BH")
       g8.df$label <- ifelse(g8.df$fdr<0.05,"**", ifelse(g8.df$pval.wilcox<0.05,"*",""))
@@ -224,7 +263,7 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
         theme(axis.text.y = element_blank(),
               axis.title.y = element_blank(),
               legend.position = "none")
-    } else if(mode=="regression")
+    } else if(mode == "regression")
     {
       g8.df$fdr <- stats::p.adjust(g8.df$pval, method = "BH")
       g8.df$label <- ifelse(g8.df$fdr<0.05,"**", ifelse(g8.df$pval<0.05,"*",""))
@@ -242,31 +281,35 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     }
     
     ##Build a a list with plots to visualize
-    plot.list <- list("featprevFBM"=g1,
-                      "featImp"=g6,
-                      "effectSizes"=g8,
-                      "featPrevGroups"=g7)
-    #Save plotlist object if specified
+    plot.list <- list("featprevFBM" = g1,
+                      "featImp" = g6,
+                      "effectSizes" = g8,
+                      "featPrevGroups" = g7)
+    # Save plotlist object if specified
     if(saveplotobj)
     {
       save(plot.list, file=paste("population features",name,".Rda", sep=""))
     }
-    #plotting statements
+    
+    
+    # plotting statements
     if(makeplot)
     {
       if(verbose) print(paste("Making plots in a dedicated pdf"))
-      #Set the layout for patchwork plotting
+      # Set the layout for patchwork plotting
       layout <- "
       AAABBCD
       "
-      #Set the file name
+      # Set the file name
       fname <- paste("population features",name,".pdf", sep="")
-      #Build the patchwork plot
+      # Build the patchwork plot
       fname.plot <- patchwork::wrap_plots(plot.list, design = layout)
-      #Save the plot with cowplot::ggsave2
+      # Save the plot with cowplot::ggsave2
       cowplot::ggsave2(filename = fname, 
-                       plot = fname.plot, width = as.numeric(pdf.dims[1]), height = as.numeric(pdf.dims[2]))
-      #Return the plot
+                       plot = fname.plot, 
+                       width = as.numeric(pdf.dims[1]), 
+                       height = as.numeric(pdf.dims[2]))
+      # Return the plot
       return(patchwork::wrap_plots(plot.list, design = layout))
     }else
     {
@@ -359,7 +402,9 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
       features.import.vec <- levels(features.import$feature)
     }
     
-    #Build the feature prevalence plot
+    # ----------------------------------
+    # Build the feature prevalence plot
+    # ----------------------------------
     g1.df <- pop.list.fbm.fa.popnoz.df[pop.list.fbm.fa.popnoz.df$feature %in% features.import.vec,]
     g1.df$feature <- factor(g1.df$feature, levels=rev(features.import.vec))
     g1.col <- c("deepskyblue1","white","firebrick1")
@@ -375,7 +420,9 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
             axis.text.x = element_blank(),
             axis.ticks.x = element_blank())
     
+    # ----------------------------------
     # get the importance graphic
+    # ----------------------------------
     g6.df <- feat.import$summary
     g6.df <- g6.df[g6.df$feature %in% features.import.vec,]
     g6.df$feature <- factor(g6.df$feature, levels=rev(features.import.vec))
@@ -410,7 +457,9 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     g6 <- g6 + theme(axis.text.y = element_blank(), 
                      strip.background = element_rect(fill = NA))
     
+    # ----------------------------------
     # get the prevalence graphic
+    # ----------------------------------
     if(mode == "regression")
     {
       g7 <- plotPrevalence(features = features.import.vec, X, y = NULL)
@@ -421,20 +470,23 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
     g7 <- g7 + theme(axis.title.y=element_blank(),
                      axis.text.y=element_blank(),
                      axis.ticks.y=element_blank())
+    
+    # ----------------------------------
     # get the effect size graphic
+    # ----------------------------------
     g8.df <- computeEffectSizes(X = X, y = y, mode = mode)
     #subset g8 to features.import
     g8.df <- g8.df[g8.df$feature %in% features.import.vec,]
     g8.df$feature <- factor(g8.df$feature, levels=rev(features.import.vec))
     #add FDR adjustment + labels
-    if(mode=="classification")
+    if(mode == "classification")
     {
       g8.df$fdr <- stats::p.adjust(g8.df$pval.wilcox, method = "BH")
-      g8.df$label <- ifelse(g8.df$fdr<0.05,"**", ifelse(g8.df$pval.wilcox<0.05,"*",""))
+      g8.df$label <- ifelse(g8.df$fdr<0.05,"**", ifelse(g8.df$pval.wilcox < 0.05,"*",""))
       g8 <- ggplot(g8.df, aes(x=feature, y=cdelta, fill=cdelta)) + 
         geom_bar(stat = "identity") + 
         geom_text(aes(label=label)) + 
-        scale_fill_gradient(low = "deepskyblue1", high = "firebrick1", limits=c(-1,1)) + 
+        scale_fill_gradient(low = "deepskyblue1", high = "firebrick1", limits = c(-1,1)) + 
         ylab("Cliff's delta 1 vs. -1") + 
         ggtitle("") + 
         coord_flip() + 
@@ -442,14 +494,14 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
         theme(axis.text.y = element_blank(),
               axis.title.y = element_blank(),
               legend.position = "none")
-    } else if(mode=="regression")
+    } else if(mode == "regression")
     {
       g8.df$fdr <- stats::p.adjust(g8.df$pval, method = "BH")
       g8.df$label <- ifelse(g8.df$fdr<0.05,"**", ifelse(g8.df$pval<0.05,"*",""))
       g8 <- ggplot(g8.df, aes(x=feature, y=rho, fill=rho)) + 
         geom_bar(stat = "identity") + 
         geom_text(aes(label=label)) + 
-        scale_fill_gradient(low = "deepskyblue1", high = "firebrick1", limits=c(-1,1)) + 
+        scale_fill_gradient(low = "deepskyblue1", high = "firebrick1", limits = c(-1,1)) + 
         ylab("Spearman Rho vs. y var") + 
         ggtitle("") + 
         coord_flip() + 
@@ -499,6 +551,7 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
 
 #' Compute effect sizes for features in binary classification/regression tasks
 #'
+#' @import effsize
 #' @param X The X matrix (rows=features; columns=samples)
 #' @param y The y vector of sample class (-1,1 in binary classification; continuous variable in regression)
 #' @param mode classification or regression
@@ -509,9 +562,9 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
 #' @export
 #'
 #' @examples
-computeEffectSizes <- function(X,y,mode)
+computeEffectSizes <- function(X, y, mode)
 {
-  if(mode=="classification")
+  if(mode == "classification")
   {
     #Transform y to factor
     y.factor <- factor(y, levels=c(1,-1))
@@ -527,7 +580,7 @@ computeEffectSizes <- function(X,y,mode)
     X.melt <- as.data.frame(X)
     X.melt$feature <- rownames(X) ; X.melt <- melt(X.melt)
     X.melt <- merge(X.melt, y.factor, by.x="variable", by.y=0, all.x=TRUE)
-    #Do the univariate tests + cliff delta calculations
+    # Do the univariate tests + cliff delta calculations
     X.melt.tests <- list()
     for(v in unique(X.melt$feature))
     {
@@ -540,7 +593,7 @@ computeEffectSizes <- function(X,y,mode)
     X.melt.tests <- do.call("rbind", X.melt.tests)
     rownames(X.melt.tests) <- seq(1,nrow(X.melt.tests))
     return(X.melt.tests)
-  } else if(mode=="regression")
+  } else if(mode == "regression")
   {
     y.cont <- y
     names(y.cont) <- colnames(X)

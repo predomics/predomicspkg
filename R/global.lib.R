@@ -15,7 +15,9 @@
 # @author: Lucas Robin
 # @author: Yann Chevaleyre
 # @author: Jean-Daniel Zucker
-# @date: August 2016                                         
+# @date: August 2016    
+# @date: November 2023                                         
+
 ################################################################
 # CONTENTS
 # ========= COMPUTING MODEL OBJECTS, SCORES, ERRORS...
@@ -4946,7 +4948,7 @@ filterNoSignal <- function(X, side = 1, threshold = "auto", verbose = FALSE)
     # ind <- (c(x[,2],0)-c(0,x[,2]))[1001] *-1 # first derivate
     ind <- (c(x[,2],0,0) + c(0,0,x[,2]) - 2*c(0,x[,2],0)) # second derivate
     d2 <- max(ind[-c(1,2)])
-    thresh <- median(s) / d2
+    thresh <- stats::median(s) / d2
     if(verbose) print(paste("The best automatic threshold is", thresh))
   }else if(is.numeric(threshold))
   {

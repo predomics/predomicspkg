@@ -1,5 +1,3 @@
-man/
-debug/
 .Rproj.user
 .RData
 .Ruserdata
@@ -11,3 +9,6 @@ vignettes/*_cache
 #NAMESPACE
 Profiling_*
 *.yml
+man/
+debug
+pkgdown

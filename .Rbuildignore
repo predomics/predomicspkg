@@ -5,3 +5,7 @@ debug
 ..Rcheck
 ^vignettes/PredomicsPlotting\.Rmd$
 ^vignettes/vignette\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

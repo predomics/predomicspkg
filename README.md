@@ -1,10 +1,23 @@
 # Predomics - Interpretable machine learning for omics data
 
-The **predomics** package offers access to an original Machine Learning framework implementing several heuristics that allow discovering sparse and interpretable models in large datasets. These models are efficient and adapted for classification and regression tasks in metagenomics and other datasets with commensurable variables. We introduce the custom BTR (BIN, TER, RATIO) languages that describe different types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods (SOTA) including RF, ENET and SVM. The `predomics` package started in 2015 and has evolved quickly since. A major improvement came in 2023. The package comes also with **predomicsapp**, a R Shiny application for easy training and exploration of results.
+The **predomics** package offers access to an original Machine Learning framework 
+implementing several heuristics that allow discovering sparse and interpretable 
+models in large datasets. These models are efficient and adapted for 
+classification and regression tasks in metagenomics and other datasets with 
+commensurable variables. We introduce the custom BTR (BIN, TER, RATIO) languages 
+that describe different types of associations between variables. Moreover, 
+in the same framework we implemented several state-of-the-art methods (SOTA) 
+including RF, ENET and SVM. The `predomics` package started in 2015 and has 
+evolved quickly since. A major improvement came in 2023. The package comes also 
+with **predomicsapp**, a R Shiny application for easy training and exploration 
+of results.
 
 ## Badges
 
-![R Package](https://github.com/predomics/predomicspkg/workflows/R/badge.svg) ![License](https://img.shields.io/github/license/predomics/predomicspkg) ![GitHub issues](https://img.shields.io/github/issues/predomics/predomicspkg) [![GitHub forks](https://img.shields.io/github/forks/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/network/members) [![GitHub stars](https://img.shields.io/github/stars/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/stargazers)
+![R Package](https://github.com/predomics/predomicspkg/workflows/R/badge.svg) 
+![License](https://img.shields.io/github/license/predomics/predomicspkg) 
+![GitHub issues](https://img.shields.io/github/issues/predomics/predomicspkg) 
+[![GitHub forks](https://img.shields.io/github/forks/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/network/members) [![GitHub stars](https://img.shields.io/github/stars/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/stargazers)
 
 ## Table of Contents
 

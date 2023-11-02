@@ -6,7 +6,7 @@
 # See https://github.com/r-lib/actions/tree/master/examples#readme for
 # additional example workflows available for the R community.
 
-name: R
+name: R build
 
 on:
   push:
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   build:
-    if: "contains(github.event.head_commit.message, 'run build')"
+    if: "contains(github.event.head_commit.message, 'deploy')"
     runs-on: macos-latest
     strategy:
       matrix:

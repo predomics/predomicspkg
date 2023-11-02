@@ -45,4 +45,4 @@ jobs:
         with:
           clean: false
           branch: gh-pages
-          folder: pkgdown
+          folder: pkgdown-site

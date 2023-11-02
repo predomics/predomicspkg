@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 debug
+pkgdown-site
 .Rcheck
 ..Rcheck
 ^vignettes$

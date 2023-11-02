@@ -14,8 +14,8 @@ of results.
 
 ## Badges
 
-![R Package](https://github.com/predomics/predomicspkg/workflows/R/badge.svg) 
-![License](https://img.shields.io/github/license/predomics/predomicspkg) 
+![R Package](https://github.com/predomics/predomicspkg/workflows/R/badge.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub issues](https://img.shields.io/github/issues/predomics/predomicspkg) 
 [![GitHub forks](https://img.shields.io/github/forks/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/network/members) [![GitHub stars](https://img.shields.io/github/stars/predomics/predomicspkg?style=social)](https://github.com/predomics/predomicspkg/stargazers)
 

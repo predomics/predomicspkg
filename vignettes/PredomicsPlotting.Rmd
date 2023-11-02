@@ -22,7 +22,7 @@ This vignette will shown how to use several functions that allows to visualize t
 Here we start with the cirrhosis train data available in predomics, for which we would like to compare the features retained in the FBM derived from *terinter* and *biniter* models learned with the Terga2 learner. For this purpose, we start by building a classifier for the bininter experiment and run the experiment with the *fit* function, saving the results in the *res_clr_bininter* object.
 
 ```{r}
-library(devtools)
+# library(devtools)
 library(reshape2)
 library(plyr)
 library(ggplot2)

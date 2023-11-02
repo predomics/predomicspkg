@@ -51,7 +51,7 @@ A *predomics* model is coded in R as a S3 object, which contains a certain numbe
 ## Installing and loading `predomics`
 `predomics` package is available on Integromics' GitLab and can be installed on your computer through the following instructions. For this first is needed the `devtools` package if not already installed. Finally the package will be loaded to be used.
 
-```{r install packages, eval=FALSE, message=F, warning=FALSE, include=FALSE, paged.print=TRUE}
+```{r install packages, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=TRUE}
 # Load "devtools" library (install it if needed)
 ip <- installed.packages()
 
@@ -76,7 +76,7 @@ rm(ip)
 ```{r load the packages, message=FALSE, warning=FALSE}
 # load the library
 library(predomics)
-library(tidyverse)
+library(ggplot2)
 library(gridExtra)
 library(pROC)
 library(reshape2)

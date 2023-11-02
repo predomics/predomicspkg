@@ -11,7 +11,6 @@ Depends:
 Imports:
     ggplot2,
     reshape2,
-    logger,
     data.table,
     foreach,
     snow,
@@ -31,7 +30,7 @@ Imports:
     kernlab,
     randomForest,
     effsize
-Suggests: knitr, rmarkdown, testthat
+Suggests: knitr, rmarkdown, testthat, logger, devtools
 VignetteBuilder: knitr
 Description: The predomics package offers access to a novel framework implementing several heuristics that allow finding
     sparse and interpretable models in large datasets. These models are efficient and adopted for classification and regression 

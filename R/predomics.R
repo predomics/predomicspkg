@@ -74,9 +74,9 @@ fit <- function(X,
   
   if (!is.matrix(X))
   {
-    # cat("... Database X is not a matrix! Converting ...\n")
+    cat("... Database X is not a matrix! Converting ...\n")
     
-    log_info("... Database X is not a matrix! Converting ...")
+    # log_info("... Database X is not a matrix! Converting ...")
     
     # transforming to dataframe first will make sure to keep the dimnames such as for instance when it is sparse table or otu_table (phyloseq)
     X <- as.matrix(as.data.frame(X))

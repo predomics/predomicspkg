@@ -33,7 +33,9 @@ jobs:
       - name: Install BasicTeX
         run: |
           brew install --cask basictex
-          sudo /usr/local/texlive/2021basic/bin/x86_64-darwin/tlmgr path add
+        shell: bash
+      - name: Add TeX Live to PATH
+        run: echo "/usr/local/texlive/2023/bin/universal-darwin/tlmgr" >> $GITHUB_PATH
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))

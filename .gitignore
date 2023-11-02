@@ -5,6 +5,7 @@ debug/
 .Ruserdata
 .Rhistory
 ..Rcheck/
+R/.DS_Store
 desktop.ini
 vignettes/*_cache
 #NAMESPACE

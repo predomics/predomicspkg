@@ -3,3 +3,5 @@
 debug
 .Rcheck
 ..Rcheck
+^vignettes/PredomicsPlotting\.Rmd$
+^vignettes/vignette\.Rmd$

@@ -21,16 +21,16 @@ of results.
 
 ## Table of Contents
 
-1.  [Installation](docs/Installation.md)
-2.  [Usage](docs/Usage.md)
-3.  [Features](docs/Features.md)
-4.  [Screenshots](docs/Screenshots.md)
-5.  [Technologies](docs/Technologies.md)
-6.  [Contributing](CONTRIBUTING.md)
+1.  [Installation](inst/doc/Installation.html)
+2.  [Usage](inst/doc/Usage.html)
+3.  [Features](inst/doc/Features.html)
+4.  [Screenshots](inst/doc/Screenshots.html)
+5.  [Technologies](inst/doc/Technologies.html)
+6.  [Contributing](CONTRIBUTING.html)
 7.  [License](LICENSE)
-8.  [Authors](docs/Authors.md)
-9.  [Contact](docs/Contact.md)
-10. [FAQs](docs/FAQs.md)
+8.  [Authors](inst/doc/Authors.html)
+9.  [Contact](inst/doc/Contact.html)
+10. [FAQs](inst/doc/FAQs.html)
 
 
 ## Overview

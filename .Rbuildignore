@@ -3,8 +3,8 @@
 debug
 .Rcheck
 ..Rcheck
-^vignettes/PredomicsPlotting\.Rmd$
-^vignettes/vignette\.Rmd$
+^vignettes$
+^vignettes_disabled$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$

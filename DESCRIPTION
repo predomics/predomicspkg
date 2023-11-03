@@ -3,8 +3,9 @@ Type: Package
 Title: Interpretable Prediction in Omics Data
 Version: 1.2.0
 Date: 2023-10-31
-Author: Edi Prifti, 
-        Jean-Daniel Zucker
+Author: Edi Prifti, Jean-Daniel Zucker, Yann Chevaleyre, Blaise Hanczar,
+        Eugeni Belda, Lucas Robin, Shasha Cui, Magali Cousin Thorez, 
+        Youcef Sklab, Gaspar Roy
 Maintainer: Edi Prifti <edi.prifti@ird.fr>
 Depends:
     R (>= 2.15.0),

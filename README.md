@@ -1,6 +1,6 @@
 # Predomics - Interpretable machine learning for omics data
 
-![](man/figures/illustration2.png)
+![DALL-E3's view of PredOmics](man/figures/illustration4.png)
 
 The **predomics** package offers access to an original Machine Learning framework implementing several heuristics that allow discovering sparse and interpretable models in large datasets. These models are efficient and adapted for classification and regression tasks in metagenomics and other datasets with commensurable variables. We introduce the custom BTR (BIN, TER, RATIO) languages that describe different types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods (SOTA) including RF, ENET and SVM. The `predomics` package started in 2015 and has evolved quickly since. A major improvement came in 2023. The package comes also with **predomicsapp**, a R Shiny application for easy training and exploration of results.
 
@@ -10,16 +10,16 @@ The **predomics** package offers access to an original Machine Learning framewor
 
 ## Table of Contents
 
-1.  [Installation](Installation.html)
-2.  [Usage](Usage.html)
-3.  [Features](Features.html)
-4.  [Screenshots](Screenshots.html)
-5.  [Technologies](Technologies.html)
-6.  [Contributing](Contributing.html)
-7.  [License](LICENSE-text.html)
-8.  [Authors](Authors.html)
-9.  [Contact](Contact.html)
-10. [FAQs](FAQs.html)
+1.  [Installation](articles/Installation.html)
+2.  [Usage](articles/Usage.html)
+3.  [Features](articles/Features.html)
+4.  [Screenshots](articles/Screenshots.html)
+5.  [Technologies](articles/Technologies.html)
+6.  [Contributing](articles/Contributing.html)
+7.  [License](articles/LICENSE-text.html)
+8.  [Authors](articles/Authors.html)
+9.  [Contact](articles/Contact.html)
+10. [FAQs](articles/FAQs.html)
 
 ## Overview
 

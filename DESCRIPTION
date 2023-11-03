@@ -9,27 +9,9 @@ Maintainer: Edi Prifti <edi.prifti@ird.fr>
 Depends:
     R (>= 2.15.0),
 Imports:
-    ggplot2,
-    reshape2,
-    data.table,
-    foreach,
-    snow,
-    doRNG,
-    doSNOW,
-    yaml,
-    cowplot,
-    patchwork,
-    gridExtra,
-    grid,
-    gtools,
-    RColorBrewer,
-    viridis,
-    pROC,  
-    caTools,
-    glmnet,
-    kernlab,
-    randomForest,
-    effsize
+    ggplot2, reshape2, data.table, foreach, snow, doRNG, doSNOW, yaml, cowplot,
+    patchwork, gridExtra, grid, gtools, RColorBrewer, viridis, pROC, caTools,
+    glmnet, kernlab, randomForest, effsize
 Suggests: knitr, rmarkdown, testthat, logger, devtools
 VignetteBuilder: knitr
 Description: The predomics package offers access to a novel framework implementing several heuristics that allow finding
@@ -37,7 +19,7 @@ Description: The predomics package offers access to a novel framework implementi
     in metagenomics and other commensurable datasets. We introduce the BTR (BIN, TER, RATIO) languages that describe different 
     types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods 
     (SOTA) including RF, ENET and SVM.
-License: GPL-3
+License: GPL-3 + file LICENSE
 LazyData: TRUE
 RoxygenNote: 7.2.3
 Encoding: UTF-8

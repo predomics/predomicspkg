@@ -10,16 +10,16 @@ The **predomics** package offers access to an original Machine Learning framewor
 
 ## Table of Contents
 
-1.  [Installation](inst/doc/Installation.html)
-2.  [Usage](inst/doc/Usage.html)
-3.  [Features](inst/doc/Features.html)
-4.  [Screenshots](inst/doc/Screenshots.html)
-5.  [Technologies](inst/doc/Technologies.html)
+1.  [Installation](Installation.html)
+2.  [Usage](Usage.html)
+3.  [Features](Features.html)
+4.  [Screenshots](Screenshots.html)
+5.  [Technologies](Technologies.html)
 6.  [Contributing](Contributing.html)
 7.  [License](LICENSE-text.html)
-8.  [Authors](inst/doc/Authors.html)
-9.  [Contact](inst/doc/Contact.html)
-10. [FAQs](inst/doc/FAQs.html)
+8.  [Authors](Authors.html)
+9.  [Contact](Contact.html)
+10. [FAQs](FAQs.html)
 
 ## Overview
 

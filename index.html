@@ -53,6 +53,9 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="articles/index.html">Articles</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -70,7 +73,9 @@
 <img src="logo.png" class="logo" alt=""><h1 id="predomics---interpretable-machine-learning-for-omics-data">Predomics - Interpretable machine learning for omics data<a class="anchor" aria-label="anchor" href="#predomics---interpretable-machine-learning-for-omics-data"></a>
 </h1>
 </div>
-<p><img src="reference/figures/illustration2.png"></p>
+<div class="float">
+<img src="reference/figures/illustration4.png" alt="DALL-E3’s view of PredOmics"><div class="figcaption">DALL-E3’s view of PredOmics</div>
+</div>
 <p>The <strong>predomics</strong> package offers access to an original Machine Learning framework implementing several heuristics that allow discovering sparse and interpretable models in large datasets. These models are efficient and adapted for classification and regression tasks in metagenomics and other datasets with commensurable variables. We introduce the custom BTR (BIN, TER, RATIO) languages that describe different types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods (SOTA) including RF, ENET and SVM. The <code>predomics</code> package started in 2015 and has evolved quickly since. A major improvement came in 2023. The package comes also with <strong>predomicsapp</strong>, a R Shiny application for easy training and exploration of results.</p>
 <div class="section level2">
 <h2 id="badges">Badges<a class="anchor" aria-label="anchor" href="#badges"></a>
@@ -81,16 +86,16 @@
 <h2 id="table-of-contents">Table of Contents<a class="anchor" aria-label="anchor" href="#table-of-contents"></a>
 </h2>
 <ol style="list-style-type: decimal">
-<li><a href="inst/doc/Installation.html">Installation</a></li>
-<li><a href="inst/doc/Usage.html">Usage</a></li>
-<li><a href="inst/doc/Features.html">Features</a></li>
-<li><a href="inst/doc/Screenshots.html">Screenshots</a></li>
-<li><a href="inst/doc/Technologies.html">Technologies</a></li>
-<li><a href="CONTRIBUTING.html">Contributing</a></li>
-<li><a href="LICENSE">License</a></li>
-<li><a href="inst/doc/Authors.html">Authors</a></li>
-<li><a href="inst/doc/Contact.html">Contact</a></li>
-<li><a href="inst/doc/FAQs.html">FAQs</a></li>
+<li><a href="articles/Installation.html">Installation</a></li>
+<li><a href="articles/Usage.html">Usage</a></li>
+<li><a href="articles/Features.html">Features</a></li>
+<li><a href="articles/Screenshots.html">Screenshots</a></li>
+<li><a href="articles/Technologies.html">Technologies</a></li>
+<li><a href="articles/Contributing.html">Contributing</a></li>
+<li><a href="articles/LICENSE-text.html">License</a></li>
+<li><a href="articles/Authors.html">Authors</a></li>
+<li><a href="articles/Contact.html">Contact</a></li>
+<li><a href="articles/FAQs.html">FAQs</a></li>
 </ol>
 </div>
 <div class="section level2">
@@ -141,13 +146,14 @@
 <li>
 <strong>State of the art (SOTA)</strong>. We have implemnted in <em>predomics</em> three state-of-the-art algorithms used today in the field of metagenomics, random forest <em>(rf)</em>, support vector machines <em>(svmlin, svmrad)</em>, respectively using a linear and a radial kernel and finally the Elastic-Net Regularized Generalized Linear Models <em>(glmnet)</em>. Most of the parameteres of these algorithms are left by default and some are optimized using internal cross-validation techniques.</li>
 </ul>
-<p><code>{r} ## install dependencies install.packages(c("doSNOW", "foreach", "snow", "doRNG", "gtools", "glmnet", "pROC", "viridis", "kernlab", "randomForest","effsize")) if (!requireNamespace("BiocManager", quietly = TRUE))     install.packages("BiocManager") BiocManager::install("BioQC") # install.packages("testthat") # install.packages("roxygen2")</code></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></li>
+<li>
+<a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 

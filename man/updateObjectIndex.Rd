@@ -12,7 +12,7 @@ updateObjectIndex(obj, features = NULL)
 \item{features:}{the list of features which overrides the clf$data$features if this exists.}
 }
 \value{
-an the same object type as input, but updated
+the same object type as input, but updated
 }
 \description{
 Update the index of a model, population, or modelCollection.

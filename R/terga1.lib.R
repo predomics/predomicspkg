@@ -652,7 +652,7 @@ evolve <- function(X, y, clf, pop, seed = NULL)
                               size = ceiling(sum(selection) * clf$params$mutate_size/100),
                               replace = FALSE)
       # MUTATE
-      evolved_pop <- mutate(clf, evolved_pop, selection.ind, seed = seed)
+      evolved_pop <- predomics::mutate(clf, evolved_pop, selection.ind, seed = seed)
       # transform to a population of model objects
       evolved_pop.mod <- listOfSparseVecToListOfModels(X = X, y = y, clf = clf, v = evolved_pop)
       # evaluate the population

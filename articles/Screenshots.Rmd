@@ -1,4 +1,10 @@
-# Screenshots
+---
+title: "Screenshots"
+vignette: >
+  %\VignetteIndexEntry{Screenshots}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 
 Here are some screenshots to give you an overview of Predomics:
 

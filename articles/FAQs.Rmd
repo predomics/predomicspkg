@@ -1,4 +1,12 @@
-# Frequently Asked Questions
+---
+title: "FAQs"
+vignette: >
+  %\VignetteIndexEntry{FAQs}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+### Frequently Asked Questions
 
 **Q1: How do I install Predomics?**
 

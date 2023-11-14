@@ -1,0 +1,16 @@
+---
+title: "Usage"
+vignette: >
+  %\VignetteIndexEntry{Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+Here's how you can get started with Predomics:
+
+```         
+R
+library(predomics)
+result <- mainFunction(data)
+print(result)
+```

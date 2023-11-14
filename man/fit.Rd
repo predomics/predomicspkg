@@ -21,7 +21,7 @@ fit(
 \arguments{
 \item{X:}{Dataset to classify}
 
-\item{y:}{Variable to predict}
+\item{y:}{Variable to predict. This is a two class binary variable.}
 
 \item{clf:}{The classifier object object containing the settings of the classifier}
 

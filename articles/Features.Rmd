@@ -1,4 +1,10 @@
-# Features
+---
+title: "Features"
+vignette: >
+  %\VignetteIndexEntry{Features}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 
 Predomics offers a wide array of features:
 

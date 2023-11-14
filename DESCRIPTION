@@ -1,18 +1,18 @@
 Package: predomics
 Type: Package
 Title: Interpretable Prediction in Omics Data
-Version: 1.2.0
-Date: 2023-10-31
+Version: 1.2.1
+Date: 2023-11-13
 Author: Edi Prifti, Jean-Daniel Zucker, Yann Chevaleyre, Blaise Hanczar,
         Eugeni Belda, Lucas Robin, Shasha Cui, Magali Cousin Thorez, 
         Youcef Sklab, Gaspar Roy
 Maintainer: Edi Prifti <edi.prifti@ird.fr>
 Depends:
-    R (>= 2.15.0),
+    R (>= 3.5.0),
 Imports:
-    ggplot2, reshape2, data.table, foreach, snow, doRNG, doSNOW, yaml, cowplot,
-    patchwork, gridExtra, grid, gtools, RColorBrewer, viridis, pROC, caTools,
-    glmnet, kernlab, randomForest, effsize
+    ggplot2, reshape2, dplyr, data.table, foreach, snow, doRNG, doSNOW, yaml, 
+    cowplot, patchwork, gridExtra, grid, gtools, RColorBrewer, viridis, 
+    pROC, caTools, glmnet, kernlab, randomForest, effsize
 Suggests: knitr, rmarkdown, testthat, logger, devtools
 VignetteBuilder: knitr
 Description: The predomics package offers access to a novel framework implementing several heuristics that allow finding

@@ -1,0 +1,15 @@
+---
+title: "Technologies"
+vignette: >
+  %\VignetteIndexEntry{Technologies}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+
+Predomics is built with the following technologies:
+
+- R
+- Other Libraries
+
+We chose these technologies for their ...

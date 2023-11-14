@@ -1,12 +1,15 @@
 .Rproj.user
+.Rapp.history
 .RData
 .Ruserdata
 .Rhistory
 ..Rcheck/
-R/.DS_Store
+.DS_Store
 desktop.ini
 vignettes/*_cache
 #NAMESPACE
 Profiling_*
 *.yml
 debug
+/doc/
+/Meta/

@@ -113,14 +113,21 @@ evaluateAdditionnalMetrics <- function(mod, X, y, clf, mode = "train")
   
   # precision = tp/(tp+fp)
   # cm = confusion matrix (2,2 is the positive class)
-  mod$precision_ <- mod$confusionMatrix[2, 2] / (mod$confusionMatrix[2, 2] + mod$confusionMatrix[2, 1])
-  #mod$precision_ <- mod$confusionMatrix[1, 1] / (mod$confusionMatrix[1, 1] + mod$confusionMatrix[2, 1])
-  
-  # recall = tp/(tp+fn), aka sensitivity
-  #mod$recall_    <- mod$confusionMatrix[1, 1] / (mod$confusionMatrix[1, 1] + mod$confusionMatrix[1, 2])
-  mod$recall_    <- mod$confusionMatrix[2, 2] / (mod$confusionMatrix[2, 2] + mod$confusionMatrix[1, 2])
-  
-  mod$f1_       <- 2 * (mod$precision_ * mod$recall_) / (mod$precision_ + mod$recall_)
+  if(all(dim(mod$confusionMatrix) == 2)) # if confusion matrix is OK (2x2)
+  {
+    mod$precision_ <- mod$confusionMatrix[2, 2] / (mod$confusionMatrix[2, 2] + mod$confusionMatrix[2, 1])
+    #mod$precision_ <- mod$confusionMatrix[1, 1] / (mod$confusionMatrix[1, 1] + mod$confusionMatrix[2, 1])
+    # recall = tp/(tp+fn), aka sensitivity
+    #mod$recall_    <- mod$confusionMatrix[1, 1] / (mod$confusionMatrix[1, 1] + mod$confusionMatrix[1, 2])
+    mod$recall_    <- mod$confusionMatrix[2, 2] / (mod$confusionMatrix[2, 2] + mod$confusionMatrix[1, 2])
+    mod$f1_       <- 2 * (mod$precision_ * mod$recall_) / (mod$precision_ + mod$recall_)
+    
+  }else # otherwise we don't compute it
+  {
+    mod$precision_  <- NA
+    mod$recall_     <- NA
+    mod$f1_         <- NA
+  }
   
   return(mod)
 }
@@ -3119,7 +3126,7 @@ updateModelIndex <- function(obj, features = NULL)
 #' @description Update the index of a model, population, or modelCollection.
 #' @param obj: the object can be a model, population, or modelCollection
 #' @param features: the list of features which overrides the clf$data$features if this exists.
-#' @return an the same object type as input, but updated
+#' @return the same object type as input, but updated
 #' @export
 updateObjectIndex <- function(obj, features = NULL)
 {
@@ -3330,9 +3337,12 @@ listOfModelsToDenseCoefMatrix <- function(clf, X, y, list.models, rm.empty = TRU
 #' @param attributes: the list of attributes that we wish to have in the data.frame (default:"learner","language","fit_", "unpenalized_fit_", "auc_", "accuracy_", "cor_", "aic_", "intercept_", "eval.sparsity", "sign_","precision_", "recall_","f1_")
 #' @return an data frame with attributes for each model
 #' @export
-populationToDataFrame <- function(pop, attributes = c("learner","language","fit_", "unpenalized_fit_",
-                                                      "auc_", "accuracy_", "cor_", "aic_", "intercept_",
-                                                      "eval.sparsity", "sign_","precision_", "recall_","f1_"))
+populationToDataFrame <- function(
+    pop, 
+    attributes = c("learner","language","fit_", "unpenalized_fit_",
+                   "auc_", "accuracy_", "cor_", "aic_", "intercept_",
+                   "eval.sparsity", "sign_","precision_", "recall_","f1_")
+    )
 {
   
   if(!isPopulation(pop))
@@ -3381,6 +3391,8 @@ populationToDataFrame <- function(pop, attributes = c("learner","language","fit_
   rownames(df) <- paste("mod",1:length(pop),sep="_")
   return(df)
 }
+
+
 
 ################################################################
 # ADDERS, REMOVERS
@@ -3709,47 +3721,95 @@ meltScoreList <- function(v=v.prop, prepare.for.graph=TRUE, topdown=TRUE)
 #' Plot performance scores for multiple learners.
 #'
 #' @description summarySE gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95\%).
+#' @import dplyr
 #' @param data: a data frame
 #' @param groupvars: a vector containing names of columns that contain grouping variables
 #' @param na.rm: a boolean that indicates whether to ignore NA's
 #' @param conf.interval: the percent range of the confidence interval (default is 95\%)
 #' @return A transformed data frame with information on the different errors and confidence.
-## @import plyr
-summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.interval=.95, .drop=TRUE) 
-{
-  # This was taken from 'http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-  # New version of length which can handle NA's: if na.rm==T, don't count them
-  length2 <- function (x, na.rm=FALSE) 
-  {
-    if (na.rm) sum(!is.na(x))
-    else       length(x)
+summarySE <- function(data, measurevar, groupvars, na.rm = FALSE, conf.interval = .95) {
+  # Ensure that measurevar and groupvars are non-null and valid
+  if (is.null(data) || is.null(measurevar) || is.null(groupvars)) {
+    stop("Data, measurevar, and groupvars must be provided.")
   }
   
-  # This does the summary. For each group's data frame, return a vector with
-  # N, mean, and sd
-  datac <- ddply(data, groupvars, .drop=.drop, .fun = function(xx, col) 
-  {
-    c(N    = length2(xx[[col]], na.rm=na.rm),
-      mean = mean   (xx[[col]], na.rm=na.rm),
-      sd   = sd     (xx[[col]], na.rm=na.rm)
+  data %>%
+    dplyr::group_by(across(all_of(groupvars))) %>%
+    dplyr::summarise(
+      N = sum(!is.na(.data[[measurevar]]), na.rm = na.rm),
+      
+      sd = sd(.data[[measurevar]], na.rm = na.rm),
+      value = mean(.data[[measurevar]], na.rm = na.rm),
+      .groups = 'drop' # This will drop the grouping after summarise
+    ) %>%
+    dplyr::mutate(
+      se = sd / sqrt(N),
+      ci = if_else(N > 1,
+                   se * qt(conf.interval/2 + 0.5, N - 1),
+                   NA_real_  # Or your chosen default value for CI when N <= 1
+      )
     )
-  },
-  measurevar
-  )
-  
-  # Rename the "mean" column    
-  datac <- rename(datac, c("mean" = measurevar))
-  
-  datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
-  
-  # Confidence interval multiplier for standard error
-  # Calculate t-statistic for confidence interval: 
-  # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
-  ciMult <- qt(conf.interval/2 + .5, datac$N-1)
-  datac$ci <- datac$se * ciMult
-  
-  return(datac)
 }
+
+# summarySE <- function(data, measurevar, groupvars, na.rm = FALSE, conf.interval = .95) {
+#   if (is.null(data) || is.null(measurevar) || is.null(groupvars)) {
+#     stop("Data, measurevar, and groupvars must be provided.")
+#   }
+#   
+#   data %>%
+#     dplyr::group_by(!!!syms(groupvars)) %>%
+#     dplyr::summarise(
+#       N = sum(!is.na(.data[[measurevar]]), na.rm = na.rm),
+#       sd = sd(.data[[measurevar]], na.rm = na.rm),
+#       value = mean(.data[[measurevar]], na.rm = na.rm),
+#       .groups = 'drop'
+#     ) %>%
+#     dplyr::mutate(
+#       se = sd / sqrt(N),
+#       ci = if_else(N > 1, 
+#                    se * qt(conf.interval/2 + 0.5, N - 1), 
+#                    NA_real_
+#       )
+#     )
+# }
+
+# ## @import plyr
+# summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.interval=.95, .drop=TRUE)
+# {
+#   require(plyr)
+#   # This was taken from 'http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+#   # New version of length which can handle NA's: if na.rm==T, don't count them
+#   length2 <- function (x, na.rm=FALSE)
+#   {
+#     if (na.rm) sum(!is.na(x))
+#     else       length(x)
+#   }
+# 
+#   # This does the summary. For each group's data frame, return a vector with
+#   # N, mean, and sd
+#   datac <- plyr::ddply(data, groupvars, .drop=.drop, .fun = function(xx, col)
+#   {
+#     c(N    = length2(xx[[col]], na.rm=na.rm),
+#       mean = mean   (xx[[col]], na.rm=na.rm),
+#       sd   = sd     (xx[[col]], na.rm=na.rm)
+#     )
+#   },
+#   measurevar
+#   )
+# 
+#   # Rename the "mean" column
+#   # datac <- rename(datac, c("mean" = measurevar))
+# 
+#   datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+# 
+#   # Confidence interval multiplier for standard error
+#   # Calculate t-statistic for confidence interval:
+#   # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+#   ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+#   datac$ci <- datac$se * ciMult
+# 
+#   return(datac)
+# }
 
 
 #' Computes different metrics for a given distributions
@@ -4593,12 +4653,12 @@ filterfeaturesK <- function(data,
           # https://accio.github.io/BioQC/bioqc-efficiency.html
           # we will compute this outside the for loop
           
-          if (!accelerate)
-          {
-            # apply test
-            try(tmp <- stats::wilcox.test(vd ~ vt, paired = paired), silent = TRUE)
-            try(res[i, "p"] <- tmp$p.value, silent = TRUE)
-          }
+          # if (!accelerate)
+          # {
+          # apply test
+          try(tmp <- stats::wilcox.test(vd ~ vt, paired = paired), silent = TRUE)
+          try(res[i, "p"] <- tmp$p.value, silent = TRUE)
+          # }
 
           # determine the status
           if (mean(vd[trait == trait.val[1]], na.rm = TRUE) > mean(vd[trait == trait.val[2]], na.rm = TRUE)) 

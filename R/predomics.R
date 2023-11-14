@@ -29,7 +29,7 @@
 #' @description This function runs a learning experiment based on the classifier
 #' object and the given dataset.
 #' @param X: Dataset to classify
-#' @param y: Variable to predict
+#' @param y: Variable to predict. This is a two class binary variable.
 #' @param clf: The classifier object object containing the settings of the classifier
 #' @param cross.validate: Whether or not the classification should be run in
 #' cross-validation mode (default:TRUE)
@@ -693,10 +693,10 @@ runClassifier <- function(X,
   if (clf$params$compute.importance & !isLearnerSota(clf))
   {
     # the population of models that is learned in this fold
-    pop.fold <-
-      modelCollectionToPopulation(mod.collection = clf$models)
+    pop.fold <- modelCollectionToPopulation(mod.collection = clf$models)
     
-    # In the case where we are in the whole dataset and x_test is null as is y_test we use X as a whole to learn the feature importance.
+    # In the case where we are in the whole dataset and x_test is null as is 
+    # y_test we use X as a whole to learn the feature importance.
     # In this case we will have an empirical importance
     if (is.null(x_test) | is.null(y_test))
     {
@@ -708,20 +708,19 @@ runClassifier <- function(X,
     }
     
     # for each of the best models in the population compute the importance in the test population
-    efip.fold <-
-      evaluateFeatureImportanceInPopulation(
-        pop = pop.fold,
-        X = x_test,
-        y = y_test,
-        clf = clf,
-        score = "fit_",
-        filter.ci = TRUE,
-        method = "extensive",
-        seed = c(1:10),
-        # 10 times the perturbation for more accurate importance
-        aggregation = "mean",
-        verbose = clf$params$verbose
-      )
+    efip.fold <- evaluateFeatureImportanceInPopulation(
+      pop = pop.fold,
+      X = x_test,
+      y = y_test,
+      clf = clf,
+      score = "fit_",
+      filter.ci = TRUE,
+      method = "extensive",
+      seed = c(1:10),
+      # 10 times the perturbation for more accurate importance
+      aggregation = "mean",
+      verbose = clf$params$verbose
+    )
     clf$fip <- efip.fold
   }
   
@@ -733,9 +732,7 @@ runClassifier <- function(X,
   if (isModelCollection(clf$models))
   {
     # update the final indexes as the input X
-    clf$models <-
-      updateObjectIndex(obj = clf$models,
-                        features = clf$data$features)
+    clf$models <- updateObjectIndex(obj = clf$models, features = clf$data$features)
   }
   
   clf$execTime <-

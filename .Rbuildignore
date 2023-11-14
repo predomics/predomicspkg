@@ -10,3 +10,5 @@ pkgdown-site
 ^docs$
 ^pkgdown$
 ^\.github$
+^doc$
+^Meta$

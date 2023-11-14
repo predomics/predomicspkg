@@ -1177,7 +1177,7 @@ plotFeatureModelCoeffs <- function(feat.model.coeffs, topdown = TRUE, main="", c
 #' @title Plots a population of models (or a single model) objects as barplots of scaled coefficients.
 #'
 #' @description Plots an model or a population of models as a barplots, representing each feature, the length being the coefficient
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' @param pop: a population of models to plot
 #' @param X: the data matrix with variables in the rows and observations in the columns
 #' @param y: the class vector

@@ -4,14 +4,7 @@
 \alias{summarySE}
 \title{Plot performance scores for multiple learners.}
 \usage{
-summarySE(
-  data = NULL,
-  measurevar,
-  groupvars = NULL,
-  na.rm = FALSE,
-  conf.interval = 0.95,
-  .drop = TRUE
-)
+summarySE(data, measurevar, groupvars, na.rm = FALSE, conf.interval = 0.95)
 }
 \arguments{
 \item{data:}{a data frame}

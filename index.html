@@ -77,30 +77,28 @@
 <img src="reference/figures/illustration4.png" alt="DALL-E3’s view of PredOmics"><div class="figcaption">DALL-E3’s view of PredOmics</div>
 </div>
 <p>The <strong>predomics</strong> package offers access to an original Machine Learning framework implementing several heuristics that allow discovering sparse and interpretable models in large datasets. These models are efficient and adapted for classification and regression tasks in metagenomics and other datasets with commensurable variables. We introduce the custom BTR (BIN, TER, RATIO) languages that describe different types of associations between variables. Moreover, in the same framework we implemented several state-of-the-art methods (SOTA) including RF, ENET and SVM. The <code>predomics</code> package started in 2015 and has evolved quickly since. A major improvement came in 2023. The package comes also with <strong>predomicsapp</strong>, a R Shiny application for easy training and exploration of results.</p>
-<div class="section level2">
-<h2 id="badges">Badges<a class="anchor" aria-label="anchor" href="#badges"></a>
-</h2>
+<div class="section level3">
+<h3 id="badges">Badges<a class="anchor" aria-label="anchor" href="#badges"></a>
+</h3>
 <p><img src="https://github.com/predomics/predomicspkg/workflows/R/badge.svg" alt="R Package"><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a> <img src="https://img.shields.io/github/issues/predomics/predomicspkg" alt="GitHub issues"><a href="https://github.com/predomics/predomicspkg/network/members" class="external-link"><img src="https://img.shields.io/github/forks/predomics/predomicspkg?style=social" alt="GitHub forks"></a> <a href="https://github.com/predomics/predomicspkg/stargazers" class="external-link"><img src="https://img.shields.io/github/stars/predomics/predomicspkg?style=social" alt="GitHub stars"></a></p>
 </div>
-<div class="section level2">
-<h2 id="table-of-contents">Table of Contents<a class="anchor" aria-label="anchor" href="#table-of-contents"></a>
-</h2>
+<div class="section level3">
+<h3 id="table-of-contents">Table of Contents<a class="anchor" aria-label="anchor" href="#table-of-contents"></a>
+</h3>
 <ol style="list-style-type: decimal">
 <li><a href="articles/Installation.html">Installation</a></li>
 <li><a href="articles/Usage.html">Usage</a></li>
 <li><a href="articles/Features.html">Features</a></li>
 <li><a href="articles/Screenshots.html">Screenshots</a></li>
 <li><a href="articles/Technologies.html">Technologies</a></li>
-<li><a href="articles/Contributing.html">Contributing</a></li>
 <li><a href="articles/LICENSE-text.html">License</a></li>
 <li><a href="articles/Authors.html">Authors</a></li>
-<li><a href="articles/Contact.html">Contact</a></li>
 <li><a href="articles/FAQs.html">FAQs</a></li>
 </ol>
 </div>
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
+<div class="section level3">
+<h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h3>
 <p>We introduce here the <em>predomics</em> package, which is designed to search for simple and interpretable predictive models from omics data and more specifically metagenomics. These models, called BTR (for Bin/Ter/Ratio) are based on a novel family of languages designed to represent the microbial interactions in microbial ecosystems. Moreover, in this package we have proposed four different optimization heuristics that allow to discover some of the best predictive models. A model in <em>predomics</em> is a set of indexes from the dataset (i.e. variables) along with the respective coefficients belonging to the ternary set <code>{-1, 0, 1}</code> and an intercept of the form <code>(A + B + C - K - L - M &lt; intercept)</code>. The number of variables in a model, also known as <em>model size</em>, <em>sparsity</em> or <em>parsimony</em>, can vary in a range provided as a parameters to the experiment.</p>
 <p>In <em>predomics</em> we have impemented the following types of object:</p>
 <ul>
@@ -117,9 +115,9 @@
 </ul>
 <p>All these objects can be quickly viewed with the <code><a href="reference/printy.html">printy()</a></code> function. Other existing functions allow conversion from one object type to the other as for instance <code><a href="reference/modelCollectionToPopulation.html">modelCollectionToPopulation()</a></code>. An experiment can be explored using the <code><a href="reference/digest.html">digest()</a></code> routine along with many other functions implemented in more than 18K lines of code that compose this package.</p>
 </div>
-<div class="section level2">
-<h2 id="heuristics">Heuristics<a class="anchor" aria-label="anchor" href="#heuristics"></a>
-</h2>
+<div class="section level3">
+<h3 id="heuristics">Heuristics<a class="anchor" aria-label="anchor" href="#heuristics"></a>
+</h3>
 <p>In this package we have proposed four different heuristics to search for the best predictive models.</p>
 <ul>
 <li>
@@ -132,9 +130,9 @@
 <strong>Metal</strong>. The four algorithms presented above complement each other in terms of model space epxloration. For instance, <em>terbeam</em> is specialized in small models, <em>terda</em> in bigger ones and <em>terga</em> will make sure to explore random combinations that are not only composed of features which in smaller-sparisty settings yield good results. We devised another algorithm named <em>metal</em> (fusion), which is a meta-heuristic based on the <em>terga2</em> engine. The initial population is seeded by sets of models found by either <em>terbeam</em>, <em>terda</em> or <em>terga2</em> and is next combined and evolved together. Metal has also the capacity to evolve models with multiple languages in the same time. This is particularly of interest when we wish to discover automatically the set of rules that predicts best the studied condition.</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="predomics-languages">Predomics languages<a class="anchor" aria-label="anchor" href="#predomics-languages"></a>
-</h2>
+<div class="section level3">
+<h3 id="predomics-languages">Predomics languages<a class="anchor" aria-label="anchor" href="#predomics-languages"></a>
+</h3>
 <p>A <em>predomics</em> model is coded in R as a S3 object, which contains a certain number of attributes among which the <code>learner</code> (algorithm) that generated it but also the <code>language</code> that is used. The languages we have proposed in the current version are the following.</p>
 <ul>
 <li>
@@ -145,6 +143,17 @@
 <strong>Ratio</strong>. In the ratio language the intercept plays the role of a multiplication factor and the model is the form <code>(A+B+C)/(K+L+M) &lt; intercept</code>.</li>
 <li>
 <strong>State of the art (SOTA)</strong>. We have implemnted in <em>predomics</em> three state-of-the-art algorithms used today in the field of metagenomics, random forest <em>(rf)</em>, support vector machines <em>(svmlin, svmrad)</em>, respectively using a linear and a radial kernel and finally the Elastic-Net Regularized Generalized Linear Models <em>(glmnet)</em>. Most of the parameteres of these algorithms are left by default and some are optimized using internal cross-validation techniques.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="contact">Contact<a class="anchor" aria-label="anchor" href="#contact"></a>
+</h3>
+<p>If you have any questions or feedback, please contact us at:</p>
+<ul>
+<li>Email: <a href="mailto:edi.prifti@ird.fr" class="email">contact@predomics.com</a>
+</li>
+<li>GitHub Issues: <a href="https://github.com/predomics/predomicspkg/issues" class="external-link">Predomics Issues</a>
+</li>
 </ul>
 </div>
 </div>

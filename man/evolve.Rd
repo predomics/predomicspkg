@@ -2,24 +2,56 @@
 % Please edit documentation in R/terga1.lib.R
 \name{evolve}
 \alias{evolve}
-\title{Creates new combinations of features based from a parents.}
+\title{Evolve a Population of Models Over Generations}
 \usage{
 evolve(X, y, clf, pop, seed = NULL)
 }
 \arguments{
-\item{X:}{the data matrix with variables in the rows and observations in the columns}
+\item{X}{A matrix or data frame representing the features of the training dataset.}
 
-\item{y:}{the response vector}
+\item{y}{A vector representing the target variable for the training dataset.}
 
-\item{clf:}{the classifier parameter object}
+\item{clf}{A classifier object containing parameters for the evolutionary algorithm, including:
+- `nb_generations`: The number of generations to evolve the population.
+- `size_pop`: The target population size.
+- `current_sparsity`: The desired sparsity level for individuals.
+- `select_type`: Selection method, which can be "elite," "tournoi," or "mixed."
+- `select_perc1` and `select_perc2`: Percentages used in mixed selection.
+- `mutate_size`: Percentage of the population to mutate in each generation.
+- `plot`: Boolean indicating whether to plot the evolution of the best score.
+- `convergence`: Boolean indicating if convergence testing should be applied.
+- `convergence_steps`: The number of steps used for convergence testing.}
 
-\item{pop:}{A population (i.e. list) of index vectors}
+\item{pop}{A list representing the initial population of models, with each individual represented as a vector of selected features.}
 
-\item{seed:}{For reproductibility purpose to fix the random generator number.}
+\item{seed}{Optional integer seed for random number generation to ensure reproducibility.}
 }
 \value{
-a population of models, containing parents and children
+A list representing the final evolved population of models.
 }
 \description{
-This function is used in terga1 and is the main engine of the algorithm that allows to cross, mutate and select individuals from one generation to the next.
+This function evolves a population of models across a specified number of generations, using selection, crossover, and mutation operations. It tracks the best-performing individuals in each generation to encourage convergence toward optimal solutions.
+}
+\details{
+The function evolves a population of models over multiple generations using the following steps:
+1. **Evaluation**: Evaluates each individual in the population.
+2. **Selection**: Selects parents based on specified selection criteria (`select_type`).
+3. **Crossover**: Combines genetic material from selected parents to produce children.
+4. **Mutation**: Mutates a portion of the population to introduce genetic diversity.
+5. **Convergence Testing**: Optionally tests for convergence, stopping the evolution early if stability is detected in performance.
+**Population Structure**: The population is a list of vectors, where each vector represents a sparse model (a subset of features). After each generation, the function retains the best-performing individuals, tracking the evolution of the best score across generations.
+}
+\examples{
+\dontrun{
+clf <- list(
+  params = list(nb_generations = 10, size_pop = 20, current_sparsity = 5, 
+                select_type = "elite", mutate_size = 10, plot = TRUE, convergence = FALSE)
+)
+X <- matrix(runif(200), nrow = 20)
+y <- sample(0:1, 20, replace = TRUE)
+initial_pop <- list(1:5, 2:6, 3:7)  # Example initial population
+final_pop <- evolve(X, y, clf, initial_pop, seed = 42)
+print(final_pop)
+}
+
 }

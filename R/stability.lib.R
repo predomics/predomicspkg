@@ -508,7 +508,7 @@ AnalyseStableModels_LOO <- function(X, y, clf, tmp, loo)
 #' @description This function gets a graph of the result of analyseStableModels
 #' @param X: dataset to classify
 #' @param mat: AnalyseStableModels()$origin
-#' @param threshold: 
+#' @param threshold: Used to select a number of edgets. By default this is zero.
 #' @return a graph
 #' @export
 getGraph <- function(mat, X, threshold=0){

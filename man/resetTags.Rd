@@ -2,22 +2,52 @@
 % Please edit documentation in R/terga2.lib.R
 \name{resetTags}
 \alias{resetTags}
-\title{Resets selection, mutation and mate tags to inactive}
+\title{Reset Tags for All Individuals in a Population}
 \usage{
 resetTags(pop, selected = FALSE, toBeMutated = FALSE, mate = -1)
 }
 \arguments{
-\item{pop:}{The population to be evolved}
+\item{pop}{A list representing the population, where each individual is
+expected to have attributes `selected`, `toBeMutated`, and `mate`.}
 
-\item{selected:}{set to (default:FALSE) the selected attribute, if not null.}
+\item{selected}{A logical value to set for the `selected` attribute of each
+individual. Defaults to \code{FALSE}.}
 
-\item{toBeMutated:}{set to (default:FALSE) the selected attribute, if not null.}
+\item{toBeMutated}{A logical value to set for the `toBeMutated` attribute of
+each individual. Defaults to \code{FALSE}.}
 
-\item{mate:}{set to (default:-1) the selected attribute, if not null.}
+\item{mate}{A value to set for the `mate` attribute of each individual.
+Defaults to \code{-1}.}
 }
 \value{
-A modified population
+The modified population list with updated `selected`, `toBeMutated`,
+  and `mate` attributes for each individual.
 }
 \description{
-Resets selection, mutation and mate tags to inactive
+This function resets specific tags for all individuals in a population,
+including `selected`, `toBeMutated`, and `mate` attributes. It can be used to
+clear or initialize these tags before further processing.
+}
+\details{
+The function iterates through each individual in the population and
+sets their `selected`, `toBeMutated`, and `mate` attributes to the specified
+values. This function is useful for resetting the population's status before
+selection and mutation operations.
+
+If `pop` is \code{NULL}, the function issues a warning (if
+`clf$params$warnings` is enabled) and returns \code{NULL}. If `pop` is not a
+list, an error is raised.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, selected = TRUE, toBeMutated = TRUE, mate = 2),
+  list(fit_ = 0.8, selected = TRUE, toBeMutated = FALSE, mate = 3),
+  list(fit_ = 0.7, selected = FALSE, toBeMutated = TRUE, mate = -1)
+)
+pop <- resetTags(pop, selected = FALSE, toBeMutated = FALSE, mate = -1)
+# Check updated population
+str(pop)
+}
+
 }

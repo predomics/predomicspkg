@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotFeatureModelCoeffs}
 \alias{plotFeatureModelCoeffs}
-\title{Plots the prevalence of a list of features in the whole dataset and per each class}
+\title{Plot Feature Model Coefficients}
 \usage{
 plotFeatureModelCoeffs(
   feat.model.coeffs,
@@ -13,19 +13,54 @@ plotFeatureModelCoeffs(
 )
 }
 \arguments{
-\item{feat.model.coeffs:}{feature vs. model coeffient table}
+\item{feat.model.coeffs}{A matrix or data frame where rows represent
+features, and columns represent models. The values in the matrix correspond
+to the coefficients of the features in each model.}
 
-\item{topdown:}{showing features from top-down or the other way around (default:TRUE)}
+\item{topdown}{Logical; if `TRUE`, the features will be arranged from top to
+bottom in the plot. If `FALSE`, the original order is preserved.}
 
-\item{main:}{main title (default:none)}
+\item{main}{A string for the title of the plot.}
 
-\item{col:}{colors to be used for the coeffients (default: -1 = deepskyblue1, 0 = white, 1 = firebrick1)}
+\item{col}{A vector of colors for the heatmap. Default is `c("deepskyblue1",
+"white", "firebrick1")`.}
 
-\item{vertical.label:}{wether the x-axis labels should be vertical or not (default:TRUE)}
+\item{vertical.label}{Logical; if `TRUE`, the feature labels on the y-axis
+will be rotated vertically.}
 }
 \value{
-a ggplot object
+A `ggplot` object displaying the heatmap of feature coefficients
+across models.
 }
 \description{
-Plots the coefficients of subset of features in the models where they are found
+This function visualizes the coefficients of features across different models
+in a heatmap-style plot. It allows for customized ordering of the features
+and models, and it supports vertical or horizontal axis labels.
+}
+\details{
+The function generates a heatmap-style plot of feature coefficients
+across multiple models. The color intensity represents the coefficient
+values, with positive values shown in one color, negative values in another,
+and zeros in a neutral color. The function supports customization of the plot
+layout and label orientation.
+
+The `topdown` argument controls the ordering of the features in the plot.
+When set to `TRUE`, the features are arranged in reverse order, and if set to
+`FALSE`, the original order is maintained. The function also allows the user
+to rotate the feature labels vertically if needed.
+}
+\examples{
+# Example usage
+features <- c("feature1", "feature2", "feature3")
+models <- c("model1", "model2", "model3")
+coeffs <- matrix(runif(9), nrow = 3, ncol = 3)
+rownames(coeffs) <- features
+colnames(coeffs) <- models
+
+# Plot feature model coefficients
+plotFeatureModelCoeffs(coeffs, main = "Feature Coefficients Heatmap")
+
+}
+\author{
+Edi Prifti (IRD)
 }

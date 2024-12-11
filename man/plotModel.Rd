@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotModel}
 \alias{plotModel}
-\title{Plots a model or a population of model objectsas barplots of scaled coefficients.}
+\title{Plot Model Coefficients and Importance}
 \usage{
 plotModel(
   mod,
@@ -19,28 +19,76 @@ plotModel(
 )
 }
 \arguments{
-\item{mod:}{a model to plot}
+\item{mod}{A model object (e.g., a fitted machine learning model such as SVM,
+logistic regression, or random forest).}
 
-\item{X:}{the data matrix with variables in the rows and observations in the columns}
+\item{X}{A data matrix or data frame where each row is an observation and
+each column is a feature.}
 
-\item{y:}{the class vector}
+\item{y}{A vector of class labels (e.g., 1 and -1 for binary classification,
+or continuous for regression) corresponding to the rows in `X`.}
 
-\item{sort.features:}{wether the features need to be sorted by correlation with 'y' or not (default: TRUE)}
+\item{sort.features}{Logical; if `TRUE`, the features will be sorted by their
+discriminance with respect to `y`. Default is `FALSE`.}
 
-\item{sort.ind:}{computing sorting can take time if computed for every model and can be computed outside the function and passed as a parameter}
+\item{sort.ind}{A vector of indices for sorting the features. If `NULL`, the
+function will determine the order based on discriminance. Default is
+`NULL`.}
 
-\item{feature.name:}{show the name of the features (default:FALSE)}
+\item{feature.name}{Logical; if `TRUE`, the feature names will be displayed
+on the plot.}
 
-\item{col.sign:}{the colors of the cofficients based on the sign of the coefficients (default: -1=deepskyblue1, 1:firebrick1)}
+\item{col.sign}{A vector of two colors for positive and negative coefficients
+(default is `c("deepskyblue1", "firebrick1")`).}
 
-\item{main:}{possibility to change the title of the function (default:"")}
+\item{main}{A string for the title of the plot.}
 
-\item{slim:}{plot without axis information (default:FALSE)}
+\item{slim}{Logical; if `TRUE`, the plot will be simplified (e.g., removing
+axis labels and ticks). Default is `FALSE`.}
 
-\item{importance:}{the importance (mda) of the features in crossval}
+\item{importance}{Logical; if `TRUE`, the feature importance will be plotted.
+Default is `FALSE`.}
 
-\item{res_clf:}{the result of the learning process (default:NULL). If provided information on MDA will be extracted for the importance graphic.}
+\item{res_clf}{Optional; a result object containing cross-validation or
+feature importance data. This is used when `importance` is `TRUE` for
+models that have a cross-validation feature.}
+}
+\value{
+If the model is a `Random Forest`, the function returns a decision
+tree plot. For other models, it returns a `ggplot` object showing the feature
+coefficients or importance.
 }
 \description{
-Plots a model or a population of models as a barplots, representing each feature, the length being the coefficient
+This function visualizes the coefficients of a model, with the option to plot
+feature importance. It supports various model types, including SOTA models
+and Random Forests, and can display the results in a variety of layouts,
+including plots of feature coefficients, feature importance, or decision
+trees.
+}
+\details{
+This function generates a plot of model coefficients or feature
+importance, depending on the model type and the `importance` parameter. The
+function supports SOTA models (like SVM or logistic regression), where
+coefficients are visualized, and Random Forest models, where decision trees
+can be plotted. The plot can also include feature importance, if available.
+
+If the model is a `Random Forest`, the function will plot a decision tree.
+For other models, it will plot the feature coefficients with color-coded bars
+for positive and negative coefficients.
+}
+\examples{
+# Example usage for a classification model
+model <- train(logistic_regression_model)  # Assume this is a pre-trained model
+X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+y <- sample(c(1, -1), 100, replace = TRUE)
+
+# Plot the model's coefficients
+plotModel(model, X, y, main = "Model Coefficients Plot")
+
+# Plot the model's importance (if available)
+plotModel(model, X, y, importance = TRUE)
+
+}
+\author{
+Edi Prifti (IRD)
 }

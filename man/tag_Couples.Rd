@@ -2,20 +2,48 @@
 % Please edit documentation in R/terga2.lib.R
 \name{tag_Couples}
 \alias{tag_Couples}
-\title{Tag the couples}
+\title{Pair Individuals in Population as Mating Couples}
 \usage{
 tag_Couples(pop, parents)
 }
 \arguments{
-\item{pop:}{The population on which we the couples are being constituted;}
+\item{pop}{A list representing the population, where each individual has a
+`mate` attribute to indicate their paired individual.}
 
-\item{parents:}{The parent candidate individuals from which the couples will 
-be selected.}
+\item{parents}{A vector of indices or identifiers for individuals in the
+population that are eligible to be paired.}
 }
 \value{
-The parent population with the couple tags set.
+The modified population list, with `mate` attributes assigned for
+  paired individuals.
 }
 \description{
-This function selects constitutes the couples that will give the
-next generation individuals by adding the couple id on the mate attribute.
+This function pairs individuals in a population to form mating couples,
+assigning each pair a `mate` attribute. Each individual can be matched with
+one other individual from the specified parents list.
+}
+\details{
+The function randomly pairs individuals from the `parents` list. For
+  each couple, it assigns the `mate` attribute of one individual to the
+  other’s index, and vice versa. If an individual’s `mate` attribute is
+  positive, it indicates the index of their partner. If it’s negative, it
+  indicates their partner’s index with a negative sign.
+
+  If the population is empty, the function issues a warning and returns
+  \code{NULL}.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, selected = FALSE, mate = NULL),
+  list(fit_ = 0.8, selected = FALSE, mate = NULL),
+  list(fit_ = 0.7, selected = FALSE, mate = NULL),
+  list(fit_ = 0.6, selected = FALSE, mate = NULL)
+)
+parents <- c(1, 2, 3, 4)
+pop <- tag_Couples(pop, parents)
+# Check mates for each individual
+sapply(pop, function(ind) ind$mate)
+}
+
 }

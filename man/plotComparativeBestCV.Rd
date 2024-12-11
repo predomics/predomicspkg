@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotComparativeBestCV}
 \alias{plotComparativeBestCV}
-\title{Plots a graph for a given score}
+\title{Plot Comparative Best Cross-Validation (CV) Performance for Multiple Methods}
 \usage{
 plotComparativeBestCV(
   digested.results,
@@ -14,17 +14,60 @@ plotComparativeBestCV(
 )
 }
 \arguments{
-\item{digested.results:}{a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()}
+\item{digested.results}{A list containing the best CV results of the models,
+including performance scores for various methods.}
 
-\item{ylim:}{y-axis zoom in the plot}
+\item{ylim}{A numeric vector of length 2 specifying the limits for the
+y-axis. Default is `c(0.5, 1)`.}
 
-\item{score:}{default (auc_) score for the cross-validation representation}
+\item{generalization}{A logical value (`TRUE` or `FALSE`). If `TRUE`, the
+plot shows the generalization performance (cross-validation performance
+across folds). If `FALSE`, it shows empirical performance. Default is
+`TRUE`.}
 
-\item{main:}{name of the graphic}
+\item{score}{A string specifying which score to visualize, e.g., "auc_",
+"accuracy_", "recall_", etc. Default is `"auc_"`.}
+
+\item{ci}{A logical value (`TRUE` or `FALSE`). If `TRUE`, confidence
+intervals (error bars) are shown in the plot. Default is `TRUE`.}
+
+\item{main}{A string specifying the title of the plot. Default is an empty
+string.}
 }
 \value{
-A ggplot graphs
+A ggplot object visualizing the best cross-validation (CV) scores
+  across multiple methods.
 }
 \description{
-plotComparativeCV plots a digested.results data object for a given score.
+This function generates a plot comparing the best cross-validation (CV)
+performance (such as AUC, accuracy, or other scores) across multiple methods
+for different values of the sparse parameter (k sparse). The plot includes
+lines representing each method and points indicating the best CV performance
+score at each k sparse value. Optional error bars (confidence intervals) can
+be included in the plot. The best method for each k sparse is also indicated
+in the legend.
+}
+\details{
+The function plots the best cross-validation (CV) scores (such as
+AUC, accuracy, etc.) for different methods across various values of k sparse.
+It handles both generalization (cross-validation) and empirical tasks, and
+includes optional error bars representing confidence intervals for each
+score.
+
+The plot is created using \code{ggplot2}, and different methods can be
+assigned different colors and point shapes. Horizontal lines indicate
+important thresholds, such as AUC = 0.5 or the majority class in
+classification tasks.
+
+The plot also includes a legend with the best method for each k sparse value.
+}
+\examples{
+# Assuming digested.results contains the best cross-validation performance scores for methods
+plotComparativeBestCV(digested.results, ylim = c(0.5, 1), score = "auc_", ci = TRUE, main = "Comparison of Best AUC across Methods")
+
+# You can customize the plot by adjusting the score, error bars (ci), and other parameters.
+
+}
+\author{
+Edi Prifti (IRD)
 }

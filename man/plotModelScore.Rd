@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotModelScore}
 \alias{plotModelScore}
-\title{Plots a model or a population of model objectsas barplots of scaled coefficients.}
+\title{Plot Model Performance Scores}
 \usage{
 plotModelScore(
   mod = NULL,
@@ -12,14 +12,61 @@ plotModelScore(
 )
 }
 \arguments{
-\item{mod:}{a model to plot}
+\item{mod}{A model object containing the attribute `score_` (predicted
+scores) and other model evaluation metrics such as accuracy, AUC, R2, etc.}
 
-\item{y:}{the class to predict}
+\item{y}{A vector of true class labels or continuous values, corresponding to
+the predicted scores in `mod$score_`.}
 
-\item{col.sign:}{the colors of the cofficients based on the sign of the coefficients (default: -1=deepskyblue1, 1:firebrick1)}
+\item{col.sign}{A vector of two colors for positive and negative class labels
+(default is `c("deepskyblue1", "firebrick1")`).}
 
-\item{main:}{possibility to change the title of the function (default:"")}
+\item{main}{A string for the title of the plot (default is an empty string).}
+}
+\value{
+A `ggplot` object displaying the model's performance plot, either a
+boxplot for classification tasks or a scatter plot with a regression line for
+regression tasks.
 }
 \description{
-Plots a model score or a population of models as a barplots, representing each feature, the length being the coefficient
+This function visualizes the performance of a model by plotting the predicted
+scores (`yhat`) against the true class labels (`y`). It supports both
+classification (AUC, accuracy) and regression (R2, correlation) tasks. For
+classification tasks, it displays a boxplot with jittered points, while for
+regression tasks, it shows a scatter plot with a linear regression line.
+}
+\details{
+This function checks the validity of the model and the input data,
+then creates a plot based on the model's prediction performance. For
+classification tasks, it uses a boxplot to show the distribution of predicted
+scores, while for regression tasks, it uses a scatter plot with a linear
+regression line.
+
+The function also displays performance metrics in the plot title, such as
+accuracy and AUC for classification tasks, or correlation coefficient (Rho),
+R-squared (R2), and standard error of regression (SER) for regression tasks.
+
+If the model is of type `SOTA` or lacks the required attributes (`score_`,
+`y`), the function will return `NULL` and display a corresponding error
+message.
+}
+\examples{
+# Example usage for a classification model
+model <- train(logistic_regression_model)  # Assume this is a pre-trained model
+X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+y <- sample(c(1, -1), 100, replace = TRUE)
+
+# Plot the model's performance score
+plotModelScore(model, y, main = "Classification Model Performance")
+
+# Example usage for a regression model
+model <- train(regression_model)  # Assume this is a pre-trained model
+y <- rnorm(100)  # Continuous response variable
+
+# Plot the model's performance score
+plotModelScore(model, y, main = "Regression Model Performance")
+
+}
+\author{
+Edi Prifti (IRD)
 }

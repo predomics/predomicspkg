@@ -2,17 +2,38 @@
 % Please edit documentation in R/terga2.lib.R
 \name{get_IndividualToBeMutated}
 \alias{get_IndividualToBeMutated}
-\title{Return list of individuals to mutate}
+\title{Retrieve Individuals Marked for Mutation}
 \usage{
 get_IndividualToBeMutated(pop)
 }
 \arguments{
-\item{pop:}{population list}
+\item{pop}{A list representing the population, where each individual has a
+`toBeMutated` attribute indicating if they are marked for mutation.}
 }
 \value{
-a list of individuals (= a population) containing all the individuals selected for mutation
+A vector of indices corresponding to individuals in the population
+  who are marked for mutation.
 }
 \description{
-Wraper function that returns the list of individuals that are going to go through 
-the mutate function (normaly taged with \link[predomics]{tag_SelectRandom})
+This function identifies and returns the indices of individuals in the
+population who are marked for mutation, as indicated by the `toBeMutated`
+attribute.
+}
+\details{
+The function uses `populationGet_X` to retrieve individuals with the
+`toBeMutated` attribute set to `TRUE`. It returns the indices of these
+individuals, allowing them to be processed for mutation in subsequent
+evolutionary steps.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, toBeMutated = TRUE),
+  list(fit_ = 0.8, toBeMutated = FALSE),
+  list(fit_ = 0.7, toBeMutated = TRUE)
+)
+toBeMutated <- get_IndividualToBeMutated(pop)
+print(toBeMutated) # Should return indices of individuals marked for mutation
+}
+
 }

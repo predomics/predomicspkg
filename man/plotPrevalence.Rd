@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotPrevalence}
 \alias{plotPrevalence}
-\title{Plots the prevalence of a list of features in the whole dataset and per each class}
+\title{Plot Feature Prevalence and Enrichment}
 \usage{
 plotPrevalence(
   features,
@@ -17,27 +17,63 @@ plotPrevalence(
 )
 }
 \arguments{
-\item{features:}{a list of features or features indexes for which we wish to compute prevalence}
+\item{features}{A character vector of feature names to be plotted.}
 
-\item{X:}{dataset where to compute the prevalence}
+\item{X}{A data matrix or data frame where each row is an observation and
+each column is a feature.}
 
-\item{y:}{if provided it will also compute hte prevalence per each class (default:NULL)}
+\item{y}{A vector of class labels (e.g., 1 and -1 for binary classification)
+corresponding to the rows in `X`.}
 
-\item{topdown:}{showing features from top-down or the other way around (default:TRUE)}
+\item{topdown}{Logical; whether to arrange the features in a top-down order
+(default is `TRUE`).}
 
-\item{main:}{main title (default:none)}
+\item{main}{A string for the title of the plot.}
 
-\item{plot:}{if TRUE this provides a plot, otherwise will return different metrics such as prevalence and enrichment statistics}
+\item{plot}{Logical; if `TRUE`, the function will display the plot. If
+`FALSE`, the function will return the enrichment statistics.}
 
-\item{col.pt:}{colors for the point border (-1:deepskyblue4, 1:firebrick4)}
+\item{col.pt}{Colors for points in the plot (default is `c("deepskyblue4",
+"firebrick4")`).}
 
-\item{col.bg:}{colors for the point fill (-1:deepskyblue1, 1:firebrick1)}
+\item{col.bg}{Colors for bars in the plot (default is `c("deepskyblue1",
+"firebrick1")`).}
 
-\item{zero.value:}{the value that specifies what is zero. This can be a different than 0 in log transformed data for instance (default = 0)}
+\item{zero.value}{The value to replace in `y` for missing values (default is
+`0`).}
 }
 \value{
-a ggplot object
+If `plot = TRUE`, the function returns a ggplot object displaying the
+feature prevalence and enrichment. If `plot = FALSE`, the function returns
+the enrichment results.
 }
 \description{
-Plots the prevalence of a given number of features
+This function visualizes the prevalence of features across different groups
+in a dataset and computes feature enrichment, providing an optional
+statistical test for enrichment. The plot displays the prevalence of features
+in each group, and if enrichment data is available, it adds significance
+markers.
+}
+\details{
+The function computes and visualizes the prevalence of the specified
+features across different groups in the dataset, showing the percentage of
+occurrences in each class. If statistical enrichment tests are available, the
+function will display these using asterisks for significant features. The
+enrichment is computed using chi-square tests.
+}
+\examples{
+# Example usage
+features <- c("feature1", "feature2", "feature3")
+X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100), feature3 = rnorm(100))
+y <- sample(c(1, -1), 100, replace = TRUE)
+
+# Plot feature prevalence
+plotPrevalence(features, X, y, main = "Feature Prevalence Plot")
+
+# Get enrichment statistics without plotting
+plotPrevalence(features, X, y, plot = FALSE)
+
+}
+\author{
+Edi Prifti (IRD)
 }

@@ -2,20 +2,52 @@
 % Please edit documentation in R/global.visu.R
 \name{printPopulation}
 \alias{printPopulation}
-\title{Prints a population of model objects as text.}
+\title{Print Information about a Population of Models}
 \usage{
 printPopulation(obj, method = "short", score = "fit_", indent = "")
 }
 \arguments{
-\item{obj:}{a population of models to plot}
+\item{obj}{A population of models. This should be a valid object returned by
+a model training procedure.}
 
-\item{method:}{if "digested" a short sumary (one line) will be printed, otherwise the method will contain the 
-specific way to print a model through the printModel() routine}
+\item{method}{A string specifying the format in which the population summary
+will be printed. Possible values are "digested", "short", "long", and
+"str". "digested" provides a summarized view of the population's
+properties, "short" gives a brief summary of each model, "long" provides a
+more detailed view, and "str" prints the structure of each model in the
+population.}
 
-\item{score:}{which score to show in the fit (default:fit_)}
+\item{score}{A string specifying the score attribute to be used when printing
+models. Default is "fit_".}
 
-\item{indent:}{a string (default:'tab---') that will precede each element of the object.}
+\item{indent}{A string used for indentation when printing information,
+helpful when displaying hierarchical data.}
+}
+\value{
+None. The function prints the information directly.
 }
 \description{
-Prints a population of model objects as text
+This function prints detailed information about a population of models. It
+supports multiple methods for displaying the model summaries, such as
+providing a "digested" view, a "short" version, or a more detailed "long"
+view. It can also print the structure of each model within the population.
+}
+\details{
+- The "digested" method provides an overview of the population, summarizing key attributes such as the
+sparsity and learner type.
+- The "short" method gives a brief summary of each model, including its learner, language, and evaluation
+score.
+- The "long" method offers a detailed description of each model, including all relevant information about
+coefficients and evaluation metrics.
+- The "str" method prints the structure of each model using `str()`.
+}
+\examples{
+\dontrun{
+# Assuming 'population' is a valid population of models
+printPopulation(population, method = "short")
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

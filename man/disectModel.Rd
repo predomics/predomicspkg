@@ -2,24 +2,57 @@
 % Please edit documentation in R/global.visu.R
 \name{disectModel}
 \alias{disectModel}
-\title{Analyzes the score construction and model}
+\title{Dissects the model by separating positive and negative coefficients}
 \usage{
 disectModel(mod, X, y, clf, plot = TRUE)
 }
 \arguments{
-\item{mod:}{a model object where the score will be computed}
+\item{mod}{A valid model object.}
 
-\item{X:}{the data matrix with variables in the rows and observations in the columns}
+\item{X}{The matrix of features (design matrix).}
 
-\item{y:}{the class vector}
+\item{y}{The class labels (response variable).}
 
-\item{clf:}{an object containing the different parameters of the classifier}
+\item{clf}{The classifier used (not currently utilized in the function).}
 
-\item{plot:}{plot graphical interpretation of if TRUE, (default:TRUE)}
+\item{plot}{Logical, if `TRUE`, a plot will be generated showing the score
+composition and a classification of samples based on the score.}
 }
 \value{
-an object containing statistics on a given model
+A list containing the following components:
+\describe{
+  \item{mod}{The provided model.}
+  \item{y}{The response variable.}
+  \item{scores}{A matrix containing positive, negative, and raw scores.}
+  \item{scores.norm}{Normalized scores.}
+}
 }
 \description{
-Analyzes the score construction and model
+This function dissects a model by separating its positive and negative
+coefficients, calculates the corresponding scores for each group (positive
+and negative coefficients), and normalizes them. It also provides a plot
+showing the composition of the score.
+}
+\details{
+The function works by first identifying the positive and negative
+  coefficients from the model. It then calculates the corresponding scores
+  for both the positive and negative coefficients. The scores are normalized
+  by dividing each score by the total sum of the scores. Finally, the
+  function provides an optional plot that visualizes the score composition.
+
+  The plot shows:
+\itemize{
+  \item A barcode plot of the score composition.
+  \item A classification of the samples according to the model's score with the intercept line.
+}
+}
+\examples{
+\dontrun{
+# Assuming `mod`, `X`, and `y` are already defined
+dissectResult <- disectModel(mod = mod, X = X, y = y, plot = TRUE)
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

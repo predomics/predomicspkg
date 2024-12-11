@@ -2,18 +2,49 @@
 % Please edit documentation in R/global.visu.R
 \name{plotComparativeResultsBest}
 \alias{plotComparativeResultsBest}
-\title{Plot performance scores for multiple learners}
+\title{Plot Comparative Results for Best Performance Across Multiple Methods}
 \usage{
 plotComparativeResultsBest(digested.results, plot = TRUE, ylim = c(0.5, 1))
 }
 \arguments{
-\item{digested.results:}{a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()}
+\item{digested.results}{A list containing the performance results, including
+both empirical and cross-validation (CV) scores for various methods.}
 
-\item{ylim:}{y-axis zoom in the plot}
+\item{plot}{A logical value (`TRUE` or `FALSE`). If `TRUE`, the function will
+generate and display the plots. Default is `TRUE`.}
+
+\item{ylim}{A numeric vector of length 2 specifying the limits for the
+y-axis. Default is `c(0.5, 1)`.}
 }
 \value{
-A list of ggplot graphs if plot is set to FALSE and a pannel organized graph otherwise.
+If `plot = TRUE`, the function displays the plots. If `plot = FALSE`,
+the function returns a list of ggplot objects for further manipulation.
 }
 \description{
-plotComparativeResultsBest plots a digested.results data object to compare performance results between different learners focusing at the best model.
+This function generates plots comparing the best performance metrics (such as
+AUC, accuracy, recall, precision, F1-score, etc.) across multiple methods. It
+visualizes both empirical performance and cross-validation (CV) scores for
+different methods, with the option to plot results for different scores. The
+function can handle both classification and regression tasks.
+}
+\details{
+The function generates multiple plots comparing the best performance
+metrics such as AUC, accuracy, recall, precision, F1-score, and correlation,
+across multiple methods. The plots include:
+- Empirical performance for each method.
+- Cross-validation performance (generalization) for each method.
+
+The function can visualize both classification and regression models, and
+displays the best performance across different methods. The plots are
+arranged using the `multiplot` function.
+}
+\examples{
+# Assuming digested.results contains the performance scores for methods
+plotComparativeResultsBest(digested.results, plot = TRUE, ylim = c(0.5, 1))
+
+# You can customize the plot by adjusting the score, error bars (ci), and other parameters.
+
+}
+\author{
+Edi Prifti (IRD)
 }

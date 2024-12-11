@@ -2,10 +2,45 @@
 % Please edit documentation in R/terga2.lib.R
 \name{selector_v1}
 \alias{selector_v1}
-\title{Does an elite selection on a population}
+\title{Select Top Individuals from a Population Based on Fitness}
 \usage{
 selector_v1(pop, number, clf)
 }
+\arguments{
+\item{pop}{A list representing the population, where each individual has a
+`fit_` attribute that represents its fitness score.}
+
+\item{number}{An integer specifying the number of individuals to select from
+the sorted population.}
+
+\item{clf}{A classifier object containing any additional parameters needed
+for selection (though not directly used in this function).}
+}
+\value{
+A list of the top `number` individuals from the population, sorted by
+  fitness.
+}
 \description{
-This function is a template for other selectors, it takes a population and a number of individuals to select. The result is the \code{number} bests element of the population.
+This function selects a specified number of top individuals from a population
+based on their fitness scores. It sorts the population in descending order of
+fitness and returns the highest-ranking individuals.
+}
+\details{
+The function sorts the population in descending order by the `fit_`
+attribute and returns the top `number` individuals. This selection strategy
+prioritizes individuals with the highest fitness scores, making it useful for
+selecting elites in evolutionary algorithms.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, indices_ = 1:5),
+  list(fit_ = 0.8, indices_ = 6:10),
+  list(fit_ = 0.7, indices_ = 11:15)
+)
+clf <- list() # Placeholder for classifier settings
+selected_individuals <- selector_v1(pop, number = 2, clf)
+print(selected_individuals)
+}
+
 }

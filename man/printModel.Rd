@@ -2,23 +2,49 @@
 % Please edit documentation in R/global.visu.R
 \name{printModel}
 \alias{printModel}
-\title{# plot a horizontal barplot
-#' @export
-plotBarplot <- function(v, rev=TRUE, xlim=range(v), main=""){
-  if(rev) v <- rev(v)
-  barplot(v, las=2, horiz=TRUE, col="black", main=main, xlim=xlim)
-}
-Prints a model object as text.}
+\title{Print Model Information}
 \usage{
 printModel(mod, method = "short", score = "fit_")
 }
 \arguments{
-\item{mod:}{a model to plot}
+\item{mod}{A model object. It can be any predomics model object.}
 
-\item{method:}{an object containing the different parameters of the classifier}
+\item{method}{A string specifying the format in which the model summary will
+be printed. Possible values are "short" (default), "long", and "str".
+"short" gives a compact summary, "long" provides a detailed summary, and
+"str" prints the structure of the model.}
 
-\item{score:}{which score to show in the fit (default:fit_)}
+\item{score}{A string specifying the score attribute to be displayed. Default
+is "fit_".}
+}
+\value{
+A string representing the model summary in the chosen format.
 }
 \description{
-Prints a model object as text
+This function prints information about a given model, either in a short,
+long, or structured format. The function provides a summary of the model,
+including the model coefficients, intercept, evaluation score, learner, and
+language, depending on the selected format.
+}
+\details{
+- The "short" method provides a brief overview of the model with information such as the coefficients,
+intercept, decision boundary, and evaluation score (if available).
+- The "long" method gives a more detailed version of the model summary, including the coefficients for
+both positive and negative terms, along with other model attributes such as
+learner type, language, and sparsity.
+- The "str" method prints the structure of the model using the `str()` function.
+
+If a SOTA (state-of-the-art) model is provided, the function adjusts the
+output accordingly, displaying the model's coefficients and attributes in a
+simplified format.
+}
+\examples{
+\dontrun{
+# Assuming 'mod' is a trained model
+printModel(mod, method = "short", score = "fit_")
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

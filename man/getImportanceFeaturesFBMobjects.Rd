@@ -2,8 +2,7 @@
 % Please edit documentation in R/analyzeImportantFeaturesFBM.R
 \name{getImportanceFeaturesFBMobjects}
 \alias{getImportanceFeaturesFBMobjects}
-\title{Get objects needed for a merged visualization task combining different 
-experiments from different datasets (different X and y)}
+\title{Extract Important Features and Related Metrics from Final Population}
 \usage{
 getImportanceFeaturesFBMobjects(
   clf_res,
@@ -17,35 +16,58 @@ getImportanceFeaturesFBMobjects(
 )
 }
 \arguments{
-\item{clf_res}{The result of a single experiment}
+\item{clf_res}{A classifier experiment result, as produced by the modeling
+function.}
 
-\item{X}{The feature table used as input of fit function behind experiments 
-in clf_res}
+\item{X}{A feature matrix with rows representing features and columns
+representing samples.}
 
-\item{y}{The target class (binary/continuous)}
+\item{y}{A response variable, either a binary factor (for classification) or
+a continuous variable (for regression).}
 
-\item{verbose}{print out informaiton}
+\item{verbose}{Logical. If `TRUE`, print detailed messages.}
 
-\item{filter.cv.prev}{keep only features found in at least (default: 0.25, 
-i.e 25 percent) of the cross validation experiments}
+\item{filter.cv.prev}{Numeric threshold for filtering based on
+cross-validation prevalence (default is 0.25).}
 
-\item{scaled.importance}{the scaled importance is the importance multipied 
-by the prevalence in the folds. If (default = TRUE) this will be used, the 
-mean mda will be scaled by the prevalence of the feature in the folds and 
-ordered subsequently}
+\item{scaled.importance}{Logical. If `TRUE`, scales the feature importance
+scores.}
 
-\item{k_penalty}{the sparsity penalty needed to select the best models of the 
-population (default:0.75/100).}
+\item{k_penalty}{A numeric penalty factor applied to sparsity selection
+during model evaluation (default is `0.75/100`).}
 
-\item{k_max}{select the best population below a given threshold. If (default:0) 
-no selection is performed.}
+\item{k_max}{Maximum allowed sparsity value during model selection (default
+is 0).}
 }
 \value{
-list of objects for subsequent combination
+A list with the following components:
+  - `featprevFBM`: A data frame containing feature prevalence data.
+  - `featImp`: A summary of feature importance across cross-validation folds.
+  - `effectSizes`: A data frame with effect sizes for each feature (Cliff’s delta for classification or Spearman's rho for regression).
+  - `featPrevGroups`: Data used for plotting feature prevalence by group.
 }
 \description{
-Here we get the 4 datasets from a given prediction experiment 
-(clf object + X + y) needed for subsequent combination with other 
-predition experiments for combined visualization (feature prevalence in 
-FBM + feature importance + featureEffSizes + feature prevalence in groups)
+This function processes the final population of models from a given
+classifier experiment (`clf_res`), selects the best population based on
+specified criteria, and computes the feature importance, prevalence, and
+effect sizes. The function returns a list of objects that can be used for
+plotting or further analysis of the most relevant features in the model.
+}
+\details{
+**Workflow**:
+  - Determines if the experiment is regression or classification based on the classifier's objective.
+  - Filters the best models from the population based on sparsity and evaluation criteria.
+  - Constructs data structures that capture the feature importance, prevalence, and effect sizes.
+  - Returns a list of data objects for easy plotting or further analysis.
+
+**Requirements**:
+  - `isExperiment` should be a function that checks if `clf_res` is a valid experiment.
+  - `modelCollectionToPopulation`, `selectBestPopulation`, and other helper functions should be defined for processing population and feature data.
+}
+\examples{
+\dontrun{
+# Extract feature importance and related metrics
+feature_data <- getImportanceFeaturesFBMobjects(clf_res = my_experiment, X = my_data, y = my_labels)
+}
+
 }

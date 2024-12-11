@@ -2,14 +2,46 @@
 % Please edit documentation in R/global.visu.R
 \name{printy}
 \alias{printy}
-\title{Prints as text the detail on a given object from the predomics package.}
+\title{Print Summary of Predomics Object}
 \usage{
 printy(obj)
 }
 \arguments{
-\item{obj:}{an object from the predomics object}
+\item{obj}{An object that can be of type model, population, classifier,
+experiment, or model collection.}
+}
+\value{
+None. The function prints the summary of the object directly to the
+  console.
 }
 \description{
-This function will summarize any of the predomics package objects such as can be an Experiment, 
-a Model, a Population of models or a ModelCollection
+This function prints a summary of a given object, identifying its type
+(model, population, classifier, experiment, or model collection) and calling
+the appropriate print function to display relevant information about the
+object.
+}
+\details{
+The function checks the type of the provided object using `isModel`,
+`isPopulation`, `isClf`, `isExperiment`, and `isModelCollection` functions.
+Based on the object type, it prints a summary:
+- **Model**: Calls `printModel` with a detailed description of the model.
+- **Population**: Calls `printPopulation`, showing a summary of the population of models.
+- **Model Collection**: Calls `printModelCollection` to show a summary of a collection of models.
+- **Experiment**: Calls `printExperiment` to display experiment details.
+- **Classifier**: Calls `printClassifier` for classifier details.
+If the object type is not recognized, an error message is printed.
+}
+\examples{
+\dontrun{
+# Assuming 'model', 'population', 'classifier', 'experiment', and 'model_collection' are valid objects
+printy(model)
+printy(population)
+printy(classifier)
+printy(experiment)
+printy(model_collection)
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

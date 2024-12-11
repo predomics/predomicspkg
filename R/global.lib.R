@@ -198,7 +198,16 @@ evaluateYhat <- function(mod = NULL, X, y, clf, score=NULL, intercept=NULL, sign
     if(!myAssertNotNullNorNa(intercept, "missing intercept from evaluateYhat", stop = FALSE)) return(NULL)
     if(!myAssertNotNullNorNa(sign, "missing sign from evaluateYhat", stop = FALSE)) return(NULL)
     
-    lev   <- levels(as.factor(clf$data$y))
+    # if the data does not exist in y, we can't compute the class
+    if(!myAssertNotNullNorNa(clf$data$y, "missing y from evaluateYhat", stop = FALSE)) 
+    {
+      warning("evaluateYhat: missing y from clf$data, getting it from y instead")
+      lev <- levels(as.factor(y))
+      # return(NULL)
+    }else
+    {
+      lev   <- levels(as.factor(clf$data$y))
+    }
     
     # NOTE: in the score we may have infite values that come for instance from the ratio language
     # This means that whatever the intercept these examples are positive ones. As such we can omit
@@ -235,6 +244,89 @@ evaluateYhat <- function(mod = NULL, X, y, clf, score=NULL, intercept=NULL, sign
   }
   
   return(yhat)
+}
+
+
+#' Predicts the outcomes of a population of models in a dataset.
+#'
+#' @description This function evaluates the class of a population of models for a dataset X
+#' @param X: dataset to predit
+#' @param y: the real y
+#' @param pop: a population of models. This can be an FBM for instance.
+#' @param clf: an object containing the different parameters of the classifier
+#' @param plot: logical (default:FALSE), returns a barplot for each sample with 
+#' the prevalence of each class by the population of models
+#' @param col: manual scaling colors (default:`c("deepskyblue4", "firebrick4")`). 
+#' @param fill: manual scaling colors (default:`c("deepskyblue1", "firebrick1")`).
+#' @return A dataframe of predicted classes with samples in columns and models 
+#' in rows, `if(plot = FALSE)`. Otherwise it will return a ggplot object.
+#' @export
+predictPopulation <- function(X, y, clf, 
+                              pop, 
+                              plot = FALSE, 
+                              col = c("deepskyblue4", "firebrick4"),
+                              fill = c("deepskyblue1", "firebrick1"))
+{
+  if(!isPopulation(pop))
+  {
+    stop("predictPopulation: please provide a valid population object.")
+  }
+  
+  if(!isClf(clf))
+  {
+    stop("predictPopulation: please provide a valid classifier object.")
+  }
+  
+  # make sure the population is evaluated forced for this X, y and clf
+  pop <- evaluatePopulation(X = X, y = y, clf = clf, 
+                            pop = pop, 
+                            eval.all = TRUE, 
+                            force.re.evaluation = TRUE, 
+                            mode = "test")
+  
+  list.evaluations <- lapply(pop, function(mod) {
+    as.character(evaluateYhat(mod = mod, 
+                              X = X, 
+                              y = y, 
+                              clf = clf)
+                 
+    )
+  })
+  
+  # Assuming tmp is your list of vectors
+  combined_df <- do.call(rbind, list.evaluations)
+  
+  # Convert the row names to a column if needed
+  combined_df <- data.frame(row.names = rownames(combined_df), 
+                            combined_df)
+  if(plot){
+    g <- combined_df %>% 
+      rownames_to_column("model") %>%
+      pivot_longer(
+        cols = -model, 
+        names_to = "samples", 
+        values_to = "class"
+      ) %>%
+      group_by(samples, class) %>%
+      summarize(count = n(),  .groups = "drop") %>%
+      ggplot(aes(x = samples, y = count, 
+                 color = as.factor(class),
+                 fill = as.factor(class))
+      ) +
+      geom_bar(stat="identity") + 
+      scale_color_manual(values = c("deepskyblue4", "firebrick4")) + 
+      scale_fill_manual(values = c("deepskyblue1", "firebrick1")) +
+      labs(color = "Class", fill = "Class") + # Rename the legend
+      theme_bw() + 
+      theme(legend.position = "bottom", 
+            axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+    
+    return(g)
+    
+  }else
+  {
+    return(combined_df)
+  }
 }
 
 
@@ -1523,6 +1615,10 @@ evaluateModelRegression <- function(mod, X, y, clf, eval.all = FALSE, force.re.e
 #' @export 
 evaluateModel <- function(mod, X, y, clf, eval.all = FALSE, force.re.evaluation = FALSE, estim.feat.importance = FALSE, mode = 'train')
 {
+  if(ncol(X) != length(y))
+  {
+    stop("evaluateModel: the number of columns in X should be the same as the length of y.")
+  }
   
   if(mode != "train" & mode != "test")
   {

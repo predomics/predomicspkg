@@ -2,31 +2,75 @@
 % Please edit documentation in R/terga2.lib.R
 \name{evolve2m}
 \alias{evolve2m}
-\title{Second version of the evolve method}
+\title{Evolve a Population with Advanced Selection, Crossover, and Mutation}
 \usage{
 evolve2m(X, y, clf, pop, featEval, generation)
 }
 \arguments{
-\item{X:}{Dataset to classify}
+\item{X}{A matrix or data frame of feature values, where each row represents
+a feature and each column represents a sample.}
 
-\item{y:}{Variable to predict}
+\item{y}{A response vector or target variable for supervised learning. The
+length of \code{y} should match the number of columns in \code{X}.}
 
-\item{clf:}{The claffifier  object containing the different parameters}
+\item{clf}{A classifier object containing parameters for evolutionary
+operations, including options for selection percentages, mutation size,
+population size, parallelization, and debugging.}
 
-\item{pop:}{The population to be evolved}
+\item{pop}{A list representing the population, where each individual has
+attributes like `fit_`, `selected`, `mate`, and `toBeMutated`.}
 
-\item{featEval:}{A dataframe with the evaluation of each variable of the dataset, 
-used for some mutator.}
+\item{featEval}{A vector or list containing feature evaluation metrics, used
+to guide mutation operations.}
+
+\item{generation}{An integer representing the current generation number in
+the evolutionary process.}
 }
 \value{
-A list with the size_pop bests of the combination of the old population 
-with the new population
+The evolved population list, containing updated individuals with
+  modified `fit_`, `selected`, `mate`, and `toBeMutated` attributes.
 }
 \description{
-This evolve method realize the selection of the parents with 
-two methods (for the moment) : elite and random. The it tags every selected 
-individual with the index of it's mate in the population. Then the individual 
-which sould be mutated are tagged. for each individual of the population we 
-check if they need to be crossed and/or mutated and the we apply the operations 
-and create a new individual for each operation applied.
+This function performs one generation of evolution on a population,
+implementing selection, crossover, and mutation with customizable methods. It
+returns the evolved population after these operations.
+}
+\details{
+The `evolve2m` function implements a detailed evolutionary cycle
+with the following steps:
+
+1. **Population Sorting**: The population is sorted by fitness, and
+individuals are evaluated if necessary. 2. **Tagging for Selection**:
+Individuals are tagged for elite and random selection based on selection
+percentages in `clf$params$select_percByMethod`. 3. **Tagging for Mutation**:
+Some individuals are tagged for mutation based on `mutate_size`. 4.
+**Parallel and Sequential Processing**: If parallel processing is enabled
+(`clf$params$parallel.local`), crossover and mutation are performed in
+parallel; otherwise, they are processed sequentially. 5. **Mating and
+Mutation**: Selected individuals are paired for mating, and some are mutated
+based on the feature evaluation metrics (`featEval`). 6. **Population Pruning
+and Expansion**: The evolved population is pruned to retain the top 2/3 of
+individuals by fitness, then expanded by adding new individuals or retaining
+some from the previous population if necessary.
+
+The population is further cleaned, sorted, and prepared for the next
+generation. If `debug` mode is enabled in `clf`, various messages are printed
+to track the evolution process.
+}
+\examples{
+\dontrun{
+X <- matrix(rnorm(100), nrow = 10) # Random features
+y <- sample(c(0, 1), 10, replace = TRUE) # Random binary response
+clf <- list(params = list(
+  select_perc = 50, select_percByMethod = c(30, 20), size_pop = 10,
+  mutate_size = 10, cross = TRUE, mutate = TRUE, parallel.local = FALSE, debug = TRUE
+))
+pop <- list(
+  list(fit_ = NA, indices_ = 1:5, selected = FALSE, toBeMutated = FALSE, mate = NULL),
+  list(fit_ = NA, indices_ = 6:10, selected = FALSE, toBeMutated = FALSE, mate = NULL)
+)
+featEval <- runif(10)
+evolved_pop <- evolve2m(X, y, clf, pop, featEval, generation = 1)
+}
+
 }

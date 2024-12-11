@@ -9,19 +9,11 @@ vignette: >
 # Installation
 
 Follow these steps to install the Predomics package:
-
-1.  Install R from [CRAN](https://cran.r-project.org/).
-2.  Install the predomics package along with all its dependencies : 
-    `doSNOW`, `foreach`, `snow`, `doRNG`, `gtools`, `glmnet`, `pROC`, `viridis`, `kernlab`, `randomForest`,`effsize`
-
 ```
-devtools::install_github("predomics/predomicspkg", dependencies = TRUE)
+# library(gtools)
+# install_github("eprifti/predomics", dependencies = TRUE)
 
-## install dependencies
-# install.packages(c("doSNOW", "foreach", "snow", "doRNG", "gtools", "glmnet", "pROC", "viridis", "kernlab", "randomForest","effsize"))
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-# BiocManager::install("BioQC")
+# CRAN packages for testing and documentation
 # install.packages("testthat")
 # install.packages("roxygen2")
 ```

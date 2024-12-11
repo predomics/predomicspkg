@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotPopulation}
 \alias{plotPopulation}
-\title{Plots a population of models (or a single model) objects as barplots of scaled coefficients.}
+\title{Plot Population of Models}
 \usage{
 plotPopulation(
   pop,
@@ -17,24 +17,62 @@ plotPopulation(
 )
 }
 \arguments{
-\item{pop:}{a population of models to plot}
+\item{pop}{A population of models (either a list of models or a single
+model).}
 
-\item{X:}{the data matrix with variables in the rows and observations in the columns}
+\item{X}{A data matrix or data frame where rows represent observations and
+columns represent features.}
 
-\item{y:}{the class vector}
+\item{y}{A vector of class labels (e.g., 1 and -1 for binary classification)
+corresponding to the rows in `X`.}
 
-\item{sort.features:}{wether the features need to be sorted by correlation with 'y' or not}
+\item{sort.features}{Logical; if `TRUE`, the features will be sorted by their
+discriminance with respect to `y`. Default is `FALSE`.}
 
-\item{sort.ind:}{computing sorting can take time if computed for every model and can be computed outside the function and passed as a parameter}
+\item{sort.ind}{A vector of indices for sorting the features. If `NULL`, the
+function will determine the order based on discriminance. Default is
+`NULL`.}
 
-\item{col.sign:}{the colors of the cofficients based on the sign of the coefficients (default: -1=deepskyblue1,1:firebrick1)}
+\item{col.sign}{A vector of two colors (default is `c("deepskyblue1",
+"firebrick1")`) used to represent positive and negative coefficients,
+respectively.}
 
-\item{ncol:}{number of graphics for each line (default: 10)}
+\item{ncol}{The number of columns to arrange the plots in (default is `10`).}
 
-\item{slim:}{plot without axis information (default:FALSE)}
+\item{slim}{Logical; if `TRUE`, the plots will be simplified. Default is
+`FALSE`.}
 
-\item{importance:}{the importance (mda) of the features in crossval}
+\item{importance}{Logical; if `TRUE`, the feature importance will be plotted.
+Default is `FALSE`.}
+}
+\value{
+If the population consists of a single model, a plot of the model's
+feature coefficients or importance is returned. If the population consists of
+multiple models, a grid of plots is displayed using `grid.arrange`.
 }
 \description{
-Plots an model or a population of models as a barplots, representing each feature, the length being the coefficient
+This function visualizes a population of models by plotting their feature
+importance or coefficients. It supports sorting of features by discriminance
+or importance, and allows for customization of colors and the number of
+columns in the layout.
+}
+\details{
+This function generates a series of plots for a population of
+models, displaying the feature coefficients or importances. If the population
+consists of multiple models, each model's coefficients or importances are
+plotted in a separate subplot. The function supports feature sorting based on
+their discriminance or importance, and customizes the layout of the plots.
+}
+\examples{
+# Example usage for a population of models
+pop <- list(model1, model2, model3)  # Assume these are pre-defined models
+X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+y <- sample(c(1, -1), 100, replace = TRUE)
+
+# Plot the population
+plotPopulation(pop, X, y, sort.features = TRUE, ncol = 3)
+
+}
+\author{
+Edi Prifti (IRD)
 }

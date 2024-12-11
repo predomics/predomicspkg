@@ -2,22 +2,54 @@
 % Please edit documentation in R/terga1.lib.R
 \name{crossing}
 \alias{crossing}
-\title{Creates new combinations of features based from a parents.}
+\title{Generate Children by Crossover from Parent Population}
 \usage{
 crossing(clf, pop, parents, seed = NULL)
 }
 \arguments{
-\item{clf:}{the classifier parameter object}
+\item{clf}{A classifier object containing parameters for crossover,
+including:
+- `current_sparsity`: The target sparsity level for each child.
+- `parallel.local`: Boolean indicating whether parallel processing should be used.}
 
-\item{pop:}{A population (i.e. list) of index vectors}
+\item{pop}{A list representing the population of individuals (feature
+subsets), where each individual is represented as a vector of feature
+indices.}
 
-\item{parents:}{Indexes of the population pointing to the subset of the population containing the parents (whose genes/features) will be used to create the children.}
+\item{parents}{A vector of indices representing the parent individuals within
+`pop` from which to generate children.}
 
-\item{seed:}{For reproductibility purpose to fix the random generator number.}
+\item{seed}{Optional integer seed for random number generation, ensuring
+reproducibility.}
 }
 \value{
-a population of models, containing parents and children
+A list representing the updated population, including both the
+  original parents and the newly generated children.
 }
 \description{
-This function is used in terga1 will create new combinations of features based of existing ones from the parents.
+This function performs crossover on a population by selecting pairs of parent
+individuals to generate children. Each child is created by combining unique
+genes from two parents, up to a specified sparsity level.
+}
+\details{
+The function: 1. Selects a specified number of couples from the
+parents to generate children. 2. Combines unique genes from each pair of
+parents to create a child with `current_sparsity` number of features. 3.
+Optionally uses parallel processing to accelerate child generation.
+
+For each child, the genes are selected from the combined unique genes of both
+parents (`parents_gene_reservoir`). The final population consists of both the
+original parents and the generated children.
+}
+\examples{
+\dontrun{
+clf <- list(
+  params = list(current_sparsity = 5, parallel.local = FALSE)
+)
+pop <- list(1:5, 2:6, 3:7, 4:8)  # Example parent population
+parents <- c(1, 2, 3, 4)
+new_population <- crossing(clf, pop, parents, seed = 42)
+print(new_population)
+}
+
 }

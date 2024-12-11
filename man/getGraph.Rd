@@ -11,7 +11,7 @@ getGraph(mat, X, threshold = 0)
 
 \item{mat:}{AnalyseStableModels()$origin}
 
-\item{threshold:}{}
+\item{threshold:}{Used to select a number of edgets. By default this is zero.}
 }
 \value{
 a graph

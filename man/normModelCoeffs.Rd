@@ -2,24 +2,59 @@
 % Please edit documentation in R/global.visu.R
 \name{normModelCoeffs}
 \alias{normModelCoeffs}
-\title{Normalize the model coefficients needed for the plot}
+\title{Normalize Model Coefficients}
 \usage{
 normModelCoeffs(mod, X, y, sort.features = FALSE, sort.ind = NULL)
 }
 \arguments{
-\item{mod:}{a model to plot}
+\item{mod}{A model object that includes the attribute `coeffs_` (the model
+coefficients). The model should also include an associated `language`
+attribute specifying the type of model (e.g., `bin`, `glmnet`, `svm`).}
 
-\item{X:}{the data matrix with variables in the rows and observations in the columns}
+\item{X}{A matrix or data frame of feature values used in the model.}
 
-\item{y:}{the class vector}
+\item{y}{A vector of true labels or target values corresponding to `X`.}
 
-\item{sort.features:}{wether the features need to be sorted by correlation with 'y' or not (default:FALSE)}
+\item{sort.features}{A logical value indicating whether to sort the features
+based on their importance in relation to the target variable (default is
+`FALSE`).}
 
-\item{sort.ind:}{computing sorting can take time if computed for every model and can be computed outside the function and passed as a parameter}
+\item{sort.ind}{A vector of indices for sorting the features. If `NULL`, the
+function will determine the sorting based on feature discriminance (default
+is `NULL`).}
 }
 \value{
-the normalized coefficients
+A numeric vector containing the normalized coefficients of the model,
+or `NULL` if the model does not have valid coefficients.
 }
 \description{
-Normalize the model coefficients needed for the plot
+This function normalizes the model coefficients to a common scale. It is
+designed to handle different types of models and normalizes their
+coefficients for comparison purposes. The function also offers the ability to
+sort the features based on their importance or discriminatory power relative
+to the target variable.
+}
+\details{
+The function normalizes the coefficients of a model based on the
+type of model. It handles models such as logistic regression (`logreg`), SVM
+(`svm`), GLM (`glmnet`), and others. If `sort.features` is set to `TRUE`, the
+features will be sorted based on their discriminatory power, as calculated by
+a feature selection method (e.g., filtering based on statistical
+significance).
+
+The normalized coefficients are scaled to lie between -1 and 1, which allows
+for a fair comparison of feature importance across different models.
+}
+\examples{
+# Example usage for a logistic regression model
+model <- train(logistic_regression_model)  # Assume this is a pre-trained model
+X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+y <- sample(c(1, -1), 100, replace = TRUE)
+
+# Normalize the model coefficients
+normalized_coeffs <- normModelCoeffs(model, X, y)
+
+}
+\author{
+Edi Prifti (IRD)
 }

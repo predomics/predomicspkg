@@ -2,23 +2,60 @@
 % Please edit documentation in R/terga2.lib.R
 \name{tag_select}
 \alias{tag_select}
-\title{Add `selected` tag using elite and random selection}
+\title{Select and Tag Individuals in a Population for Evolutionary Operations}
 \usage{
 tag_select(X, y, clf, pop)
 }
 \arguments{
-\item{X:}{Unused but still here for compatibility}
+\item{X}{A matrix or data frame of feature values, where each row represents
+a feature and each column represents a sample.}
 
-\item{y:}{same as `X`}
+\item{y}{A response vector or target variable for supervised learning. The
+length of \code{y} should match the number of columns in \code{X}.}
 
-\item{clf:}{the classifier object where parameters are defined}
+\item{clf}{A classifier object containing parameters for selection, including
+`select_perc`, `select_percByMethod`, `size_pop`, and `mutate_size`.}
 
-\item{pop:}{the population on which we want to apply the selection}
+\item{pop}{A list representing the population, where each individual has
+attributes including `mate` and `toBeMutated`.}
 }
 \value{
-the population with the tag `selected` on some of the individuals
+The modified population list, where selected individuals are tagged
+  with `mate` attributes for mating and `toBeMutated` attributes for
+  mutation.
 }
 \description{
-This function combines \link[predomics]{tag_SelectElite} and \link[predomics]{tag_SelectRandom}
-to tag the desired individuals in a population following the proportion given in the clf
+This function selects individuals in a population for evolutionary
+operations, including elite and random selection, pairing individuals for
+mating, and tagging some individuals for mutation. The selection process is
+based on specified percentages in the classifier object (`clf`).
+}
+\details{
+The function begins by sorting the population based on fitness
+(`fit_` attribute). It then calculates the number of individuals to be
+selected for mutation based on `select_perc` in `clf`. Selection is split
+into two methods, elite and random, as specified by `select_percByMethod`,
+and individuals are tagged for mating within these groups.
+
+Following selection, individuals are paired for mating, with each selected
+individual having a `mate` attribute set. The function then calls
+`tag_ToBeMutated` to mark some individuals for mutation based on
+`mutate_size` from `clf`.
+}
+\examples{
+\dontrun{
+X <- matrix(rnorm(100), nrow = 10) # Random features
+y <- sample(c(0, 1), 10, replace = TRUE) # Random binary response
+clf <- list(params = list(select_perc = 50, select_percByMethod = c(30, 20), size_pop = 10, mutate_size = 10))
+pop <- list(
+  list(fit_ = 0.9, mate = list(), toBeMutated = FALSE),
+  list(fit_ = 0.8, mate = list(), toBeMutated = FALSE),
+  # Add additional individuals as needed
+)
+pop <- tag_select(X, y, clf, pop)
+# Check which individuals are selected for mating and mutation
+sapply(pop, function(ind) ind$mate)
+sapply(pop, function(ind) ind$toBeMutated)
+}
+
 }

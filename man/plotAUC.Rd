@@ -2,24 +2,49 @@
 % Please edit documentation in R/global.visu.R
 \name{plotAUC}
 \alias{plotAUC}
-\title{Analyze the results from a given classifier}
+\title{Plot AUC and ROC Curve with Confidence Intervals}
 \usage{
 plotAUC(score, y, main = "", ci = TRUE, percent = TRUE)
 }
 \arguments{
-\item{score:}{this is the y^ of a given model}
+\item{score}{A numeric vector containing the predicted scores from the model.}
 
-\item{y:}{the class to be predted}
+\item{y}{A numeric or factor vector containing the true class labels. The
+labels should be binary, with two levels (e.g., 1 and -1, or 0 and 1).}
 
-\item{main:}{title of the graph}
+\item{main}{A string representing the title of the plot. Default is an empty
+string.}
 
-\item{ci:}{the point shape for the graph}
+\item{ci}{A logical value indicating whether to compute and display the
+confidence intervals for the AUC. Default is `TRUE`.}
 
-\item{percent:}{color for the graph}
+\item{percent}{A logical value indicating whether to express the ROC curve in
+percentage scale. Default is `TRUE`.}
 }
 \value{
-a roc object
+A `roc` object from the `pROC` package, containing the ROC curve and
+  AUC information.
 }
 \description{
-Analyze the results from a given classifier.
+This function generates a Receiver Operating Characteristic (ROC) curve and
+computes the Area Under the Curve (AUC) along with the corresponding
+confidence intervals. It also highlights the best threshold using Youden's
+index.
+}
+\details{
+The function uses the `pROC` package to compute and plot the ROC
+curve and AUC. The best threshold is determined using Youden’s index, and it
+is displayed on the plot with vertical and horizontal lines. The plot
+includes the AUC value and its confidence intervals, as well as the best
+threshold on the curve.
+}
+\examples{
+\dontrun{
+# Assuming `score` is a vector of predicted scores and `y` is the true labels
+plotAUC(score, y, main = "ROC Curve with AUC", ci = TRUE)
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

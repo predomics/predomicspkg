@@ -258,6 +258,60 @@ terga2 <- function(sparsity = c(1:10), max.nb.features = 1000,
 #######################################################
 ##      New Version of the terga_fit function :      ##
 #######################################################
+
+#' Fit a Model Using an Evolutionary Algorithm with Controlled Parameters
+#'
+#' This function fits a model to the data using an evolutionary algorithm,
+#' allowing for controlled sparsity, fitness evaluation, and multiple evolution
+#' strategies. The function iteratively evolves a population of models,
+#' optimizing for accuracy or correlation, and terminates based on specified
+#' conditions.
+#'
+#' @param X A matrix or data frame of feature values, where each row represents
+#'   a feature and each column represents a sample.
+#' @param y A response vector or target variable for supervised learning. The
+#'   length of \code{y} should match the number of columns in \code{X}.
+#' @param clf A classifier object containing parameters for fitting, including:
+#' - `params`: A list of parameters for fitting, such as `language`, `objective`, `evalToFit`, `sparsity`, `size_pop`, `nb_generations`, `maxTime`, and `evolver`.
+#' - `feature.cor`: A matrix of feature correlations for pre-selection of features based on correlation.
+#' - `functions`: A list of functions to be used within the fitting process, such as `evolve`, `mutate`, and `cross`.
+#'
+#' @details The function performs the following steps:
+#'
+#' 1. **Parameter Initialization**: Sets parameters based on the specified
+#' `language` and adjusts `evalToFit` based on the `objective`. 2. **Feature
+#' Pre-selection**: Optionally restricts `X` to the most significant features
+#' based on `clf$feature.cor` if `max.nb.features` is specified. 3. **Population
+#' Initialization**: Initializes a population of models based on `in_pop` (if
+#' available) or generates a new population with random individuals. 4.
+#' **Evolutionary Process**:
+#'   - Iteratively evolves the population over generations, evaluating and ranking individuals by fitness.
+#'   - Applies selection, crossover, and mutation strategies to generate new models.
+#'   - Stores the best models by sparsity level for each generation.
+#' 5. **Termination**: Stops when the maximum number of generations or specified
+#' execution time (`maxTime`) is reached.
+#'
+#' The function returns a collection of the best models, sorted by fitness, and
+#' allows for plotting evolution if `plot` is set to `TRUE`.
+#'
+#' @return A list representing a model collection of the best individuals from
+#'   the final population, each evaluated by fitness and sparsity level.
+#'
+#' @examples
+#' \dontrun{
+#' X <- matrix(rnorm(1000), nrow = 10) # Random features
+#' y <- sample(c(0, 1), 100, replace = TRUE) # Random binary response
+#' clf <- list(
+#'   params = list(language = "bin", objective = "accuracy", evalToFit = "accuracy_", size_pop = 20,
+#'                 nb_generations = 50, maxTime = 3600, evolver = "v2m"),
+#'   feature.cor = data.frame(p = runif(10)),
+#'   functions = list(evolver = evolve2m)
+#' )
+#' best_models <- terga2_fit(X, y, clf)
+#' print(best_models)
+#' }
+#'
+#' @export
 terga2_fit <- function(X, y, clf)
 {
   startingTime <- Sys.time()

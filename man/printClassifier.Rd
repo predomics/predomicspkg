@@ -2,18 +2,42 @@
 % Please edit documentation in R/global.visu.R
 \name{printClassifier}
 \alias{printClassifier}
-\title{Prints as text the detail on a given Classifier object}
+\title{Print Information about a Classifier Object}
 \usage{
 printClassifier(obj, indent = "\\t--- ")
 }
 \arguments{
-\item{obj:}{a Classifier object}
+\item{obj}{A classifier object, typically returned by a classifier training
+function. The object should contain details about the experiment, model
+parameters, and possibly a collection of models.}
 
-\item{indent:}{a string (default:'tab---') that will precede each element of the object.}
+\item{indent}{A string for indentation used when printing information. It
+allows for hierarchical display, making the output easier to read and
+understand. Default is "   --- ".}
 }
 \value{
-NULL if the object is not a valid Classifier
+None. The function prints the information directly to the console.
 }
 \description{
-This function prints a summary of a Classifier object.
+This function prints detailed information about a classifier object,
+including information about the experiment, the learner settings, and the
+models within the classifier. It provides a structured view of the
+classifier's parameters and any relevant attributes to facilitate
+understanding and debugging.
+}
+\details{
+- If the classifier object contains an experiment attribute, the function prints details of the experiment.
+- If the classifier has parameters (`params`), it prints the learner type, its parameters, and, if applicable,
+any models used in the classifier.
+- If the classifier includes a model collection, details of the models are printed as well.
+}
+\examples{
+\dontrun{
+# Assuming 'classifier' is a valid classifier object
+printClassifier(classifier)
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

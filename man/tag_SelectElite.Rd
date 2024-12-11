@@ -2,20 +2,47 @@
 % Please edit documentation in R/terga2.lib.R
 \name{tag_SelectElite}
 \alias{tag_SelectElite}
-\title{Tag individuals for parenting}
+\title{Select Elite Individuals in a Population}
 \usage{
 tag_SelectElite(clf, pop, nbToSelect)
 }
 \arguments{
-\item{clf:}{the classifier object}
+\item{clf}{A classifier object that may contain parameters for selection
+(though it is not directly used in this function).}
 
-\item{pop:}{the population on which we want to add the tag}
+\item{pop}{A list representing the population, where each individual is an
+element with a `selected` attribute and a `fit_` fitness attribute.}
 
-\item{nbToSelect:}{the number of individuals we are going to select in the population}
+\item{nbToSelect}{An integer specifying the number of individuals to mark as
+elite in the population.}
 }
 \value{
-the population given as an input with `nbToSelect` bests individuals with `$selected = TRUE`
+The modified population list with the `selected` attribute set to
+  \code{TRUE} for the top elite individuals.
 }
 \description{
-Function to add the tag "selected" to the best individuals of the population
+This function selects a specified number of elite individuals from a
+population by marking them as selected. The population is sorted by fitness,
+and the top individuals are tagged based on the `nbToSelect` parameter.
+}
+\details{
+The function sorts the population by the `fit_` attribute
+(presumably representing fitness) in descending order. It then iterates
+through the sorted list, marking the top `nbToSelect` individuals as
+`selected` by setting their `selected` attribute to `TRUE`. If the population
+is empty, a warning is issued and the function returns \code{NULL}.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, selected = FALSE),
+  list(fit_ = 0.8, selected = FALSE),
+  list(fit_ = 0.7, selected = FALSE)
+)
+clf <- list() # Placeholder for classifier object
+pop <- tag_SelectElite(clf, pop, nbToSelect = 2)
+# Check which individuals are selected
+sapply(pop, function(ind) ind$selected)
+}
+
 }

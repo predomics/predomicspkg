@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotComparativeEmpiricalScore}
 \alias{plotComparativeEmpiricalScore}
-\title{Plots a graph for a given score}
+\title{Plot Comparative Empirical Score for Multiple Methods}
 \usage{
 plotComparativeEmpiricalScore(
   digested.results,
@@ -12,17 +12,46 @@ plotComparativeEmpiricalScore(
 )
 }
 \arguments{
-\item{digested.results:}{a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()}
+\item{digested.results}{A list containing the empirical results of the
+models, including performance scores for various methods.}
 
-\item{ylim:}{y-axis zoom in the plot}
+\item{ylim}{A numeric vector of length 2 specifying the limits for the
+y-axis. Default is `c(0.5, 1)`.}
 
-\item{score:}{default (auc_) score}
+\item{score}{A string specifying which score to visualize, e.g., "auc_" or
+"accuracy_". Default is `"auc_"`.}
 
-\item{main:}{name of the graphic}
+\item{main}{A string specifying the title of the plot. Default is an empty
+string.}
 }
 \value{
-A ggplot graphs
+A ggplot object visualizing the comparative empirical scores across
+  multiple methods.
 }
 \description{
-plotComparativeEmpiricalScore plots a digested.results data object for a given score.
+This function generates a plot comparing the empirical scores (such as AUC or
+accuracy) across multiple methods for different values of the sparse
+parameter (k sparse). The plot includes lines representing each method and
+points indicating the empirical score at each k sparse value. Horizontal
+lines indicate major thresholds (e.g., AUC = 0.5 or accuracy = majority
+class).
+}
+\details{
+The function plots empirical scores (such as AUC or accuracy) for
+different methods across various values of k sparse. It handles multiple
+methods and adds horizontal lines to indicate important thresholds, such as
+AUC = 0.5 or the majority class in classification tasks.
+
+The plot is created using \code{ggplot2}, and different methods can be
+assigned different colors and point shapes. If no empirical data is provided,
+a blank plot with axis labels and horizontal lines for thresholds is
+displayed.
+}
+\examples{
+# Assuming digested.results contains the performance scores for methods
+plotComparativeEmpiricalScore(digested.results, ylim = c(0.5, 1), score = "auc_", main = "Comparison of AUC across Methods")
+
+}
+\author{
+Edi Prifti (IRD)
 }

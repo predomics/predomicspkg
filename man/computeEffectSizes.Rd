@@ -2,26 +2,48 @@
 % Please edit documentation in R/analyzeImportantFeaturesFBM.R
 \name{computeEffectSizes}
 \alias{computeEffectSizes}
-\title{Compute effect sizes for features in binary classification/regression tasks}
+\title{Compute Effect Sizes for Features}
 \usage{
 computeEffectSizes(X, y, mode)
 }
 \arguments{
-\item{X}{The X matrix (rows=features; columns=samples)}
+\item{X}{A feature matrix with rows representing features and columns
+representing samples.}
 
-\item{y}{The y vector of sample class (-1,1 in binary classification; 
-continuous variable in regression)}
+\item{y}{The response variable, either a binary factor for classification
+(with levels `1` and `-1`) or a continuous variable for regression.}
 
-\item{mode}{classification or regression}
+\item{mode}{A character string indicating the task type, either
+`"classification"` or `"regression"`.}
 }
 \value{
-data frame of features, effect sizes (cliff's delta for binary 
-classification; spearman rho for regression), and pvalues (wicoxon rank-sum 
-test for binary classification task; spearman correlation for regression)
+A data frame with effect size metrics for each feature:
+  - For `classification` mode: columns `feature`, `cdelta` (Cliff's delta), and `pval.wilcox` (p-value from Wilcoxon test).
+  - For `regression` mode: columns `feature`, `rho` (Spearman's correlation coefficient), and `pval` (p-value).
 }
 \description{
-In binary classification tasks, compute the cliff's delta effect 
-sizes btw groups (1 vs. -1) + pvalues from wilcoxon rank-sum tests; in 
-regression tasks, compute spearman correlations (rho + pvalue) vs. 
-continuous y variable
+This function computes effect sizes for each feature in the feature matrix
+`X`, using different methods based on the specified mode (`classification` or
+`regression`). For classification tasks, it calculates Cliff's delta and
+performs a Wilcoxon test for each feature, assuming binary classes `1` and
+`-1`. For regression tasks, it computes Spearman's rank correlation
+coefficient.
+}
+\details{
+**Classification Mode**:
+  - Checks that `y` contains only binary values (`1` and `-1`).
+  - Calculates Cliff's delta to measure effect size and performs a Wilcoxon rank-sum test to assess the significance of feature values between the two classes.
+
+**Regression Mode**:
+  - Computes Spearman's rank correlation coefficient (`rho`) to assess monotonic relationships between each feature and the continuous response variable `y`.
+}
+\examples{
+\dontrun{
+# For classification
+effect_sizes <- computeEffectSizes(X = my_data, y = my_labels, mode = "classification")
+
+# For regression
+effect_sizes <- computeEffectSizes(X = my_data, y = my_continuous_response, mode = "regression")
+}
+
 }

@@ -2,17 +2,38 @@
 % Please edit documentation in R/terga2.lib.R
 \name{get_Parents}
 \alias{get_Parents}
-\title{Return list of parents}
+\title{Retrieve Selected Individuals as Parents}
 \usage{
 get_Parents(pop)
 }
 \arguments{
-\item{pop:}{population list}
+\item{pop}{A list representing the population, where each individual has a
+`selected` attribute indicating if they are selected.}
 }
 \value{
-a list of individuals (= a population) containing all the selected parents
+A vector of indices corresponding to individuals in the population
+  who are marked as selected.
 }
 \description{
-Wraper function that returns the list of parents (normaly taged with 
-\link[predomics]{tag_SelectRandom})
+This function identifies and returns the indices of individuals in the
+population who are marked as selected, which can be used as parents in
+evolutionary processes.
+}
+\details{
+The function uses `populationGet_X` to retrieve individuals with the
+`selected` attribute set to `TRUE`. It returns the indices of these
+individuals, allowing them to be used as parents in subsequent evolutionary
+steps.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, selected = TRUE),
+  list(fit_ = 0.8, selected = FALSE),
+  list(fit_ = 0.7, selected = TRUE)
+)
+parents <- get_Parents(pop)
+print(parents) # Should return indices of selected individuals
+}
+
 }

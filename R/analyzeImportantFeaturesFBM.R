@@ -1,39 +1,54 @@
-#' Visualize a summary of an experiment/set of experiments
+#' Analyze and Plot Feature Importance for Feature-Based Models (FBM)
 #'
-#' @description Visualization of 4 panels corresponding to feature prevalence 
-#' in FBM, feature importance, feature prevalence in groups, effect sizes of 
-#' feature abundances vs y-variable (cliff's delta for binary y; 
-#' spearman rho for continuous y). Can be applied to single classification task 
-#' or to multiple classification tasks carried out on the same X-y dataset
-#' @import ggplot2
-#' @param clf_res The result of an experiment or multiple experiments 
-#' (list of experiments)
-#' @param X The feature table used as input of fit function behind experiments 
-#' in clf_res
-#' @param y The target class (binary/continuous)
-#' @param makeplot  make a pdf file with the resulting plots (default:TRUE)
-#' @param saveplotobj make a .Rda file with a list of the individual plots 
-#' (default:TRUE)
-#' @param name the suffix of the pdf file (default:"")
-#' @param verbose print out informaiton
-#' @param pdf.dims dimensions of the pdf object (default: c(w = 25, h = 20))
-#' @param filter.cv.prev keep only features found in at least (default: 0.25, 
-#' i.e 25 percent) of the cross validation experiments 
-#' @param nb.top.features the maximum number (default: 100) of most important 
-#' features to be shown.
-#' If the number of features in FBM < nb.top.features, the number of features 
-#' in FBM will be shown instead
-#' @param scaled.importance the scaled importance is the importance multiplied 
-#' by the prevalence in the folds. If (default = TRUE) this will be used, the 
-#' mean mda will be scaled by the prevalence of the feature in the folds and 
-#' ordered subsequently 
-#' @param k_penalty the sparsity penalty needed to select the best models of 
-#' the population (default:0.75/100).
-#' @param k_max select the best population below a given threshold. 
-#' If (default:0) no selection is performed.
+#' This function analyzes and visualizes feature importance for FBM models,
+#' creating plots for feature prevalence, importance, and effect size. It
+#' supports both single and multiple experiments, handling classification and
+#' regression modes.
+#' @import stats grDevices
+#' @param clf_res A classifier result object or a list of classifier results.
+#'   Each classifier result must contain the trained models and the classifier
+#'   parameters.
+#' @param X The feature matrix.
+#' @param y The response variable.
+#' @param makeplot Logical, if `TRUE` (default), plots will be generated and
+#'   displayed.
+#' @param saveplotobj Logical, if `TRUE` (default), the plot objects will be
+#'   saved as an RData file.
+#' @param name A character string for the output file name prefix.
+#' @param verbose Logical, if `TRUE` (default), progress messages are printed.
+#' @param pdf.dims A numeric vector specifying the width and height of the PDF
+#'   output.
+#' @param filter.cv.prev Numeric, a cutoff for the cross-validation prevalence
+#'   filter.
+#' @param nb.top.features Numeric, the number of top features to display.
+#' @param scaled.importance Logical, if `TRUE`, scales feature importance
+#'   values.
+#' @param k_penalty Numeric, a penalty factor applied to control model selection
+#'   based on sparsity.
+#' @param k_max Numeric, maximum number of features to include.
 #'
-#' @return plots if makeplot is FALSE; plot.list list object saved locally with 
-#' individual plots (including source data) if saveplotobj
+#' @details This function examines the FBM classifier results, retrieves the
+#' best population of models, calculates feature importance, and generates plots
+#' to visualize feature prevalence, importance, and effect size. If multiple
+#' experiments are provided, results are averaged across experiments.
+#'
+#' **Generated Plots**:
+#'   - **Feature Prevalence (FBM)**: Shows the frequency and orientation of features across models.
+#'   - **Feature Importance**: Visualizes feature importance scores.
+#'   - **Effect Sizes**: Displays the effect sizes of features.
+#'
+#' For classification, Cliff's delta is used for effect sizes, and Spearman's
+#' rho is used for regression.
+#'
+#' @return If `makeplot` is `TRUE`, a combined plot of feature importance,
+#'   prevalence, and effect sizes is returned. Otherwise, a list of individual
+#'   plot objects.
+#'
+#' @examples
+#' \dontrun{
+#' analyzeImportanceFeaturesFBM(clf_res = my_clf_result, X = X_data, y = y_data, name = "example_analysis")
+#' }
+#'
 #' @export
 analyzeImportanceFeaturesFBM <- function(clf_res, 
                                          X, 
@@ -547,22 +562,46 @@ analyzeImportanceFeaturesFBM <- function(clf_res,
 }
 
 
-#' Compute effect sizes for features in binary classification/regression tasks
+#' Compute Effect Sizes for Features
 #'
-#' @import effsize
-#' @param X The X matrix (rows=features; columns=samples)
-#' @param y The y vector of sample class (-1,1 in binary classification; 
-#' continuous variable in regression)
-#' @param mode classification or regression
+#' This function computes effect sizes for each feature in the feature matrix
+#' `X`, using different methods based on the specified mode (`classification` or
+#' `regression`). For classification tasks, it calculates Cliff's delta and
+#' performs a Wilcoxon test for each feature, assuming binary classes `1` and
+#' `-1`. For regression tasks, it computes Spearman's rank correlation
+#' coefficient.
 #'
-#' @description In binary classification tasks, compute the cliff's delta effect 
-#' sizes btw groups (1 vs. -1) + pvalues from wilcoxon rank-sum tests; in 
-#' regression tasks, compute spearman correlations (rho + pvalue) vs. 
-#' continuous y variable
-#' 
-#' @return data frame of features, effect sizes (cliff's delta for binary 
-#' classification; spearman rho for regression), and pvalues (wicoxon rank-sum 
-#' test for binary classification task; spearman correlation for regression)
+#' @param X A feature matrix with rows representing features and columns
+#'   representing samples.
+#' @param y The response variable, either a binary factor for classification
+#'   (with levels `1` and `-1`) or a continuous variable for regression.
+#' @param mode A character string indicating the task type, either
+#'   `"classification"` or `"regression"`.
+#'
+#' @return A data frame with effect size metrics for each feature:
+#'   - For `classification` mode: columns `feature`, `cdelta` (Cliff's delta), and `pval.wilcox` (p-value from Wilcoxon test).
+#'   - For `regression` mode: columns `feature`, `rho` (Spearman's correlation coefficient), and `pval` (p-value).
+#'
+#' @details
+#' **Classification Mode**:
+#'   - Checks that `y` contains only binary values (`1` and `-1`).
+#'   - Calculates Cliff's delta to measure effect size and performs a Wilcoxon rank-sum test to assess the significance of feature values between the two classes.
+#'
+#' **Regression Mode**:
+#'   - Computes Spearman's rank correlation coefficient (`rho`) to assess monotonic relationships between each feature and the continuous response variable `y`.
+#'
+#' @examples
+#' \dontrun{
+#' # For classification
+#' effect_sizes <- computeEffectSizes(X = my_data, y = my_labels, mode = "classification")
+#'
+#' # For regression
+#' effect_sizes <- computeEffectSizes(X = my_data, y = my_continuous_response, mode = "regression")
+#' }
+#'
+#' @importFrom effsize cliff.delta
+#' @importFrom stats wilcox.test cor.test
+#'
 #' @export
 computeEffectSizes <- function(X, y, mode)
 {
@@ -622,30 +661,53 @@ computeEffectSizes <- function(X, y, mode)
   }
 }
 
-#' Get objects needed for a merged visualization task combining different 
-#' experiments from different datasets (different X and y)
+#' Extract Important Features and Related Metrics from Final Population
 #'
-#' @description Here we get the 4 datasets from a given prediction experiment 
-#' (clf object + X + y) needed for subsequent combination with other 
-#' predition experiments for combined visualization (feature prevalence in 
-#' FBM + feature importance + featureEffSizes + feature prevalence in groups)
-#' @param clf_res The result of a single experiment
-#' @param X The feature table used as input of fit function behind experiments 
-#' in clf_res
-#' @param y The target class (binary/continuous)
-#' @param verbose print out informaiton
-#' @param filter.cv.prev keep only features found in at least (default: 0.25, 
-#' i.e 25 percent) of the cross validation experiments 
-#' @param scaled.importance the scaled importance is the importance multipied 
-#' by the prevalence in the folds. If (default = TRUE) this will be used, the 
-#' mean mda will be scaled by the prevalence of the feature in the folds and 
-#' ordered subsequently 
-#' @param k_penalty the sparsity penalty needed to select the best models of the 
-#' population (default:0.75/100).
-#' @param k_max select the best population below a given threshold. If (default:0) 
-#' no selection is performed.
+#' This function processes the final population of models from a given
+#' classifier experiment (`clf_res`), selects the best population based on
+#' specified criteria, and computes the feature importance, prevalence, and
+#' effect sizes. The function returns a list of objects that can be used for
+#' plotting or further analysis of the most relevant features in the model.
 #'
-#' @return list of objects for subsequent combination
+#' @param clf_res A classifier experiment result, as produced by the modeling
+#'   function.
+#' @param X A feature matrix with rows representing features and columns
+#'   representing samples.
+#' @param y A response variable, either a binary factor (for classification) or
+#'   a continuous variable (for regression).
+#' @param verbose Logical. If `TRUE`, print detailed messages.
+#' @param filter.cv.prev Numeric threshold for filtering based on
+#'   cross-validation prevalence (default is 0.25).
+#' @param scaled.importance Logical. If `TRUE`, scales the feature importance
+#'   scores.
+#' @param k_penalty A numeric penalty factor applied to sparsity selection
+#'   during model evaluation (default is `0.75/100`).
+#' @param k_max Maximum allowed sparsity value during model selection (default
+#'   is 0).
+#'
+#' @return A list with the following components:
+#'   - `featprevFBM`: A data frame containing feature prevalence data.
+#'   - `featImp`: A summary of feature importance across cross-validation folds.
+#'   - `effectSizes`: A data frame with effect sizes for each feature (Cliff’s delta for classification or Spearman's rho for regression).
+#'   - `featPrevGroups`: Data used for plotting feature prevalence by group.
+#'
+#' @details
+#' **Workflow**:
+#'   - Determines if the experiment is regression or classification based on the classifier's objective.
+#'   - Filters the best models from the population based on sparsity and evaluation criteria.
+#'   - Constructs data structures that capture the feature importance, prevalence, and effect sizes.
+#'   - Returns a list of data objects for easy plotting or further analysis.
+#'
+#' **Requirements**:
+#'   - `isExperiment` should be a function that checks if `clf_res` is a valid experiment.
+#'   - `modelCollectionToPopulation`, `selectBestPopulation`, and other helper functions should be defined for processing population and feature data.
+#'
+#' @examples
+#' \dontrun{
+#' # Extract feature importance and related metrics
+#' feature_data <- getImportanceFeaturesFBMobjects(clf_res = my_experiment, X = my_data, y = my_labels)
+#' }
+#'
 #' @export
 getImportanceFeaturesFBMobjects <- function(clf_res, 
                                             X, 
@@ -748,24 +810,49 @@ getImportanceFeaturesFBMobjects <- function(clf_res,
 }
 
 
-#' Visualize a list containing outouts of getImportanceFeaturesFBMobjects
+#' Plot Feature Importance, Prevalence, and Effect Sizes from Final Models
 #'
-#' @description Here we combine the 4 datasets generated by 
-#' getImportanceFeaturesFBMobjects function from different prediction experiments 
-#' (clf object + X + y) ; designed to combine predomics results with different 
-#' X, y source data for unified visualization (feature prevalence in FBM, 
-#' feature importance, feature effect size across groups, feature prevalence 
-#' across groups)
-#' @param FBMobjList List of outputs of getImportanceFeaturesFBMobjects 
-#' function (1 list per experiment to combine)
-#' @param verbose print out informaiton
-#' @param nb.top.features features to retain for visualization (top features 
-#' with highest mean feature importance across datasets)
-#' @param makeplot  make a pdf file with the resulting plots (default:TRUE)
+#' This function takes a list of `listFBMfeatures` objects (produced by the
+#' `getImportanceFeaturesFBMobjects` function), and generates a series of plots
+#' visualizing the feature importance, prevalence across models, effect sizes,
+#' and feature prevalence across groups. The plots are generated for the top
+#' features, based on their importance, and saved in a PDF file.
 #'
-#' @return Combined visualization of feature prevalence in FBM + feature 
-#' importance + feature effect size across groups + feature prevalence across 
-#' groups in different predomics prediction tasks
+#' @param FBMobjList A list of `listFBMfeatures` objects, typically produced by
+#'   `getImportanceFeaturesFBMobjects`.
+#' @param verbose Logical. If `TRUE`, print detailed messages.
+#' @param nb.top.features Integer. The number of top features to display in the
+#'   plots. Default is 100.
+#' @param makeplot Logical. If `TRUE`, generate the plots. If `FALSE`, return
+#'   the plot objects without saving.
+#' @param pdf.dims A vector of two numbers specifying the width and height of
+#'   the PDF (default is `c(width = 25, height = 20)`).
+#'
+#' @return If `makeplot` is `TRUE`, a PDF file is created with the feature
+#'   importance and prevalence plots. Otherwise, a list of plot objects is
+#'   returned.
+#'
+#' @details
+#' **Workflow**:
+#'   - Extracts feature importance, prevalence, and effect size data from the given `FBMobjList`.
+#'   - Selects the top features based on their importance across multiple datasets.
+#'   - Generates four key visualizations:
+#' 1. Feature prevalence in the final population of models. 2. Feature
+#' importance across models. 3. Effect sizes (Cliff's delta for classification
+#' or Spearman's rho for regression). 4. Feature prevalence across groups (e.g.,
+#' -1, 1 classes for classification tasks).
+#'   - If `makeplot` is `TRUE`, the plots are saved to a PDF file.
+#'
+#' **Requirements**:
+#'   - The input `FBMobjList` must be a list of `listFBMfeatures` objects, as produced by `getImportanceFeaturesFBMobjects`.
+#'   - Helper functions for plotting such as `plotPrevalence` and `computeEffectSizes` must be defined.
+#'
+#' @examples
+#' \dontrun{
+#' # Plot feature importance and related metrics
+#' plotImportanceFeaturesFBMobjects(FBMobjList = my_FBM_objects, makeplot = TRUE)
+#' }
+#'
 #' @export
 plotImportanceFeaturesFBMobjects <- function(FBMobjList, 
                                              verbose = TRUE, 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{plotAbundanceByClass}
 \alias{plotAbundanceByClass}
-\title{Plots the prevalence of a list of features in the whole dataset and per each class}
+\title{Plot Feature Abundance by Class}
 \usage{
 plotAbundanceByClass(
   features,
@@ -16,25 +16,66 @@ plotAbundanceByClass(
 )
 }
 \arguments{
-\item{features:}{a list of features or features indexes for which we wish to compute prevalence}
+\item{features}{A character vector of feature names to be plotted.}
 
-\item{X:}{dataset where to compute the prevalence}
+\item{X}{A data matrix or data frame where each row represents an observation
+and each column represents a feature.}
 
-\item{y:}{if provided it will also compute hte prevalence per each class (default:NULL)}
+\item{y}{A vector of class labels (e.g., 1 and -1 for binary classification,
+or continuous for regression) corresponding to the rows in `X`.}
 
-\item{topdown:}{showing features from top-down or the other way around (default:TRUE)}
+\item{topdown}{Logical; whether to arrange the features in a top-down order
+(default is `TRUE`).}
 
-\item{main:}{main title (default:none)}
+\item{main}{A string for the title of the plot.}
 
-\item{plot:}{if TRUE this provides a plot, otherwise will return different metrics such as prevalence and enrichment statistics}
+\item{plot}{Logical; if `TRUE`, the function will display the plot. If
+`FALSE`, the function will return the statistical results of the test.}
 
-\item{col.pt:}{colors for the point border (-1:deepskyblue4, 1:firebrick4)}
+\item{col.pt}{Colors for points in the plot (default is `c("deepskyblue4",
+"firebrick4")`).}
 
-\item{col.bg:}{colors for the point fill (-1:deepskyblue1, 1:firebrick1)}
+\item{col.bg}{Colors for boxplots in the plot (default is `c("deepskyblue1",
+"firebrick1")`).}
 }
 \value{
-a ggplot object
+If `plot = TRUE`, the function returns a ggplot object displaying the
+feature abundance by class. If `plot = FALSE`, it returns the statistical
+results of the test (p-values and q-values).
 }
 \description{
-Plots the abundance of a given number of features for each class and tests significance
+This function visualizes the abundance of features across different classes
+in a dataset. It creates boxplots to show the distribution of feature
+abundances in each class, along with statistical tests for the significance
+of differences between the classes. The function supports both classification
+and regression tasks.
+}
+\details{
+This function computes and visualizes the abundance of features in
+each class (group) of the dataset. It creates a boxplot for each feature and
+computes a non-parametric test for differences in abundance between classes.
+The function supports both classification (e.g., binary or multi-class) and
+regression tasks (using continuous values in `y`).
+
+In classification mode, the plot compares the two classes (e.g., 1 vs -1 for
+binary classification) and adds significance markers (e.g., asterisks) for
+features with significant differences in abundance between classes. In
+regression mode, it compares feature abundance across all observations and
+computes correlations with the response variable.
+}
+\examples{
+# Example usage for classification task
+features <- c("feature1", "feature2", "feature3")
+X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100), feature3 = rnorm(100))
+y <- sample(c(1, -1), 100, replace = TRUE)
+
+# Plot feature abundance
+plotAbundanceByClass(features, X, y, main = "Feature Abundance Plot")
+
+# Get statistical results without plotting
+plotAbundanceByClass(features, X, y, plot = FALSE)
+
+}
+\author{
+Edi Prifti (IRD)
 }

@@ -2,22 +2,55 @@
 % Please edit documentation in R/terga2.lib.R
 \name{tag_ToBeMutated}
 \alias{tag_ToBeMutated}
-\title{Tag individuals for mutation}
+\title{Tag Individuals for Mutation in a Population}
 \usage{
 tag_ToBeMutated(pop, mutate_size, protected = NULL)
 }
 \arguments{
-\item{pop:}{The population on which the individuals to be mutated will be selected}
+\item{pop}{A list representing the population, where each individual has a
+`toBeMutated` attribute.}
 
-\item{mutate_size:}{The number of individuals to mutate}
+\item{mutate_size}{An integer specifying the number of individuals to mark
+for mutation.}
 
-\item{protected:}{The index of individuals which should not be mutated.}
+\item{protected}{An optional vector of indices representing individuals that
+should not be tagged for mutation. Defaults to \code{NULL}.}
 }
 \value{
-The population given as an input with `mutate_size` individuals with `toBeMutated = TRUE`
+The modified population list with `toBeMutated` attributes set to
+  `TRUE` for the selected individuals.
 }
 \description{
-Function to add the tag "toBeMutated" to a randomly sampled part of 
-the population. Some individuals (the best ones) will be protected from the mutation
-so that genetic decline does not happen.
+This function tags a specified number of individuals in the population for
+mutation, while optionally protecting certain individuals from being
+selected. The tagged individuals are marked with a `toBeMutated` attribute
+set to `TRUE`.
+}
+\details{
+The function selects `mutate_size` individuals from the population,
+excluding any indices specified in `protected`. If `mutate_size` exceeds the
+number of non-protected individuals, the function issues a warning and
+reduces the mutation count to the maximum available.
+
+If the number of protected individuals is too large to allow sufficient
+mutations, the function removes some individuals from the `protected` list as
+necessary to meet the mutation quota.
+
+If the population is empty, the function issues a warning (if
+`clf$params$warnings` is `TRUE`) and returns \code{NULL}.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, toBeMutated = FALSE),
+  list(fit_ = 0.8, toBeMutated = FALSE),
+  list(fit_ = 0.7, toBeMutated = FALSE),
+  list(fit_ = 0.6, toBeMutated = FALSE)
+)
+protected <- c(1, 2)
+pop <- tag_ToBeMutated(pop, mutate_size = 2, protected = protected)
+# Check which individuals are tagged for mutation
+sapply(pop, function(ind) ind$toBeMutated)
+}
+
 }

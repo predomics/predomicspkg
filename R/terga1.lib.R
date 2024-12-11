@@ -18,7 +18,37 @@
 
 
 #### SELECTION ####
-# this function will select x% of the best individuals of a given population
+#' Select Elite Individuals Based on Evaluation Scores
+#'
+#' This function selects the top-performing individuals from a population based
+#' on their evaluation scores. It returns the indices of the highest-scoring
+#' individuals, making up a specified percentage of the total population.
+#'
+#' @param evaluation A numeric vector of evaluation scores for each individual
+#'   in the population. Higher scores indicate better performance.
+#' @param percentage A numeric value representing the percentage of the top
+#'   individuals to select, specified as a value between 0 and 100.
+#'
+#' @details The function calculates the number of individuals to select based on
+#' the given `percentage` and the length of `evaluation`. It then sorts
+#' `evaluation` in descending order and returns the indices of the
+#' top-performing individuals.
+#'
+#' This selection method is often used to maintain high-quality solutions
+#' (elites) in evolutionary algorithms, ensuring that the best individuals are
+#' retained across generations.
+#'
+#' @return A vector of indices representing the top-performing individuals in
+#'   the population.
+#'
+#' @examples
+#' \dontrun{
+#' evaluation <- c(0.8, 0.6, 0.9, 0.7, 0.5)
+#' elite_indices <- selectElite(evaluation, percentage = 40)
+#' print(elite_indices)  # Returns indices of the top 40% based on evaluation scores
+#' }
+#'
+#' @export
 selectElite <- function(evaluation, percentage) 
 {
   perc <- ceiling(percentage*length(evaluation)/100)
@@ -27,7 +57,46 @@ selectElite <- function(evaluation, percentage)
 }
 
 
-# this function will select x% of the individuals of a given population randomly
+#' Select Individuals Using Tournament Selection
+#'
+#' This function performs tournament selection on a population, randomly
+#' selecting a specified percentage of individuals for the next generation. The
+#' selection can be either a fixed number (`discrete = TRUE`) or a percentage of
+#' the population size.
+#'
+#' @param selection A vector representing the indices or identifiers of the
+#'   individuals from which to select.
+#' @param percentage A numeric value indicating either the exact number (if
+#'   `discrete = TRUE`) or percentage (if `discrete = FALSE`) of individuals to
+#'   select.
+#' @param discrete A logical value indicating whether `percentage` should be
+#'   treated as a discrete number of individuals (`TRUE`) or a percentage of the
+#'   total population (`FALSE`).
+#'
+#' @details If `discrete` is set to `TRUE`, the function selects exactly
+#' `percentage` individuals from `selection`. If `discrete` is `FALSE`, the
+#' function interprets `percentage` as a proportion of the population size, and
+#' the number of individuals selected is calculated accordingly.
+#'
+#' This selection method introduces randomness while maintaining a proportionate
+#' selection of individuals, which can help maintain diversity within the
+#' population in evolutionary algorithms.
+#'
+#' @return A vector of selected individuals from `selection`.
+#'
+#' @examples
+#' \dontrun{
+#' selection <- 1:10
+#' # Select 3 individuals directly
+#' selected_indices <- selectTournoi(selection, percentage = 3, discrete = TRUE)
+#' print(selected_indices)
+#'
+#' # Select 30% of individuals from the population
+#' selected_indices <- selectTournoi(selection, percentage = 30, discrete = FALSE)
+#' print(selected_indices)
+#' }
+#'
+#' @export
 selectTournoi <- function(selection, percentage, discrete = TRUE) 
 {
   if(discrete) 
@@ -42,7 +111,40 @@ selectTournoi <- function(selection, percentage, discrete = TRUE)
 }
 
 
-# this function will select x% of the best individuals and y% of randomly chosen ones
+#' Select Individuals Using Mixed Elite and Tournament Selection
+#'
+#' This function combines elite selection and tournament selection to select
+#' individuals from a population. It first selects a specified percentage of
+#' top-performing individuals (elite) and then fills the remaining percentage
+#' with randomly selected individuals (tournament).
+#'
+#' @param evaluation A numeric vector of evaluation scores for each individual
+#'   in the population, with higher values indicating better performance.
+#' @param percentage_elite A numeric value representing the percentage of
+#'   individuals to select based on elite selection (top performers).
+#' @param percentage_tournoi A numeric value representing the percentage of
+#'   individuals to select based on tournament selection (random selection).
+#'
+#' @details The function calculates the total number of individuals to select
+#' (`perc`) based on `percentage_elite` and `percentage_tournoi`. It then uses
+#' `selectElite` to select the top-performing individuals as elites, filling
+#' `perc_elite` slots. Afterward, it uses `selectTournoi` to fill the remaining
+#' `perc_tournoi` slots by selecting randomly from the remaining individuals.
+#'
+#' This mixed selection approach ensures that high-quality solutions are
+#' retained while also introducing diversity through random selection.
+#'
+#' @return A vector of indices representing the selected individuals, combining
+#'   elite and tournament selections.
+#'
+#' @examples
+#' \dontrun{
+#' evaluation <- c(0.9, 0.85, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.05)
+#' selected_indices <- selectMixed(evaluation, percentage_elite = 30, percentage_tournoi = 20)
+#' print(selected_indices)  # Returns indices selected via elite and tournament strategies
+#' }
+#'
+#' @export
 selectMixed <- function(evaluation, percentage_elite, percentage_tournoi) 
 {
   perc <- ceiling((percentage_elite + percentage_tournoi) * length(evaluation)/100)
@@ -64,6 +166,48 @@ selectMixed <- function(evaluation, percentage_elite, percentage_tournoi)
 }
 
 
+#' Generate a Population with Controlled Sparsity Using Dense Vectors
+#'
+#' This function generates a population of dense vectors for a given size of the
+#' "world." It controls the sparsity of each vector based on the parameters
+#' defined in `clf`, either by creating random dense vectors or by building on a
+#' given `best_ancestor` to produce similar solutions.
+#'
+#' @param clf A classifier object containing parameters for population
+#'   generation, including:
+#'   - `size_pop`: Size of the population to generate.
+#'   - `current_sparsity`: Target sparsity level for the population (if specified).
+#'   - `sparsity`: Vector of sparsity levels, from which the minimum is used if `current_sparsity` is not provided.
+#'   - `perc_best_ancestor`: Percentage of the population to generate based on the best ancestor.
+#' @param size_world An integer representing the size of the dense vector for
+#'   each individual.
+#' @param best_ancestor An optional vector representing the best ancestor to use
+#'   as a basis for generating a portion of the population. If provided, this
+#'   ancestor must have a non-zero gene count equal to `aimedSpar - 1`.
+#'
+#' @details The function: 1. Determines the target sparsity (`aimedSpar`) based
+#' on `current_sparsity` or the minimum value in `sparsity`. 2. Generates a set
+#' of dense vectors based on `aimedSpar`:
+#'    - **Random Vectors**: For the general population, randomly generated with a specified probability for non-zero elements.
+#'    - **Ancestor-based Vectors**: If `best_ancestor` is provided, some population members are generated by modifying the ancestor with additional random genes.
+#'
+#' **Sparsity Control**: Each generated vector's sparsity is adjusted to exactly match `aimedSpar` by adding or removing non-zero elements as necessary.
+#'
+#' @return A list of dense vectors representing the generated population, each
+#'   with controlled sparsity.
+#'
+#' @examples
+#' \dontrun{
+#' clf <- list(
+#'   params = list(size_pop = 10, current_sparsity = 5, sparsity = c(3, 5, 7), perc_best_ancestor = 50)
+#' )
+#' size_world <- 20
+#' best_ancestor <- sample(c(-1, 0, 1), size_world, replace = TRUE)
+#' population <- populationDenseVec(clf, size_world, best_ancestor)
+#' print(population)
+#' }
+#'
+#' @export
 populationDenseVec <- function(clf, size_world, best_ancestor = NULL)
 {
   if(!is.na(clf$params$current_sparsity))
@@ -139,15 +283,57 @@ populationDenseVec <- function(clf, size_world, best_ancestor = NULL)
 }
 
 
-#' Creates a population of index models. 
+#' Generate a Population with Controlled Sparsity and Unique Individuals
 #'
-#' @description This function is used in terga1 and generates a list of index vectors in the variable space. These vectors can be unique or not. NB that if clf$params$unique_vars is set to TRUE it can take a long time to come out of the while loop which ensures the uniqueness of the individuals.
-#' @param clf: the classifier parameter object
-#' @param size_ind: The sparsity of the models. All the models of this population will have the same number of features.
-#' @param size_world: The number of features from which we can choose the indices. This is needed to compute the combinatory space search.
-#' @param best_ancestor: We can supply to the popolution an individual (vector with indeces) of a lower sparsity. This will ensure to seed part of the population with at least those genes. We added this feature after an observations that a local optimum of lower sparsity was lost in higher sparsities.
-#' @param size_pop: the number of models to produce (default=NULL). This information is stored here clf$params$size_pop, but this parameter allows to override it.
-#' @return a population of index models
+#' This function generates a population of individuals (feature subsets) with
+#' specified sparsity, optional use of a best ancestor, and controls for unique
+#' individuals. It creates feature subsets according to specified parameters,
+#' optionally seeding some individuals based on a provided best ancestor.
+#'
+#' @param clf A classifier object containing parameters for population
+#'   generation, including:
+#'   - `size_pop`: Size of the population to generate.
+#'   - `perc_best_ancestor`: Percentage of the population to generate based on the best ancestor.
+#'   - `unique_vars`: Boolean indicating whether each individual in the population should be unique.
+#'   - `popSourceFile`: Path to a file containing saved populations to import.
+#'   - `current_sparsity`: Target sparsity for each individual in the population.
+#' @param size_ind Integer specifying the number of features (sparsity) for each
+#'   individual.
+#' @param size_world Integer representing the size of the "world" (total number
+#'   of possible features).
+#' @param best_ancestor Optional vector or list representing the best ancestor
+#'   to use as a template for generating a portion of the population.
+#' @param size_pop Optional integer specifying the number of individuals in the
+#'   population. Defaults to `clf$params$size_pop`.
+#' @param seed Optional integer seed for random number generation, ensuring
+#'   reproducibility.
+#'
+#' @details The function generates a population by: 1. **Best Ancestor**: If
+#' `best_ancestor` is provided, a portion of the population is generated by
+#' slightly modifying the ancestor. 2. **Population Size**: Determines the final
+#' population size based on combinatory limits and `size_pop`. 3.
+#' **Uniqueness**: If `unique_vars` is `TRUE`, each individual is checked for
+#' uniqueness before adding it to the population.
+#'
+#' **Additional Options**:
+#' - The function can import previously saved populations from `popSourceFile` and add them to the current population.
+#' - Ensures that population size and sparsity constraints are respected.
+#'
+#' @return A list of individuals (feature subsets), each represented as a sorted
+#'   vector of selected feature indices.
+#'
+#' @examples
+#' \dontrun{
+#' clf <- list(
+#'   params = list(size_pop = 10, perc_best_ancestor = 20, unique_vars = TRUE, popSourceFile = "NULL", current_sparsity = 5)
+#' )
+#' size_ind <- 5
+#' size_world <- 20
+#' best_ancestor <- sample(1:size_world, size_ind - 1, replace = FALSE)
+#' population <- population(clf, size_ind, size_world, best_ancestor)
+#' print(population)
+#' }
+#'
 #' @export
 population <- function(clf, size_ind, size_world, best_ancestor = NULL, size_pop = NULL, seed = NULL) 
 {
@@ -335,14 +521,47 @@ population <- function(clf, size_ind, size_world, best_ancestor = NULL, size_pop
 }
 
 
-#' Creates new combinations of features based from a parents. 
+#' Generate Children by Crossover from Parent Population
 #'
-#' @description This function is used in terga1 will create new combinations of features based of existing ones from the parents.
-#' @param clf: the classifier parameter object
-#' @param pop: A population (i.e. list) of index vectors
-#' @param parents: Indexes of the population pointing to the subset of the population containing the parents (whose genes/features) will be used to create the children.
-#' @param seed: For reproductibility purpose to fix the random generator number.
-#' @return a population of models, containing parents and children
+#' This function performs crossover on a population by selecting pairs of parent
+#' individuals to generate children. Each child is created by combining unique
+#' genes from two parents, up to a specified sparsity level.
+#'
+#' @param clf A classifier object containing parameters for crossover,
+#'   including:
+#'   - `current_sparsity`: The target sparsity level for each child.
+#'   - `parallel.local`: Boolean indicating whether parallel processing should be used.
+#' @param pop A list representing the population of individuals (feature
+#'   subsets), where each individual is represented as a vector of feature
+#'   indices.
+#' @param parents A vector of indices representing the parent individuals within
+#'   `pop` from which to generate children.
+#' @param seed Optional integer seed for random number generation, ensuring
+#'   reproducibility.
+#'
+#' @details The function: 1. Selects a specified number of couples from the
+#' parents to generate children. 2. Combines unique genes from each pair of
+#' parents to create a child with `current_sparsity` number of features. 3.
+#' Optionally uses parallel processing to accelerate child generation.
+#'
+#' For each child, the genes are selected from the combined unique genes of both
+#' parents (`parents_gene_reservoir`). The final population consists of both the
+#' original parents and the generated children.
+#'
+#' @return A list representing the updated population, including both the
+#'   original parents and the newly generated children.
+#'
+#' @examples
+#' \dontrun{
+#' clf <- list(
+#'   params = list(current_sparsity = 5, parallel.local = FALSE)
+#' )
+#' pop <- list(1:5, 2:6, 3:7, 4:8)  # Example parent population
+#' parents <- c(1, 2, 3, 4)
+#' new_population <- crossing(clf, pop, parents, seed = 42)
+#' print(new_population)
+#' }
+#'
 #' @export
 crossing <- function(clf, pop, parents, seed=NULL) 
 {
@@ -405,14 +624,48 @@ crossing <- function(clf, pop, parents, seed=NULL)
 }
 
 
-#' Changes feature indexes in a given percentage of models. 
+#' Mutate Selected Individuals in a Population
 #'
-#' @description This function is used in terga1 will create new combinations of features based of existing ones from the parents.
-#' @param clf: the classifier parameter object
-#' @param pop: A population (i.e. list) of index vectors
-#' @param selection: Indexes of the population pointing to the subset of the models to be changed
-#' @param seed: For reproductibility purpose to fix the random generator number.
-#' @return a population of models among which the mutated ones
+#' This function applies mutation to a selected set of individuals in a
+#' population by randomly modifying a specified percentage of genes. The
+#' mutation changes some genes to new, unique values from the gene pool.
+#'
+#' @param clf A classifier object containing parameters for mutation, including:
+#'   - `current_sparsity`: The target sparsity level for each individual.
+#'   - `mutate_rate`: The mutation rate as a percentage of the total genes in each individual.
+#'   - `size_world`: The total number of genes available (size of the "world").
+#'   - `parallel.local`: Boolean indicating whether parallel processing should be used.
+#' @param pop A list representing the population, where each individual is a
+#'   vector of gene indices.
+#' @param selection A vector of indices indicating which individuals in `pop`
+#'   should undergo mutation.
+#' @param seed Optional integer seed for random number generation to ensure
+#'   reproducibility.
+#'
+#' @details The function: 1. Calculates the number of genes to mutate based on
+#' `current_sparsity` and `mutate_rate`. 2. For each selected individual,
+#' identifies genes to mutate and replaces them with new, unique genes from the
+#' remaining gene pool. 3. Uses parallel processing if specified by
+#' `parallel.local`.
+#'
+#' **Mutation Process**:
+#' - Genes are randomly selected for mutation from each individual’s current genes.
+#' - New genes are randomly chosen from a "reservoir" of available genes not currently in the individual, ensuring they are unique and do not exceed the specified mutation percentage.
+#'
+#' @return A list representing the population after mutation, with selected
+#'   individuals modified.
+#'
+#' @examples
+#' \dontrun{
+#' clf <- list(
+#'   params = list(current_sparsity = 5, mutate_rate = 20, size_world = 10, parallel.local = FALSE)
+#' )
+#' pop <- list(1:5, 2:6, 3:7, 4:8)  # Example population
+#' selection <- c(1, 3)  # Indices of individuals to mutate
+#' mutated_population <- mutate(clf, pop, selection, seed = 42)
+#' print(mutated_population)
+#' }
+#'
 #' @export
 mutate <- function(clf, pop, selection, seed = NULL) 
 {
@@ -497,15 +750,50 @@ mutate <- function(clf, pop, selection, seed = NULL)
 }
 
 
-#' Creates new combinations of features based from a parents. 
+#' Evolve a Population of Models Over Generations
 #'
-#' @description This function is used in terga1 and is the main engine of the algorithm that allows to cross, mutate and select individuals from one generation to the next.
-#' @param X: the data matrix with variables in the rows and observations in the columns
-#' @param y: the response vector
-#' @param clf: the classifier parameter object
-#' @param pop: A population (i.e. list) of index vectors
-#' @param seed: For reproductibility purpose to fix the random generator number.
-#' @return a population of models, containing parents and children
+#' This function evolves a population of models across a specified number of generations, using selection, crossover, and mutation operations. It tracks the best-performing individuals in each generation to encourage convergence toward optimal solutions.
+#'
+#' @param X A matrix or data frame representing the features of the training dataset.
+#' @param y A vector representing the target variable for the training dataset.
+#' @param clf A classifier object containing parameters for the evolutionary algorithm, including:
+#'   - `nb_generations`: The number of generations to evolve the population.
+#'   - `size_pop`: The target population size.
+#'   - `current_sparsity`: The desired sparsity level for individuals.
+#'   - `select_type`: Selection method, which can be "elite," "tournoi," or "mixed."
+#'   - `select_perc1` and `select_perc2`: Percentages used in mixed selection.
+#'   - `mutate_size`: Percentage of the population to mutate in each generation.
+#'   - `plot`: Boolean indicating whether to plot the evolution of the best score.
+#'   - `convergence`: Boolean indicating if convergence testing should be applied.
+#'   - `convergence_steps`: The number of steps used for convergence testing.
+#' @param pop A list representing the initial population of models, with each individual represented as a vector of selected features.
+#' @param seed Optional integer seed for random number generation to ensure reproducibility.
+#'
+#' @details
+#' The function evolves a population of models over multiple generations using the following steps:
+#' 1. **Evaluation**: Evaluates each individual in the population.
+#' 2. **Selection**: Selects parents based on specified selection criteria (`select_type`).
+#' 3. **Crossover**: Combines genetic material from selected parents to produce children.
+#' 4. **Mutation**: Mutates a portion of the population to introduce genetic diversity.
+#' 5. **Convergence Testing**: Optionally tests for convergence, stopping the evolution early if stability is detected in performance.
+
+#' **Population Structure**: The population is a list of vectors, where each vector represents a sparse model (a subset of features). After each generation, the function retains the best-performing individuals, tracking the evolution of the best score across generations.
+
+#' @return A list representing the final evolved population of models.
+#'
+#' @examples
+#' \dontrun{
+#' clf <- list(
+#'   params = list(nb_generations = 10, size_pop = 20, current_sparsity = 5, 
+#'                 select_type = "elite", mutate_size = 10, plot = TRUE, convergence = FALSE)
+#' )
+#' X <- matrix(runif(200), nrow = 20)
+#' y <- sample(0:1, 20, replace = TRUE)
+#' initial_pop <- list(1:5, 2:6, 3:7)  # Example initial population
+#' final_pop <- evolve(X, y, clf, initial_pop, seed = 42)
+#' print(final_pop)
+#' }
+#'
 #' @export
 evolve <- function(X, y, clf, pop, seed = NULL) 
 {
@@ -731,7 +1019,36 @@ evolve <- function(X, y, clf, pop, seed = NULL)
 
 
 
-# function needed for testing the convergence of a generation
+#' Test for Convergence in Evolutionary Algorithm Scores
+#'
+#' This function checks for convergence in a vector of scores, identifying if
+#' there has been a stable sequence of scores over a specified number of steps.
+#' Convergence is defined as no change in score for `steps` consecutive
+#' generations.
+#'
+#' @param x A numeric vector representing scores from successive generations in
+#'   an evolutionary algorithm.
+#' @param steps An integer specifying the number of consecutive steps required
+#'   with no change in score to consider the sequence as converged.
+#'
+#' @details The function iterates through the scores in `x` and counts
+#' consecutive instances where there is no change in score. If the count reaches
+#' `steps`, the function returns `TRUE`, indicating convergence. If there are
+#' fewer scores in `x` than `steps`, the function stops with an error.
+#'
+#' **Usage in Evolutionary Algorithms**: This convergence test is useful in evolutionary algorithms to detect when further evolution is unlikely to yield improved scores, allowing the algorithm to terminate early.
+#'
+#' @return A logical value: `TRUE` if convergence is detected, `FALSE`
+#'   otherwise.
+#'
+#' @examples
+#' \dontrun{
+#' scores <- c(0.8, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85)
+#' has_converged <- convergence.test(scores, steps = 5)
+#' print(has_converged)  # Returns TRUE, as the score did not change for 5 steps
+#' }
+#'
+#' @export
 convergence.test <- function(x, steps = 10) {
   test <- FALSE
   x <- x[!is.na(x)]
@@ -756,7 +1073,45 @@ convergence.test <- function(x, steps = 10) {
 #######################################################
 ###  CLASSE INDIVIDUAL #####
 #######################################################
-# this function will estimate the coefficients of multiple logistic regression model
+
+
+#' Estimate Model Coefficients for a Subset of Features
+#'
+#' This function estimates coefficients for a logistic regression model
+#' (`logit`) on a subset of features specified by `ind`. It evaluates the
+#' individual model’s performance by calculating the Akaike Information
+#' Criterion (AIC) and returns the coefficients.
+#'
+#' @param X A matrix or data frame representing the features of the dataset.
+#' @param y A vector representing the binary target variable for the dataset.
+#' @param ind A vector of feature indices specifying the subset of features to
+#'   include in the model.
+#' @param type A character string specifying the type of model to fit.
+#'   Currently, only `"logit"` (logistic regression) is supported.
+#'
+#' @details The function fits a logistic regression model using the features
+#' specified in `ind`. If `ind` contains a single feature, the function formats
+#' `X` accordingly. It then calculates the coefficients for each feature and the
+#' AIC of the model, providing insights into model performance.
+#'
+#' **Note**: Currently, only `"logit"` models are supported. Other types will result in an error message.
+#'
+#' @return A list containing:
+#'   - `coefs`: A named vector of estimated coefficients for each feature in `ind`.
+#'   - `aic`: The AIC value for the fitted logistic model, indicating model fit.
+#'   - `glm`: The fitted `glm` object.
+#'
+#' @examples
+#' \dontrun{
+#' X <- matrix(rnorm(100), nrow = 10)
+#' y <- sample(0:1, 10, replace = TRUE)
+#' ind <- c(1, 2, 3)  # Example subset of feature indices
+#' result <- estimateCoefficientsIndividual(X, y, ind, type = "logit")
+#' print(result$coefs)  # Estimated coefficients
+#' print(result$aic)    # AIC of the model
+#' }
+#'
+#' @export
 estimateCoefficientsIndividual <- function(X, y, ind, type  =  "logit") {
   trait.bin <- c(0,1)[as.factor(y)]
   res <- list()
@@ -799,7 +1154,47 @@ estimateCoefficientsIndividual <- function(X, y, ind, type  =  "logit") {
 #######################################################
 # General functions for result exploration
 #######################################################
-# modelSampling : function that select different training/test datasets randomly or by a sliding window
+
+#' Generate Training and Validation Sampling Matrices
+#'
+#' This function creates a sampling matrix for cross-validation, specifying
+#' which samples should be used for training and validation across multiple
+#' iterations. It supports two sampling types: "window" (systematic shifting)
+#' and "random" (random selection).
+#'
+#' @param vect A matrix or data frame with samples as columns, used to determine
+#'   the sampling order and dimensions.
+#' @param sampling.type A character string indicating the sampling method,
+#'   either `"window"` or `"random"`. Default is `c("window", "random")`.
+#'   - `"window"`: Sequentially shifts the training window across samples.
+#'   - `"random"`: Randomly selects training samples in each iteration.
+#' @param training.pc An integer representing the percentage of samples to be
+#'   allocated for training in each iteration. Default is 90.
+#' @param iteration An integer specifying the number of sampling iterations.
+#'   Default is 10.
+#'
+#' @details The function creates a binary sampling matrix with rows as sample
+#' names and columns as iterations. Cells with `1` indicate the sample is in the
+#' training set, while `0` indicates the sample is in the validation set. For
+#' `"window"` sampling, a moving window of training samples shifts across each
+#' iteration. For `"random"` sampling, training samples are selected randomly in
+#' each iteration.
+#'
+#' **Sampling Process**:
+#' - For `"window"`: A sequential window of `size.train` is assigned for training, wrapping around if needed.
+#' - For `"random"`: A random subset of size `size.train` is selected as the training set in each iteration.
+#'
+#' @return A binary matrix with dimensions `(number of samples) x (iteration)`,
+#'   indicating training (`1`) and validation (`0`) samples for each iteration.
+#'
+#' @examples
+#' \dontrun{
+#' vect <- matrix(rnorm(100), nrow = 10)  # Example data
+#' sampling_matrix <- modelSampling(vect, sampling.type = "random", training.pc = 80, iteration = 5)
+#' print(sampling_matrix)
+#' }
+#'
+#' @export
 modelSampling <- function(vect, sampling.type =  c("window","random"), training.pc =  90, iteration =  10)  {
   samples <- sample(colnames(vect),size =  ncol(vect),replace =  FALSE) # random permutations of the cohort samples
   sampling <- matrix(0,nrow =  ncol(vect), ncol =  iteration)
@@ -832,6 +1227,43 @@ modelSampling <- function(vect, sampling.type =  c("window","random"), training.
   return(sampling)
 }
 
+
+#' Generate a Summary Table of Best Models
+#'
+#' This function creates a data frame summarizing the best models from a list,
+#' displaying model names, AUC scores, and model gene sets.
+#'
+#' @param model.sim A list of models, where each model is represented by a
+#'   sublist containing elements with names that include `"score"` for the
+#'   model's AUC score and `"model"` for the selected features.
+#'
+#' @details The function iterates through the provided models, extracting and
+#' formatting the AUC score and sorted feature list for each. The resulting
+#' table includes:
+#'   - **N**: Model identifier (e.g., "N1" for the first model).
+#'   - **AUC**: The AUC score for the model.
+#'   - **MGS**: The model gene set, showing selected features in sorted order.
+#'
+#' **Structure**:
+#' - The function processes up to 20 models, or the number of available models if fewer than 20.
+#' - For each model, it retrieves the AUC score (by searching for `"score"` in the model name) and the model gene set (by searching for `"model"`).
+#'
+#' @return A data frame with columns:
+#'   - `N`: Identifier for each model (e.g., "N1", "N2").
+#'   - `AUC`: The AUC score for each model, rounded to 4 decimal places.
+#'   - `MGS`: A string representing the sorted model gene set for each model.
+#'
+#' @examples
+#' \dontrun{
+#' model.sim <- list(
+#'   model_N1 = list(score = 0.85, model = c("geneA", "geneB", "geneC")),
+#'   model_N2 = list(score = 0.90, model = c("geneC", "geneD", "geneE"))
+#' )
+#' best_models_table <- tableBestModels(model.sim)
+#' print(best_models_table)
+#' }
+#'
+#' @export
 tableBestModels <- function(model.sim)  {                          ## corr 03/2014
   N <- c(rep(NA,min(20,length(model.sim))))
   AUC <- c(rep(NA,min(20,length(model.sim))))

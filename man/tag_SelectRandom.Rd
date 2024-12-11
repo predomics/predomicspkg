@@ -2,22 +2,53 @@
 % Please edit documentation in R/terga2.lib.R
 \name{tag_SelectRandom}
 \alias{tag_SelectRandom}
-\title{Randomly tag selected individuals parenting}
+\title{Randomly Select Individuals in a Population}
 \usage{
 tag_SelectRandom(clf, pop, nbToSelect)
 }
 \arguments{
-\item{clf:}{The classifier object}
+\item{clf}{A classifier object that contains parameters for selection,
+including `params$warnings` (to control warnings) and
+`params$parallel.local` (for parallel execution).}
 
-\item{pop:}{The population on which the selection process will be performed.}
+\item{pop}{A list representing the population, where each individual has a
+`selected` attribute.}
 
-\item{nbToSelect:}{the number of individuals we are going to select in the population}
+\item{nbToSelect}{An integer specifying the number of individuals to randomly
+select and mark as selected.}
 }
 \value{
-the population given as an input with `nbToSelect` individuals with `selected = TRUE`
+The modified population list with randomly selected individuals
+  marked as `selected = TRUE`.
 }
 \description{
-This function turns the selected switch on when an individual is 
-selected to survive the generation and be among the pool of parents for the 
-next generation.
+This function randomly selects a specified number of unselected individuals
+from a population and marks them as selected. The function can operate in
+parallel if specified in the classifier parameters.
+}
+\details{
+The function identifies individuals in the population who have not
+been selected (i.e., their `selected` attribute is `FALSE`). It then randomly
+selects up to `nbToSelect` of these unselected individuals and sets their
+`selected` attribute to `TRUE`. If fewer than `nbToSelect` unselected
+individuals are available, it selects all unselected individuals.
+
+If parallel processing is enabled (`clf$params$parallel.local` is `TRUE`),
+selection is performed in parallel using `foreach` and `doRNG`. If the
+population is empty, the function issues a warning (if `clf$params$warnings`
+is `TRUE`) and returns \code{NULL}.
+}
+\examples{
+\dontrun{
+pop <- list(
+  list(fit_ = 0.9, selected = FALSE),
+  list(fit_ = 0.8, selected = FALSE),
+  list(fit_ = 0.7, selected = FALSE)
+)
+clf <- list(params = list(warnings = TRUE, parallel.local = FALSE))
+pop <- tag_SelectRandom(clf, pop, nbToSelect = 2)
+# Check which individuals are selected
+sapply(pop, function(ind) ind$selected)
+}
+
 }

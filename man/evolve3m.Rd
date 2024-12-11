@@ -2,31 +2,65 @@
 % Please edit documentation in R/terga2.lib.R
 \name{evolve3m}
 \alias{evolve3m}
-\title{Another version of the evolve method that distingishes the different lanugages}
+\title{Evolve a Population with Advanced Mating and Mutation}
 \usage{
 evolve3m(X, y, clf, pop, featEval)
 }
 \arguments{
-\item{X:}{dataset to classify}
+\item{X}{A matrix or data frame of feature values, where each row represents
+a feature and each column represents a sample.}
 
-\item{y:}{variable to predict}
+\item{y}{A response vector or target variable for supervised learning. The
+length of \code{y} should match the number of columns in \code{X}.}
 
-\item{clf:}{an object containing the different parameters of the classifier}
+\item{clf}{A classifier object containing parameters for evolution, including
+options for mutation size, parallel processing, and debugging.}
 
-\item{pop:}{the population to be evolved}
+\item{pop}{A list representing the population, where each individual has
+attributes like `mate` and `toBeMutated`.}
 
-\item{featEval:}{a dataset with the evaluation of each variable of the dataset, used for some mutator.}
+\item{featEval}{A vector or list containing feature evaluation metrics, used
+to guide mutation.}
 }
 \value{
-A list with every new individuals
+The evolved population list, including new offspring and mutated
+  individuals.
 }
 \description{
-In a nutshell this evolve method will select the parents using 2 methods (elite and random).
-Then it tags every selected individual with the index of it's mate in the population. 
-Then the individuals which are randomly selected and tagged as to be mutated. For each individual of the 
-population we check if they need to be crossed and/or mutated and the we apply the operations and 
-create a new individual for each operation applied. If two parents are of different languages the algorithm 
-will produce two children that are the same with each having one of the languages.
-This as been as a pipeline that could be paralellized with the most efficiency. We could summarize it the following way : 
-IN -> Evaluation -> initialisation of the tags -> Tagging -> Crossing and mutation -> OUT (newpop)
+This function performs one generation of evolution on a population, including
+advanced mating and mutation, with optional parallel processing. It returns
+the evolved population after these operations.
+}
+\details{
+The `evolve3m` function performs an evolutionary cycle on the
+population with the following steps:
+
+1. **Population Evaluation**: Each individual in the population is evaluated
+if not already done, and `mate` and `toBeMutated` attributes are initialized.
+2. **Tagging for Selection and Mating**: Individuals are tagged based on
+selection criteria from `clf`. 3. **Crossover and Mutation**: For individuals
+with mates, offspring are generated using the `crosser` function. If an
+individual is marked for mutation, the `mutator` function is applied.
+
+The function supports parallel processing, where crossover and mutation steps
+are performed concurrently if `clf$params$parallel.local` is `TRUE`. After
+crossover and mutation, children and mutated individuals are combined into a
+new population. If `debug` mode is enabled, messages track the evolution
+process.
+}
+\examples{
+\dontrun{
+X <- matrix(rnorm(100), nrow = 10) # Random features
+y <- sample(c(0, 1), 10, replace = TRUE) # Random binary response
+clf <- list(params = list(
+  mutate_size = 10, parallel.local = FALSE, debug = TRUE
+))
+pop <- list(
+  list(fit_ = NA, indices_ = 1:5, selected = FALSE, toBeMutated = FALSE, mate = NULL),
+  list(fit_ = NA, indices_ = 6:10, selected = FALSE, toBeMutated = FALSE, mate = NULL)
+)
+featEval <- runif(10)
+evolved_pop <- evolve3m(X, y, clf, pop, featEval)
+}
+
 }

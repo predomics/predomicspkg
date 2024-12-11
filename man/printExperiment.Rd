@@ -2,18 +2,38 @@
 % Please edit documentation in R/global.visu.R
 \name{printExperiment}
 \alias{printExperiment}
-\title{Prints as text the detail on a given Experiment object}
+\title{Print Information about an Experiment Object}
 \usage{
 printExperiment(obj, indent = "\\t--- ")
 }
 \arguments{
-\item{obj:}{an Experiment object}
+\item{obj}{An experiment object that contains information about the
+classifier, cross-validation, and the models used in the experiment.}
 
-\item{indent:}{a string (default:'tab---') that will precede each element of the object.}
+\item{indent}{A string for indentation, used to structure the printed output
+in a hierarchical manner. Default is "   --- ".}
 }
 \value{
-NULL if the object is not a valid Experiment
+None. The function prints the information directly to the console.
 }
 \description{
-This function prints a summary of an Experiment object.
+This function prints detailed information about an experiment object,
+including details about the experiment, cross-validation, and the classifier
+used. It helps in understanding and inspecting the components of an
+experiment.
+}
+\details{
+- Prints details about the experiment, including information about the classifier and the experiment settings.
+- If cross-validation data exists, prints the number of folds, times, and seeds used in the cross-validation.
+- Prints detailed learner options such as learner type, parameters, and the models involved in the experiment.
+}
+\examples{
+\dontrun{
+# Assuming 'experiment' is a valid experiment object
+printExperiment(experiment)
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

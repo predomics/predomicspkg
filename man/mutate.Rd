@@ -2,22 +2,55 @@
 % Please edit documentation in R/terga1.lib.R
 \name{mutate}
 \alias{mutate}
-\title{Changes feature indexes in a given percentage of models.}
+\title{Mutate Selected Individuals in a Population}
 \usage{
 mutate(clf, pop, selection, seed = NULL)
 }
 \arguments{
-\item{clf:}{the classifier parameter object}
+\item{clf}{A classifier object containing parameters for mutation, including:
+- `current_sparsity`: The target sparsity level for each individual.
+- `mutate_rate`: The mutation rate as a percentage of the total genes in each individual.
+- `size_world`: The total number of genes available (size of the "world").
+- `parallel.local`: Boolean indicating whether parallel processing should be used.}
 
-\item{pop:}{A population (i.e. list) of index vectors}
+\item{pop}{A list representing the population, where each individual is a
+vector of gene indices.}
 
-\item{selection:}{Indexes of the population pointing to the subset of the models to be changed}
+\item{selection}{A vector of indices indicating which individuals in `pop`
+should undergo mutation.}
 
-\item{seed:}{For reproductibility purpose to fix the random generator number.}
+\item{seed}{Optional integer seed for random number generation to ensure
+reproducibility.}
 }
 \value{
-a population of models among which the mutated ones
+A list representing the population after mutation, with selected
+  individuals modified.
 }
 \description{
-This function is used in terga1 will create new combinations of features based of existing ones from the parents.
+This function applies mutation to a selected set of individuals in a
+population by randomly modifying a specified percentage of genes. The
+mutation changes some genes to new, unique values from the gene pool.
+}
+\details{
+The function: 1. Calculates the number of genes to mutate based on
+`current_sparsity` and `mutate_rate`. 2. For each selected individual,
+identifies genes to mutate and replaces them with new, unique genes from the
+remaining gene pool. 3. Uses parallel processing if specified by
+`parallel.local`.
+
+**Mutation Process**:
+- Genes are randomly selected for mutation from each individual’s current genes.
+- New genes are randomly chosen from a "reservoir" of available genes not currently in the individual, ensuring they are unique and do not exceed the specified mutation percentage.
+}
+\examples{
+\dontrun{
+clf <- list(
+  params = list(current_sparsity = 5, mutate_rate = 20, size_world = 10, parallel.local = FALSE)
+)
+pop <- list(1:5, 2:6, 3:7, 4:8)  # Example population
+selection <- c(1, 3)  # Indices of individuals to mutate
+mutated_population <- mutate(clf, pop, selection, seed = 42)
+print(mutated_population)
+}
+
 }

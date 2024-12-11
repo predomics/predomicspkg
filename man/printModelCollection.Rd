@@ -2,22 +2,40 @@
 % Please edit documentation in R/global.visu.R
 \name{printModelCollection}
 \alias{printModelCollection}
-\title{Prints as text the detail on a given ModelCollection object}
+\title{Print Information about a Model Collection}
 \usage{
 printModelCollection(obj, indent = "\\t--- ", method = "long")
 }
 \arguments{
-\item{obj:}{a ModelCollection object}
+\item{obj}{A model collection object containing multiple models.}
 
-\item{indent:}{a string (default:'tab---') that will precede each element of the object for the "long" method.}
+\item{indent}{A string for indentation, used to structure the printed output
+in a hierarchical manner. Default is "   --- ".}
 
-\item{method:}{the output method (default:long) will print for each k_sparsity a short information of the population of models, 
-while the short method will output the number of models for each k_sparsity}
+\item{method}{A string specifying the format for printing. Valid options are
+"short" and "long". Default is "long".}
 }
 \value{
-NULL if the object is not a valid ModelCollection.
+None. The function prints the information directly to the console.
 }
 \description{
-This function prints a ModelCollection object. For each k_sparsity it will show some detail of 
-the maximum first models
+This function prints detailed information about a collection of models. It
+allows for summarizing the model collection in either a short or long format,
+providing insights into the models' sparsity, performance, and other relevant
+details.
+}
+\details{
+- In "short" mode, it prints the names of the models in the collection along with the number of models in each category.
+- In "long" mode, it prints detailed information about each model, including the k-sparsity and a summary of the models' characteristics.
+- The "long" mode will call the `printPopulation` function for each model in the collection to show its details.
+}
+\examples{
+\dontrun{
+# Assuming 'model_collection' is a valid model collection object
+printModelCollection(model_collection, method = "short")
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

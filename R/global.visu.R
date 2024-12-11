@@ -17,6 +17,7 @@
 # @author: Jean-Daniel Zucker
 # @date: August 2016                            
 # @date: October 2023
+# @date: November 2024
 
 
 ################################################################
@@ -32,16 +33,45 @@
 # PLOT EVALUATION RESULTS
 ################################################################
 
-#' Plots a graph for a given score
-#' 
-#' @import RColorBrewer
+#' Plot Comparative Empirical Score for Multiple Methods
+#'
+#' This function generates a plot comparing the empirical scores (such as AUC or
+#' accuracy) across multiple methods for different values of the sparse
+#' parameter (k sparse). The plot includes lines representing each method and
+#' points indicating the empirical score at each k sparse value. Horizontal
+#' lines indicate major thresholds (e.g., AUC = 0.5 or accuracy = majority
+#' class).
+#'
+#' @param digested.results A list containing the empirical results of the
+#'   models, including performance scores for various methods.
+#' @param ylim A numeric vector of length 2 specifying the limits for the
+#'   y-axis. Default is `c(0.5, 1)`.
+#' @param score A string specifying which score to visualize, e.g., "auc_" or
+#'   "accuracy_". Default is `"auc_"`.
+#' @param main A string specifying the title of the plot. Default is an empty
+#'   string.
+#'
+#' @details The function plots empirical scores (such as AUC or accuracy) for
+#' different methods across various values of k sparse. It handles multiple
+#' methods and adds horizontal lines to indicate important thresholds, such as
+#' AUC = 0.5 or the majority class in classification tasks.
+#'
+#' The plot is created using \code{ggplot2}, and different methods can be
+#' assigned different colors and point shapes. If no empirical data is provided,
+#' a blank plot with axis labels and horizontal lines for thresholds is
+#' displayed.
+#'
+#' @return A ggplot object visualizing the comparative empirical scores across
+#'   multiple methods.
+#'
+#' @examples
+#' # Assuming digested.results contains the performance scores for methods
+#' plotComparativeEmpiricalScore(digested.results, ylim = c(0.5, 1), score = "auc_", main = "Comparison of AUC across Methods")
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @description plotComparativeEmpiricalScore plots a digested.results data object for a given score.
-#' @param digested.results: a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()
-#' @param ylim: y-axis zoom in the plot
-#' @param score: default (auc_) score
-#' @param main: name of the graphic
-#' @return A ggplot graphs
+#' @import RColorBrewer
 #' @export
 plotComparativeEmpiricalScore <- function(digested.results, ylim = c(0.5,1), score = "auc_", main = "")
 {
@@ -154,18 +184,55 @@ plotComparativeEmpiricalScore <- function(digested.results, ylim = c(0.5,1), sco
 }
 
 
-#' Plots a graph for a given score
-#' 
-#' @import RColorBrewer
+#' Plot Comparative Cross-Validation (CV) Performance for Multiple Methods
+#'
+#' This function generates a plot comparing the cross-validation (CV)
+#' performance (such as AUC, accuracy, or other scores) across multiple methods
+#' for different values of the sparse parameter (k sparse). The plot includes
+#' lines representing each method and points indicating the empirical or
+#' generalization performance score at each k sparse value. Optional error bars
+#' (confidence intervals) can be included in the plot.
+#'
+#' @param digested.results A list containing the CV results of the models,
+#'   including performance scores for various methods.
+#' @param ylim A numeric vector of length 2 specifying the limits for the
+#'   y-axis. Default is `c(0.5, 1)`.
+#' @param generalization A logical value (`TRUE` or `FALSE`). If `TRUE`, the
+#'   plot shows the generalization performance (cross-validation performance
+#'   across folds). If `FALSE`, it shows empirical performance. Default is
+#'   `TRUE`.
+#' @param score A string specifying which score to visualize, e.g., "auc_",
+#'   "accuracy_", "recall_", etc. Default is `"auc_"`.
+#' @param ci A logical value (`TRUE` or `FALSE`). If `TRUE`, confidence
+#'   intervals (error bars) are shown in the plot. Default is `TRUE`.
+#' @param main A string specifying the title of the plot. Default is an empty
+#'   string.
+#'
+#' @details The function plots cross-validation (CV) scores (such as AUC,
+#' accuracy, etc.) for different methods across various values of k sparse. It
+#' handles both generalization (cross-validation) and empirical tasks, and
+#' includes optional error bars representing confidence intervals for each
+#' score.
+#'
+#' The plot is created using \code{ggplot2}, and different methods can be
+#' assigned different colors and point shapes. Horizontal lines indicate
+#' important thresholds, such as AUC = 0.5 or the majority class in
+#' classification tasks.
+#'
+#' @return A ggplot object visualizing the comparative cross-validation (CV)
+#'   scores across multiple methods.
+#'
+#' @examples
+#' # Assuming digested.results contains the cross-validation performance scores for methods
+#' plotComparativeCV(digested.results, ylim = c(0.5, 1), score = "auc_", ci = TRUE, main = "Comparison of AUC across Methods")
+#'
+#' # You can customize the plot by adjusting the score, error bars (ci), and other parameters.
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @description plotComparativeCV plots a digested.results data object for a given score.
-#' @param digested.results: a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()
-#' @param ylim: y-axis zoom in the plot
-#' @param generalization: when (default:TRUE) then the generalization score will be used
-#' @param score: default (auc_) score for the cross-validation representation
-#' @param ci: should the confidence intereval be plotted (default:TRUE)
-#' @param main: name of the graphic
-#' @return A ggplot graphs
+#' @import RColorBrewer
+#' @importFrom stats sd
 #' @export
 plotComparativeCV <- function(digested.results, ylim = c(0.5,1), generalization = TRUE, score="auc_", ci = TRUE, main = "")
 {
@@ -327,16 +394,58 @@ plotComparativeCV <- function(digested.results, ylim = c(0.5,1), generalization 
 }
 
 
-#' Plots a graph for a given score
-#' 
-#' @import RColorBrewer
+#' Plot Comparative Best Cross-Validation (CV) Performance for Multiple Methods
+#'
+#' This function generates a plot comparing the best cross-validation (CV)
+#' performance (such as AUC, accuracy, or other scores) across multiple methods
+#' for different values of the sparse parameter (k sparse). The plot includes
+#' lines representing each method and points indicating the best CV performance
+#' score at each k sparse value. Optional error bars (confidence intervals) can
+#' be included in the plot. The best method for each k sparse is also indicated
+#' in the legend.
+#'
+#' @param digested.results A list containing the best CV results of the models,
+#'   including performance scores for various methods.
+#' @param ylim A numeric vector of length 2 specifying the limits for the
+#'   y-axis. Default is `c(0.5, 1)`.
+#' @param generalization A logical value (`TRUE` or `FALSE`). If `TRUE`, the
+#'   plot shows the generalization performance (cross-validation performance
+#'   across folds). If `FALSE`, it shows empirical performance. Default is
+#'   `TRUE`.
+#' @param score A string specifying which score to visualize, e.g., "auc_",
+#'   "accuracy_", "recall_", etc. Default is `"auc_"`.
+#' @param ci A logical value (`TRUE` or `FALSE`). If `TRUE`, confidence
+#'   intervals (error bars) are shown in the plot. Default is `TRUE`.
+#' @param main A string specifying the title of the plot. Default is an empty
+#'   string.
+#'
+#' @details The function plots the best cross-validation (CV) scores (such as
+#' AUC, accuracy, etc.) for different methods across various values of k sparse.
+#' It handles both generalization (cross-validation) and empirical tasks, and
+#' includes optional error bars representing confidence intervals for each
+#' score.
+#'
+#' The plot is created using \code{ggplot2}, and different methods can be
+#' assigned different colors and point shapes. Horizontal lines indicate
+#' important thresholds, such as AUC = 0.5 or the majority class in
+#' classification tasks.
+#'
+#' The plot also includes a legend with the best method for each k sparse value.
+#'
+#' @return A ggplot object visualizing the best cross-validation (CV) scores
+#'   across multiple methods.
+#'
+#' @examples
+#' # Assuming digested.results contains the best cross-validation performance scores for methods
+#' plotComparativeBestCV(digested.results, ylim = c(0.5, 1), score = "auc_", ci = TRUE, main = "Comparison of Best AUC across Methods")
+#'
+#' # You can customize the plot by adjusting the score, error bars (ci), and other parameters.
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @description plotComparativeCV plots a digested.results data object for a given score.
-#' @param digested.results: a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()
-#' @param ylim: y-axis zoom in the plot
-#' @param score: default (auc_) score for the cross-validation representation
-#' @param main: name of the graphic
-#' @return A ggplot graphs
+#' @import RColorBrewer
+#' @importFrom stats sd
 #' @export
 plotComparativeBestCV <- function(digested.results, ylim = c(0.5,1), generalization = TRUE, score = "auc_", ci = TRUE, main = "")
 {
@@ -498,19 +607,65 @@ plotComparativeBestCV <- function(digested.results, ylim = c(0.5,1), generalizat
 }
 
 
-#' Plot performance scores for multiple learners
-#' 
-#' @import RColorBrewer
+#' Plot Comparative Results for Multiple Methods and Cross-Validation Scores
+#'
+#' This function generates plots comparing multiple performance metrics (such as
+#' AUC, accuracy, recall, precision, F1-score, etc.) across different methods.
+#' It can display results from both empirical and cross-validation (CV)
+#' evaluations, with options to show the best results across methods or by
+#' k-sparsity values. The function can handle both classification and regression
+#' tasks and supports visualizing both the empirical and generalization
+#' performance.
+#'
+#' @param digested.results A list containing the performance results, including
+#'   both empirical and cross-validation (CV) scores for various methods.
+#' @param plot A logical value (`TRUE` or `FALSE`). If `TRUE`, the function will
+#'   generate and display the plots. Default is `TRUE`.
+#' @param ylim A numeric vector of length 2 specifying the limits for the
+#'   y-axis. Default is `c(0.5, 1)`.
+#' @param best A logical value (`TRUE` or `FALSE`). If `TRUE`, the function will
+#'   plot the best results across methods, regardless of the k-sparsity. Default
+#'   is `FALSE`.
+#' @param ci A logical value (`TRUE` or `FALSE`). If `TRUE`, confidence
+#'   intervals (error bars) will be shown in the plots. Default is `FALSE`.
+#' @param main A string specifying the title of the plots. Default is an empty
+#'   string.
+#' @param mode A string specifying the type of model being analyzed. Options are
+#'   `"classification"` or `"regression"`. Default is `"classification"`.
+#'
+#' @details The function generates multiple plots comparing performance metrics
+#'   such as AUC, accuracy, recall, precision, F1-score, and correlation, across
+#'   multiple methods. The plots can show:
+#' - Empirical performance for each method.
+#' - Cross-validation performance (generalization) for each method.
+#' - The best results across methods, either by k-sparsity or regardless of k-sparsity.
+#'
+#'   The plots are generated using \code{ggplot2} and arranged in a grid using
+#'   the \code{multiplot} function. The user can choose to visualize the results
+#'   for classification or regression models.
+#'
+#' @return If `plot = TRUE`, the function displays the plots. If `plot = FALSE`,
+#'   the function returns a list of ggplot objects for further manipulation.
+#'
+#' @examples
+#' # Assuming digested.results contains the performance scores for methods
+#' plotComparativeResults(digested.results, plot = TRUE, ylim = c(0.5, 1),
+#' best = TRUE, ci = TRUE, main = "Comparison of Results")
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @description plotComparativeResults plots a digested.results data object to compare performance results between different learners.
-#' @param digested.results: a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()
-#' @param ylim: y-axis zoom in the plot
-#' @param best: a swith to plot the best values instead of declining by k_sparsity
-#' @param main: name of the graphic
-#' @param mode: either classification or regression (default:classification)
-#' @return A list of ggplot graphs if plot is set to FALSE and a pannel organized graph otherwise.
+#' @import RColorBrewer
+#' @importFrom gridExtra grid.arrange
+#' @importFrom stats sd
 #' @export
-plotComparativeResults <- function(digested.results, plot = TRUE, ylim = c(0.5, 1), best = FALSE, ci = FALSE, main = "", mode = "classification")
+plotComparativeResults <- function(digested.results, 
+                                   plot = TRUE, 
+                                   ylim = c(0.5, 1), 
+                                   best = FALSE, 
+                                   ci = FALSE, 
+                                   main = "", 
+                                   mode = "classification")
 {
   # estimate mode
   mode <- NULL
@@ -650,14 +805,46 @@ plotComparativeResults <- function(digested.results, plot = TRUE, ylim = c(0.5, 
 }
 
 
-#' Plot performance scores for multiple learners
-#' 
-#' @import RColorBrewer
+#' Plot Comparative Results for Best Performance Across Multiple Methods
+#'
+#' This function generates plots comparing the best performance metrics (such as
+#' AUC, accuracy, recall, precision, F1-score, etc.) across multiple methods. It
+#' visualizes both empirical performance and cross-validation (CV) scores for
+#' different methods, with the option to plot results for different scores. The
+#' function can handle both classification and regression tasks.
+#'
+#' @param digested.results A list containing the performance results, including
+#'   both empirical and cross-validation (CV) scores for various methods.
+#' @param plot A logical value (`TRUE` or `FALSE`). If `TRUE`, the function will
+#'   generate and display the plots. Default is `TRUE`.
+#' @param ylim A numeric vector of length 2 specifying the limits for the
+#'   y-axis. Default is `c(0.5, 1)`.
+#'
+#' @details The function generates multiple plots comparing the best performance
+#' metrics such as AUC, accuracy, recall, precision, F1-score, and correlation,
+#' across multiple methods. The plots include:
+#' - Empirical performance for each method.
+#' - Cross-validation performance (generalization) for each method.
+#'
+#' The function can visualize both classification and regression models, and
+#' displays the best performance across different methods. The plots are
+#' arranged using the `multiplot` function.
+#'
+#' @return If `plot = TRUE`, the function displays the plots. If `plot = FALSE`,
+#' the function returns a list of ggplot objects for further manipulation.
+#'
+#' @examples
+#' # Assuming digested.results contains the performance scores for methods
+#' plotComparativeResultsBest(digested.results, plot = TRUE, ylim = c(0.5, 1))
+#'
+#' # You can customize the plot by adjusting the score, error bars (ci), and other parameters.
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @description plotComparativeResultsBest plots a digested.results data object to compare performance results between different learners focusing at the best model.
-#' @param digested.results: a list of data.frames containing performance results from a lists of learners. This data object is returned by the function merge_digestScores()
-#' @param ylim: y-axis zoom in the plot
-#' @return A list of ggplot graphs if plot is set to FALSE and a pannel organized graph otherwise.
+#' @import RColorBrewer
+#' @importFrom gridExtra grid.arrange
+#' @importFrom stats sd
 #' @export
 plotComparativeResultsBest <- function(digested.results, plot = TRUE, ylim = c(0.5,1))
 {
@@ -732,7 +919,46 @@ plotComparativeResultsBest <- function(digested.results, plot = TRUE, ylim = c(0
 #source("~/Research/workspace_r/momr_1.1_corrections.R")
 
 
-#### Do we need docuentation for this ?
+#' Plot MGS Quality for Genes
+#'
+#' This function visualizes the quality of Multi-Genome Scoring (MGS) for a
+#' dataset. It generates multiple plots, including barcode plots and individual
+#' signal metric plots for the first 50 genes (or fewer, depending on the
+#' dataset size). The function also computes and visualizes various signal
+#' metrics, with results displayed in color-coded plots based on the values of
+#' the computed metrics.
+#'
+#' @param dat A data frame or matrix of gene data. Rows represent genes and
+#'   columns represent individuals.
+#' @param main A string for the title of the plots. Default is `"mgs"`.
+#' @param return.scores A logical value (`TRUE` or `FALSE`). If `TRUE`, the
+#'   function returns the computed signal scores for the genes. Default is
+#'   `TRUE`.
+#'
+#' @details The function generates a series of plots to assess the quality of
+#' MGS for a dataset. The process includes:
+#' - Creating a barcode plot for the first 50 genes.
+#' - Generating individual plots for each of the computed signal metrics, with the colors of the points indicating the magnitude of the signal (from black to red).
+#'
+#' The function calls `plotBarcode` for visualizing the dataset and
+#' `computeSignalMetrics` for calculating the signal metrics.
+#'
+#' If the dataset contains fewer than 50 genes, all available genes are used
+#' instead. The signal metrics are calculated and displayed in individual plots,
+#' with color gradients indicating the score value.
+#'
+#' @return If `return.scores = TRUE`, the function returns a data frame
+#' containing the computed signal metrics for the dataset.
+#'
+#' @examples
+#' # Assuming `dat` is a data frame of gene data
+#' plotMGSQuality(dat)
+#'
+#' # To get the computed signal metrics
+#' scores <- plotMGSQuality(dat, return.scores = TRUE)
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @export
 plotMGSQuality <- function (dat, main = "mgs", return.scores = TRUE) {
   par(mfcol = c(6, 2), xaxs = "i", yaxs = "i", mar = c(2, 2, 2, 1))
@@ -775,13 +1001,52 @@ plotMGSQuality <- function (dat, main = "mgs", return.scores = TRUE) {
 
 # Multiple plot function
 # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
-# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
-# - cols:   Number of columns in layout
-# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
-#
-# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
-# then plot 1 will go in the upper left, 2 will go in the upper right, and
-# 3 will go all the way across the bottom.
+#' Create Multiple Plots on One Page
+#'
+#' This function arranges multiple plots on a single page using grid layout. It
+#' allows for custom arrangement of the plots and can save the plots to a file
+#' if needed. It supports both direct plotting and generating a multi-plot
+#' layout from a list of plots.
+#'
+#' @param ... One or more ggplot objects to be displayed.
+#' @param plotlist A list of ggplot objects to be displayed. This is an
+#'   alternative to passing the plots as `...`.
+#' @param file Optional; a character string specifying the file path to save the
+#'   plot as a file (e.g., PNG, PDF). Default is `NULL`, which means the plot is
+#'   shown in the R graphics window.
+#' @param cols The number of columns to arrange the plots in. Default is `1`.
+#'   This is used to calculate the layout if `layout` is not provided.
+#' @param layout A matrix specifying the layout of the plots on the page. If
+#'   `NULL`, the layout is automatically calculated based on the number of plots
+#'   and the `cols` parameter.
+#'
+#' @details The function arranges multiple ggplot objects in a grid layout, with
+#' the number of columns determined by the `cols` argument. The function will
+#' automatically adjust the number of rows to fit all the plots. If `layout` is
+#' provided, it will override the `cols` argument to control the layout.
+#'
+#' If `file` is provided, the function will save the multi-plot layout to the
+#' specified file. The supported formats depend on the device used (e.g., PNG,
+#' PDF).
+#'
+#' @return No return value. The function displays the plots or saves them to a
+#' file if `file` is specified.
+#'
+#' @examples
+#' library(ggplot2)
+#' p1 <- ggplot(mtcars, aes(mpg, disp)) + geom_point()
+#' p2 <- ggplot(mtcars, aes(mpg, hp)) + geom_point()
+#' p3 <- ggplot(mtcars, aes(disp, hp)) + geom_point()
+#'
+#' # Display the plots in a 2x2 grid
+#' multiplot(p1, p2, p3, cols=2)
+#'
+#' # Save the plots to a file
+#' multiplot(p1, p2, p3, file="my_plots.pdf", cols=2)
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @import grid
 #' @export
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
@@ -825,29 +1090,58 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-# # plot a horizontal barplot
-# plotBarplot <- function(v, rev=TRUE, xlim=range(v), main="", col="darkgray"){
-#   if(rev) v <- rev(v)
-#   #barplot(v, las=2, horiz=TRUE, col="black", main=main, xlim=xlim)
-#   plot.barchart <- barchart(x=v, col=col, pch=22, cex=1, xlab="", main=main)
-#   return(plot.barchart)
-# }
 
-
-#' Plots the prevalence of a list of features in the whole dataset and per each class
+#' Plot Feature Prevalence and Enrichment
 #'
-#' @description Plots the prevalence of a given number of features
+#' This function visualizes the prevalence of features across different groups
+#' in a dataset and computes feature enrichment, providing an optional
+#' statistical test for enrichment. The plot displays the prevalence of features
+#' in each group, and if enrichment data is available, it adds significance
+#' markers.
+#'
+#' @param features A character vector of feature names to be plotted.
+#' @param X A data matrix or data frame where each row is an observation and
+#'   each column is a feature.
+#' @param y A vector of class labels (e.g., 1 and -1 for binary classification)
+#'   corresponding to the rows in `X`.
+#' @param topdown Logical; whether to arrange the features in a top-down order
+#'   (default is `TRUE`).
+#' @param main A string for the title of the plot.
+#' @param plot Logical; if `TRUE`, the function will display the plot. If
+#'   `FALSE`, the function will return the enrichment statistics.
+#' @param col.pt Colors for points in the plot (default is `c("deepskyblue4",
+#'   "firebrick4")`).
+#' @param col.bg Colors for bars in the plot (default is `c("deepskyblue1",
+#'   "firebrick1")`).
+#' @param zero.value The value to replace in `y` for missing values (default is
+#'   `0`).
+#'
+#' @details The function computes and visualizes the prevalence of the specified
+#' features across different groups in the dataset, showing the percentage of
+#' occurrences in each class. If statistical enrichment tests are available, the
+#' function will display these using asterisks for significant features. The
+#' enrichment is computed using chi-square tests.
+#'
+#' @return If `plot = TRUE`, the function returns a ggplot object displaying the
+#' feature prevalence and enrichment. If `plot = FALSE`, the function returns
+#' the enrichment results.
+#'
+#' @examples
+#' # Example usage
+#' features <- c("feature1", "feature2", "feature3")
+#' X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100), feature3 = rnorm(100))
+#' y <- sample(c(1, -1), 100, replace = TRUE)
+#'
+#' # Plot feature prevalence
+#' plotPrevalence(features, X, y, main = "Feature Prevalence Plot")
+#'
+#' # Get enrichment statistics without plotting
+#' plotPrevalence(features, X, y, plot = FALSE)
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @param features: a list of features or features indexes for which we wish to compute prevalence
-#' @param X: dataset where to compute the prevalence
-#' @param y: if provided it will also compute hte prevalence per each class (default:NULL)
-#' @param topdown: showing features from top-down or the other way around (default:TRUE)
-#' @param main: main title (default:none)
-#' @param plot: if TRUE this provides a plot, otherwise will return different metrics such as prevalence and enrichment statistics
-#' @param col.pt: colors for the point border (-1:deepskyblue4, 1:firebrick4)
-#' @param col.bg: colors for the point fill (-1:deepskyblue1, 1:firebrick1)
-#' @param zero.value: the value that specifies what is zero. This can be a different than 0 in log transformed data for instance (default = 0)
-#' @return a ggplot object
+#' @importFrom reshape2 melt
 #' @export
 plotPrevalence <- function(features, X, y, topdown = TRUE, main = "", plot = TRUE, 
                            col.pt = c("deepskyblue4", "firebrick4"), 
@@ -915,20 +1209,61 @@ plotPrevalence <- function(features, X, y, topdown = TRUE, main = "", plot = TRU
 
 
 
-#' Plots the prevalence of a list of features in the whole dataset and per each class
+#' Plot Feature Abundance by Class
 #'
-#' @description Plots the abundance of a given number of features for each class and tests significance
-#' @import reshape2
+#' This function visualizes the abundance of features across different classes
+#' in a dataset. It creates boxplots to show the distribution of feature
+#' abundances in each class, along with statistical tests for the significance
+#' of differences between the classes. The function supports both classification
+#' and regression tasks.
+#'
+#' @param features A character vector of feature names to be plotted.
+#' @param X A data matrix or data frame where each row represents an observation
+#'   and each column represents a feature.
+#' @param y A vector of class labels (e.g., 1 and -1 for binary classification,
+#'   or continuous for regression) corresponding to the rows in `X`.
+#' @param topdown Logical; whether to arrange the features in a top-down order
+#'   (default is `TRUE`).
+#' @param main A string for the title of the plot.
+#' @param plot Logical; if `TRUE`, the function will display the plot. If
+#'   `FALSE`, the function will return the statistical results of the test.
+#' @param col.pt Colors for points in the plot (default is `c("deepskyblue4",
+#'   "firebrick4")`).
+#' @param col.bg Colors for boxplots in the plot (default is `c("deepskyblue1",
+#'   "firebrick1")`).
+#'
+#' @details This function computes and visualizes the abundance of features in
+#' each class (group) of the dataset. It creates a boxplot for each feature and
+#' computes a non-parametric test for differences in abundance between classes.
+#' The function supports both classification (e.g., binary or multi-class) and
+#' regression tasks (using continuous values in `y`).
+#'
+#' In classification mode, the plot compares the two classes (e.g., 1 vs -1 for
+#' binary classification) and adds significance markers (e.g., asterisks) for
+#' features with significant differences in abundance between classes. In
+#' regression mode, it compares feature abundance across all observations and
+#' computes correlations with the response variable.
+#'
+#' @return If `plot = TRUE`, the function returns a ggplot object displaying the
+#' feature abundance by class. If `plot = FALSE`, it returns the statistical
+#' results of the test (p-values and q-values).
+#'
+#' @examples
+#' # Example usage for classification task
+#' features <- c("feature1", "feature2", "feature3")
+#' X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100), feature3 = rnorm(100))
+#' y <- sample(c(1, -1), 100, replace = TRUE)
+#'
+#' # Plot feature abundance
+#' plotAbundanceByClass(features, X, y, main = "Feature Abundance Plot")
+#'
+#' # Get statistical results without plotting
+#' plotAbundanceByClass(features, X, y, plot = FALSE)
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @param features: a list of features or features indexes for which we wish to compute prevalence
-#' @param X: dataset where to compute the prevalence
-#' @param y: if provided it will also compute hte prevalence per each class (default:NULL)
-#' @param topdown: showing features from top-down or the other way around (default:TRUE)
-#' @param main: main title (default:none)
-#' @param plot: if TRUE this provides a plot, otherwise will return different metrics such as prevalence and enrichment statistics
-#' @param col.pt: colors for the point border (-1:deepskyblue4, 1:firebrick4)
-#' @param col.bg: colors for the point fill (-1:deepskyblue1, 1:firebrick1)
-#' @return a ggplot object
+#' @importFrom reshape2 melt
 #' @export
 plotAbundanceByClass <- function(features, X, y, topdown = TRUE, 
                                  main = "", plot = TRUE, 
@@ -1107,16 +1442,52 @@ plotAbundanceByClass <- function(features, X, y, topdown = TRUE,
 
 
 
-#' Plots the prevalence of a list of features in the whole dataset and per each class
+#' Plot Feature Model Coefficients
 #'
-#' @description Plots the coefficients of subset of features in the models where they are found
+#' This function visualizes the coefficients of features across different models
+#' in a heatmap-style plot. It allows for customized ordering of the features
+#' and models, and it supports vertical or horizontal axis labels.
+#'
+#' @param feat.model.coeffs A matrix or data frame where rows represent
+#'   features, and columns represent models. The values in the matrix correspond
+#'   to the coefficients of the features in each model.
+#' @param topdown Logical; if `TRUE`, the features will be arranged from top to
+#'   bottom in the plot. If `FALSE`, the original order is preserved.
+#' @param main A string for the title of the plot.
+#' @param col A vector of colors for the heatmap. Default is `c("deepskyblue1",
+#'   "white", "firebrick1")`.
+#' @param vertical.label Logical; if `TRUE`, the feature labels on the y-axis
+#'   will be rotated vertically.
+#'
+#' @details The function generates a heatmap-style plot of feature coefficients
+#' across multiple models. The color intensity represents the coefficient
+#' values, with positive values shown in one color, negative values in another,
+#' and zeros in a neutral color. The function supports customization of the plot
+#' layout and label orientation.
+#'
+#' The `topdown` argument controls the ordering of the features in the plot.
+#' When set to `TRUE`, the features are arranged in reverse order, and if set to
+#' `FALSE`, the original order is maintained. The function also allows the user
+#' to rotate the feature labels vertically if needed.
+#'
+#' @return A `ggplot` object displaying the heatmap of feature coefficients
+#' across models.
+#'
+#' @examples
+#' # Example usage
+#' features <- c("feature1", "feature2", "feature3")
+#' models <- c("model1", "model2", "model3")
+#' coeffs <- matrix(runif(9), nrow = 3, ncol = 3)
+#' rownames(coeffs) <- features
+#' colnames(coeffs) <- models
+#'
+#' # Plot feature model coefficients
+#' plotFeatureModelCoeffs(coeffs, main = "Feature Coefficients Heatmap")
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @import ggplot2
 #' @importFrom reshape2 melt
-#' @param feat.model.coeffs: feature vs. model coeffient table
-#' @param topdown: showing features from top-down or the other way around (default:TRUE)
-#' @param main: main title (default:none)
-#' @param col: colors to be used for the coeffients (default: -1 = deepskyblue1, 0 = white, 1 = firebrick1)
-#' @param vertical.label: wether the x-axis labels should be vertical or not (default:TRUE)
-#' @return a ggplot object
 #' @export
 plotFeatureModelCoeffs <- function(feat.model.coeffs, topdown = TRUE, main="", col = c("deepskyblue1","white","firebrick1"), vertical.label = TRUE)
 {
@@ -1174,19 +1545,59 @@ plotFeatureModelCoeffs <- function(feat.model.coeffs, topdown = TRUE, main="", c
 ################################################################
 # POPULATION PLOTS
 ################################################################
-#' @title Plots a population of models (or a single model) objects as barplots of scaled coefficients.
+
+
+
+#' Plot Population of Models
 #'
-#' @description Plots an model or a population of models as a barplots, representing each feature, the length being the coefficient
-#' @importFrom gridExtra grid.arrange
-#' @param pop: a population of models to plot
-#' @param X: the data matrix with variables in the rows and observations in the columns
-#' @param y: the class vector
-#' @param sort.features: wether the features need to be sorted by correlation with 'y' or not
-#' @param sort.ind: computing sorting can take time if computed for every model and can be computed outside the function and passed as a parameter
-#' @param col.sign: the colors of the cofficients based on the sign of the coefficients (default: -1=deepskyblue1,1:firebrick1)
-#' @param ncol: number of graphics for each line (default: 10)
-#' @param slim: plot without axis information (default:FALSE)
-#' @param importance: the importance (mda) of the features in crossval
+#' This function visualizes a population of models by plotting their feature
+#' importance or coefficients. It supports sorting of features by discriminance
+#' or importance, and allows for customization of colors and the number of
+#' columns in the layout.
+#'
+#' @param pop A population of models (either a list of models or a single
+#'   model).
+#' @param X A data matrix or data frame where rows represent observations and
+#'   columns represent features.
+#' @param y A vector of class labels (e.g., 1 and -1 for binary classification)
+#'   corresponding to the rows in `X`.
+#' @param sort.features Logical; if `TRUE`, the features will be sorted by their
+#'   discriminance with respect to `y`. Default is `FALSE`.
+#' @param sort.ind A vector of indices for sorting the features. If `NULL`, the
+#'   function will determine the order based on discriminance. Default is
+#'   `NULL`.
+#' @param col.sign A vector of two colors (default is `c("deepskyblue1",
+#'   "firebrick1")`) used to represent positive and negative coefficients,
+#'   respectively.
+#' @param ncol The number of columns to arrange the plots in (default is `10`).
+#' @param slim Logical; if `TRUE`, the plots will be simplified. Default is
+#'   `FALSE`.
+#' @param importance Logical; if `TRUE`, the feature importance will be plotted.
+#'   Default is `FALSE`.
+#'
+#' @details This function generates a series of plots for a population of
+#' models, displaying the feature coefficients or importances. If the population
+#' consists of multiple models, each model's coefficients or importances are
+#' plotted in a separate subplot. The function supports feature sorting based on
+#' their discriminance or importance, and customizes the layout of the plots.
+#'
+#' @return If the population consists of a single model, a plot of the model's
+#' feature coefficients or importance is returned. If the population consists of
+#' multiple models, a grid of plots is displayed using `grid.arrange`.
+#'
+#' @examples
+#' # Example usage for a population of models
+#' pop <- list(model1, model2, model3)  # Assume these are pre-defined models
+#' X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+#' y <- sample(c(1, -1), 100, replace = TRUE)
+#'
+#' # Plot the population
+#' plotPopulation(pop, X, y, sort.features = TRUE, ncol = 3)
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @import gridExtra
+#' @import ggplot2
 #' @export
 plotPopulation <- function(pop, X, y, 
                            sort.features = FALSE, sort.ind = NULL, 
@@ -1248,21 +1659,68 @@ plotPopulation <- function(pop, X, y,
 # SINGLE MODEL PLOTS
 ################################################################
 
-#' @title Plots a model or a population of model objectsas barplots of scaled coefficients.
+#' Plot Model Coefficients and Importance
 #'
-#' @description Plots a model or a population of models as a barplots, representing each feature, the length being the coefficient
+#' This function visualizes the coefficients of a model, with the option to plot
+#' feature importance. It supports various model types, including SOTA models
+#' and Random Forests, and can display the results in a variety of layouts,
+#' including plots of feature coefficients, feature importance, or decision
+#' trees.
+#'
+#' @param mod A model object (e.g., a fitted machine learning model such as SVM,
+#'   logistic regression, or random forest).
+#' @param X A data matrix or data frame where each row is an observation and
+#'   each column is a feature.
+#' @param y A vector of class labels (e.g., 1 and -1 for binary classification,
+#'   or continuous for regression) corresponding to the rows in `X`.
+#' @param sort.features Logical; if `TRUE`, the features will be sorted by their
+#'   discriminance with respect to `y`. Default is `FALSE`.
+#' @param sort.ind A vector of indices for sorting the features. If `NULL`, the
+#'   function will determine the order based on discriminance. Default is
+#'   `NULL`.
+#' @param feature.name Logical; if `TRUE`, the feature names will be displayed
+#'   on the plot.
+#' @param col.sign A vector of two colors for positive and negative coefficients
+#'   (default is `c("deepskyblue1", "firebrick1")`).
+#' @param main A string for the title of the plot.
+#' @param slim Logical; if `TRUE`, the plot will be simplified (e.g., removing
+#'   axis labels and ticks). Default is `FALSE`.
+#' @param importance Logical; if `TRUE`, the feature importance will be plotted.
+#'   Default is `FALSE`.
+#' @param res_clf Optional; a result object containing cross-validation or
+#'   feature importance data. This is used when `importance` is `TRUE` for
+#'   models that have a cross-validation feature.
+#'
+#' @details This function generates a plot of model coefficients or feature
+#' importance, depending on the model type and the `importance` parameter. The
+#' function supports SOTA models (like SVM or logistic regression), where
+#' coefficients are visualized, and Random Forest models, where decision trees
+#' can be plotted. The plot can also include feature importance, if available.
+#'
+#' If the model is a `Random Forest`, the function will plot a decision tree.
+#' For other models, it will plot the feature coefficients with color-coded bars
+#' for positive and negative coefficients.
+#'
+#' @return If the model is a `Random Forest`, the function returns a decision
+#' tree plot. For other models, it returns a `ggplot` object showing the feature
+#' coefficients or importance.
+#'
+#' @examples
+#' # Example usage for a classification model
+#' model <- train(logistic_regression_model)  # Assume this is a pre-trained model
+#' X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+#' y <- sample(c(1, -1), 100, replace = TRUE)
+#'
+#' # Plot the model's coefficients
+#' plotModel(model, X, y, main = "Model Coefficients Plot")
+#'
+#' # Plot the model's importance (if available)
+#' plotModel(model, X, y, importance = TRUE)
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @param mod: a model to plot
-#' @param X: the data matrix with variables in the rows and observations in the columns
-#' @param y: the class vector
-#' @param sort.features: wether the features need to be sorted by correlation with 'y' or not (default: TRUE)
-#' @param sort.ind: computing sorting can take time if computed for every model and can be computed outside the function and passed as a parameter
-#' @param feature.name: show the name of the features (default:FALSE)
-#' @param col.sign: the colors of the cofficients based on the sign of the coefficients (default: -1=deepskyblue1, 1:firebrick1)
-#' @param main: possibility to change the title of the function (default:"")
-#' @param slim: plot without axis information (default:FALSE)
-#' @param importance: the importance (mda) of the features in crossval
-#' @param res_clf: the result of the learning process (default:NULL). If provided information on MDA will be extracted for the importance graphic.
+#' @importFrom reshape2 melt
 #' @export
 plotModel <- function(mod, X, y, 
                       sort.features = FALSE, 
@@ -1546,13 +2004,59 @@ plotModel <- function(mod, X, y,
 }
 
 
-#' @title Plots a model or a population of model objectsas barplots of scaled coefficients.
+#' Plot Model Performance Scores
+#'
+#' This function visualizes the performance of a model by plotting the predicted
+#' scores (`yhat`) against the true class labels (`y`). It supports both
+#' classification (AUC, accuracy) and regression (R2, correlation) tasks. For
+#' classification tasks, it displays a boxplot with jittered points, while for
+#' regression tasks, it shows a scatter plot with a linear regression line.
+#'
+#' @param mod A model object containing the attribute `score_` (predicted
+#'   scores) and other model evaluation metrics such as accuracy, AUC, R2, etc.
+#' @param y A vector of true class labels or continuous values, corresponding to
+#'   the predicted scores in `mod$score_`.
+#' @param col.sign A vector of two colors for positive and negative class labels
+#'   (default is `c("deepskyblue1", "firebrick1")`).
+#' @param main A string for the title of the plot (default is an empty string).
+#'
+#' @details This function checks the validity of the model and the input data,
+#' then creates a plot based on the model's prediction performance. For
+#' classification tasks, it uses a boxplot to show the distribution of predicted
+#' scores, while for regression tasks, it uses a scatter plot with a linear
+#' regression line.
+#'
+#' The function also displays performance metrics in the plot title, such as
+#' accuracy and AUC for classification tasks, or correlation coefficient (Rho),
+#' R-squared (R2), and standard error of regression (SER) for regression tasks.
+#'
+#' If the model is of type `SOTA` or lacks the required attributes (`score_`,
+#' `y`), the function will return `NULL` and display a corresponding error
+#' message.
+#'
+#' @return A `ggplot` object displaying the model's performance plot, either a
+#' boxplot for classification tasks or a scatter plot with a regression line for
+#' regression tasks.
+#'
+#' @examples
+#' # Example usage for a classification model
+#' model <- train(logistic_regression_model)  # Assume this is a pre-trained model
+#' X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+#' y <- sample(c(1, -1), 100, replace = TRUE)
+#'
+#' # Plot the model's performance score
+#' plotModelScore(model, y, main = "Classification Model Performance")
+#'
+#' # Example usage for a regression model
+#' model <- train(regression_model)  # Assume this is a pre-trained model
+#' y <- rnorm(100)  # Continuous response variable
+#'
+#' # Plot the model's performance score
+#' plotModelScore(model, y, main = "Regression Model Performance")
+#'
+#' @author Edi Prifti (IRD)
+#'
 #' @import ggplot2
-#' @description Plots a model score or a population of models as a barplots, representing each feature, the length being the coefficient
-#' @param mod: a model to plot
-#' @param y: the class to predict
-#' @param col.sign: the colors of the cofficients based on the sign of the coefficients (default: -1=deepskyblue1, 1:firebrick1)
-#' @param main: possibility to change the title of the function (default:"")
 #' @export
 plotModelScore <- function(mod = NULL,
                            y = NULL, # the class to predict
@@ -1653,15 +2157,52 @@ plotModelScore <- function(mod = NULL,
 }
 
 
-#' @title Normalize the model coefficients needed for the plot
+
+#' Normalize Model Coefficients
 #'
-#' @description Normalize the model coefficients needed for the plot
-#' @param mod: a model to plot
-#' @param X: the data matrix with variables in the rows and observations in the columns
-#' @param y: the class vector
-#' @param sort.features: wether the features need to be sorted by correlation with 'y' or not (default:FALSE)
-#' @param sort.ind: computing sorting can take time if computed for every model and can be computed outside the function and passed as a parameter
-#' @return the normalized coefficients
+#' This function normalizes the model coefficients to a common scale. It is
+#' designed to handle different types of models and normalizes their
+#' coefficients for comparison purposes. The function also offers the ability to
+#' sort the features based on their importance or discriminatory power relative
+#' to the target variable.
+#'
+#' @param mod A model object that includes the attribute `coeffs_` (the model
+#'   coefficients). The model should also include an associated `language`
+#'   attribute specifying the type of model (e.g., `bin`, `glmnet`, `svm`).
+#' @param X A matrix or data frame of feature values used in the model.
+#' @param y A vector of true labels or target values corresponding to `X`.
+#' @param sort.features A logical value indicating whether to sort the features
+#'   based on their importance in relation to the target variable (default is
+#'   `FALSE`).
+#' @param sort.ind A vector of indices for sorting the features. If `NULL`, the
+#'   function will determine the sorting based on feature discriminance (default
+#'   is `NULL`).
+#'
+#' @details The function normalizes the coefficients of a model based on the
+#' type of model. It handles models such as logistic regression (`logreg`), SVM
+#' (`svm`), GLM (`glmnet`), and others. If `sort.features` is set to `TRUE`, the
+#' features will be sorted based on their discriminatory power, as calculated by
+#' a feature selection method (e.g., filtering based on statistical
+#' significance).
+#'
+#' The normalized coefficients are scaled to lie between -1 and 1, which allows
+#' for a fair comparison of feature importance across different models.
+#'
+#' @return A numeric vector containing the normalized coefficients of the model,
+#' or `NULL` if the model does not have valid coefficients.
+#'
+#' @examples
+#' # Example usage for a logistic regression model
+#' model <- train(logistic_regression_model)  # Assume this is a pre-trained model
+#' X <- data.frame(feature1 = rnorm(100), feature2 = rnorm(100))
+#' y <- sample(c(1, -1), 100, replace = TRUE)
+#'
+#' # Normalize the model coefficients
+#' normalized_coeffs <- normModelCoeffs(model, X, y)
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @import ggplot2
 #' @export
 normModelCoeffs <- function(mod, X, y, sort.features = FALSE, sort.ind = NULL)
 {
@@ -1749,15 +2290,48 @@ normModelCoeffs <- function(mod, X, y, sort.features = FALSE, sort.ind = NULL)
 
 # TODO convert in ggplot
 
-#' Analyzes the score construction and model
+#' Dissects the model by separating positive and negative coefficients
 #'
-#' @description Analyzes the score construction and model
-#' @param mod: a model object where the score will be computed
-#' @param X: the data matrix with variables in the rows and observations in the columns
-#' @param y: the class vector
-#' @param clf: an object containing the different parameters of the classifier
-#' @param plot: plot graphical interpretation of if TRUE, (default:TRUE)
-#' @return an object containing statistics on a given model
+#' This function dissects a model by separating its positive and negative
+#' coefficients, calculates the corresponding scores for each group (positive
+#' and negative coefficients), and normalizes them. It also provides a plot
+#' showing the composition of the score.
+#'
+#' @param mod A valid model object.
+#' @param X The matrix of features (design matrix).
+#' @param y The class labels (response variable).
+#' @param clf The classifier used (not currently utilized in the function).
+#' @param plot Logical, if `TRUE`, a plot will be generated showing the score
+#'   composition and a classification of samples based on the score.
+#'
+#' @return A list containing the following components:
+#' \describe{
+#'   \item{mod}{The provided model.}
+#'   \item{y}{The response variable.}
+#'   \item{scores}{A matrix containing positive, negative, and raw scores.}
+#'   \item{scores.norm}{Normalized scores.}
+#' }
+#'
+#' @details The function works by first identifying the positive and negative
+#'   coefficients from the model. It then calculates the corresponding scores
+#'   for both the positive and negative coefficients. The scores are normalized
+#'   by dividing each score by the total sum of the scores. Finally, the
+#'   function provides an optional plot that visualizes the score composition.
+#'
+#'   The plot shows:
+#' \itemize{
+#'   \item A barcode plot of the score composition.
+#'   \item A classification of the samples according to the model's score with the intercept line.
+#' }
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `mod`, `X`, and `y` are already defined
+#' dissectResult <- disectModel(mod = mod, X = X, y = y, plot = TRUE)
+#' }
+#'
 #' @export
 disectModel <- function(mod, X, y, clf, plot = TRUE)
 {
@@ -1857,16 +2431,42 @@ disectModel <- function(mod, X, y, clf, plot = TRUE)
 
 
 
-#' Plots the barcode of the total score as well as positive and negative components
+#' Plot a barcode representation of model scores
 #'
-#' @description Plots the barcode of the total score as well as positive and negative components
-#' @importFrom viridis viridis_pal
-#' @param dscore: an object containing different statistics on a model
-#' @param y: the class vector
-#' @param clf: an object containing the different parameters of the classifier
-#' @param nb.col.levels: number of distinct colors from the viridis palette (default:30)
-#' @param main: a title for the graphic
-#' @return nothing
+#' This function creates a barcode-style heatmap to visualize the scores of a
+#' model, ordered by class labels. It uses color gradients to represent the
+#' score values and displays the relationship between the scores and the actual
+#' classes.
+#'
+#' @param dscore A matrix of model scores with rows representing different
+#'   features (or samples) and columns representing the model's prediction
+#'   scores for each sample.
+#' @param y A vector of class labels corresponding to the samples.
+#' @param nb.col.levels An integer specifying the number of color levels to
+#'   represent the scores. Default is 30.
+#' @param main A title for the plot. Default is an empty string.
+#'
+#' @return This function generates a barcode-style heatmap plot.
+#'
+#' @details The function visualizes the model scores by reordering them
+#' according to the class labels (`-1` and `1`). It uses a color gradient to
+#' represent the range of scores and adds a grid for better visual distinction.
+#' The plot also includes axes to indicate the feature names and the class
+#' labels.
+#'
+#' The color palette is generated using `viridis` for better visibility of
+#' scores across different value ranges. The breaks are set to cover the entire
+#' range of the scores.
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `dscore` is a matrix of scores and `y` is a vector of class labels
+#' plotScoreBarcode(dscore, y, nb.col.levels = 30, main = "Model Score Barcode")
+#' }
+#'
+#' @export
 plotScoreBarcode <- function(dscore, y, nb.col.levels = 30, main="")
 {
   ord.y <- order(y)
@@ -1899,23 +2499,48 @@ plotScoreBarcode <- function(dscore, y, nb.col.levels = 30, main="")
 
 
 
-#' Analyze the results from a given classifier
+#' Plot AUC and ROC Curve with Confidence Intervals
 #'
-#' @description Analyze the results from a given classifier.
-#' @param score: this is the y^ of a given model
-#' @param y: the class to be predted
-#' @param main: title of the graph
-#' @param ci: the point shape for the graph
-#' @param percent: color for the graph
-#' @return a roc object
+#' This function generates a Receiver Operating Characteristic (ROC) curve and
+#' computes the Area Under the Curve (AUC) along with the corresponding
+#' confidence intervals. It also highlights the best threshold using Youden's
+#' index.
+#'
+#' @param score A numeric vector containing the predicted scores from the model.
+#' @param y A numeric or factor vector containing the true class labels. The
+#'   labels should be binary, with two levels (e.g., 1 and -1, or 0 and 1).
+#' @param main A string representing the title of the plot. Default is an empty
+#'   string.
+#' @param ci A logical value indicating whether to compute and display the
+#'   confidence intervals for the AUC. Default is `TRUE`.
+#' @param percent A logical value indicating whether to express the ROC curve in
+#'   percentage scale. Default is `TRUE`.
+#'
+#' @return A `roc` object from the `pROC` package, containing the ROC curve and
+#'   AUC information.
+#'
+#' @details The function uses the `pROC` package to compute and plot the ROC
+#' curve and AUC. The best threshold is determined using Youden’s index, and it
+#' is displayed on the plot with vertical and horizontal lines. The plot
+#' includes the AUC value and its confidence intervals, as well as the best
+#' threshold on the curve.
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `score` is a vector of predicted scores and `y` is the true labels
+#' plotAUC(score, y, main = "ROC Curve with AUC", ci = TRUE)
+#' }
+#'
 #' @export
 plotAUC <- function(score, y, main="", ci = TRUE, percent = TRUE)
 {
   require(pROC)
-  rocobj <-  roc(response = y, predictor = score, percent = percent, ci = ci, of = "se", sp = seq(0, 100, 5))
+  rocobj <-  pROC::roc(response = y, predictor = score, percent = percent, ci = ci, of = "se", sp = seq(0, 100, 5))
   plot(rocobj, ci.type="shape", ci.col="grey80", main=main)
   # compute information on the threshold
-  rocobj2 <- roc(response = y, predictor = score, percent = percent, ci = TRUE, of = "auc")
+  rocobj2 <- pROC::roc(response = y, predictor = score, percent = percent, ci = TRUE, of = "auc")
   resa  = coords(rocobj2, x = "best", input = "threshold", best.method = "youden")
   abline(v=resa[2], col="red", lty=2); abline(h=resa[3], col="red", lty=2)
   legend("bottomright",legend = c(paste("auc:",signif(rocobj$auc,3)),
@@ -1925,50 +2550,46 @@ plotAUC <- function(score, y, main="", ci = TRUE, percent = TRUE)
 }
 
 
-# plotAUCg <- function(mod = NULL, verbose = FALSE, show.intercept = TRUE)
-# {
-#   if(!isModel(mod))
-#   {
-#     if(verbose) warning("plotAUCg: please provide a valid model.")
-#     return(NULL)
-#   }
-#   
-#   # make the roc object
-#   robj <- roc(y ~ mod$score_, plot=FALSE, ci = TRUE)
-#   # get the coordonates of the best
-#   resa  = coords(robj, x = "best", input = "threshold", best.method = "youden")
-#   # build the legend
-#   legend = c(paste("AUC:",signif(robj$auc,3)),
-#              paste("CI:",signif(robj$ci,3)[1],"-",signif(robj$ci,3)[3]),
-#              paste("Threshold:",signif(resa[1],3)))
-#   # make the plot
-#   g <- ggroc(robj) +
-#     annotate(geom = "text", x = 0.25, y = 0.1,  label = paste(legend, collapse = "\n"), hjust=0) +
-#     theme_bw()
-#   
-#   # add intercept
-#   if(show.intercept)
-#   {
-#     g <- g + annotate(geom = "text", x = resa["specificity"], y = resa["sensitivity"],  label = "+", colour = "red", size = 10)
-#   }
-#   
-#   return(g)
-# }
-# 
-# 
 
-#' Plot the AUC of a given classifier
+#' Plot AUC with ROC Curve and Confidence Intervals
 #'
-#' @description Analyze the results from a given classifier.
+#' This function generates a ROC (Receiver Operating Characteristic) curve for a
+#' given model or score, along with the corresponding AUC (Area Under the Curve)
+#' value and its confidence intervals. Optionally, it can also display the
+#' intercept point on the curve.
+#'
+#' @param mod An optional model object. If provided, the function will use
+#'   `mod$score_` as the predicted scores. If not provided, the `score` argument
+#'   must be supplied.
+#' @param score A numeric vector containing the predicted scores (either
+#'   provided directly or obtained from `mod`).
+#' @param y A numeric or factor vector containing the true class labels. The
+#'   labels should be binary (e.g., 1 and -1).
+#' @param main A string representing the title of the plot. Default is an empty
+#'   string.
+#' @param ci A logical value indicating whether to compute and display the
+#'   confidence intervals for the AUC. Default is `TRUE`.
+#' @param show.intercept A logical value indicating whether to display the
+#'   intercept point on the ROC curve. Default is `TRUE`.
+#'
+#' @return A `ggplot` object representing the ROC curve with AUC and its
+#'   confidence intervals.
+#'
+#' @details The function computes the ROC curve and the AUC using the `pROC`
+#' package. If the `mod` object is provided, the function will use `mod$score_`
+#' as the predicted score. The plot includes the ROC curve, AUC, confidence
+#' intervals, and optionally the intercept point. The intercept is represented
+#' as a red `+` symbol on the plot.
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming `mod` is a trained model and `y` is the true labels
+#' plotAUCg(mod, y, main = "ROC Curve with AUC", ci = TRUE)
+#' }
+#'
 #' @import pROC
-#' @import ggplot2
-#' @param mod: a predomics model object (default = NULL)
-#' @param score: this is the y^ of a given model
-#' @param y: the class to be predicted
-#' @param main: title of the graph
-#' @param ci: the point shape for the graph
-#' @param show.intercept: plot or not the intercept on the graph (default:TRUE)
-#' @return a ggplot object
 #' @export
 plotAUCg <- function(mod = NULL, score, y, main = "", ci = TRUE, show.intercept = TRUE)
 {
@@ -2076,12 +2697,12 @@ plotAUCg <- function(mod = NULL, score, y, main = "", ci = TRUE, show.intercept 
 
 
 
-#' # plot a horizontal barplot
-#' #' @export
-#' plotBarplot <- function(v, rev=TRUE, xlim=range(v), main=""){
-#'   if(rev) v <- rev(v)
-#'   barplot(v, las=2, horiz=TRUE, col="black", main=main, xlim=xlim)
-#' }
+# # plot a horizontal barplot
+# #' @export
+# plotBarplot <- function(v, rev=TRUE, xlim=range(v), main=""){
+#   if(rev) v <- rev(v)
+#   barplot(v, las=2, horiz=TRUE, col="black", main=main, xlim=xlim)
+# }
 
 
 
@@ -2090,12 +2711,42 @@ plotAUCg <- function(mod = NULL, score, y, main = "", ci = TRUE, show.intercept 
 # PRINTING DIFFERENT, OBJECTS
 ################################################################
 
-#' Prints a model object as text.
+#' Print Model Information
 #'
-#' @description Prints a model object as text
-#' @param mod: a model to plot
-#' @param method: an object containing the different parameters of the classifier
-#' @param score: which score to show in the fit (default:fit_)
+#' This function prints information about a given model, either in a short,
+#' long, or structured format. The function provides a summary of the model,
+#' including the model coefficients, intercept, evaluation score, learner, and
+#' language, depending on the selected format.
+#'
+#' @param mod A model object. It can be any predomics model object.
+#' @param method A string specifying the format in which the model summary will
+#'   be printed. Possible values are "short" (default), "long", and "str".
+#'   "short" gives a compact summary, "long" provides a detailed summary, and
+#'   "str" prints the structure of the model.
+#' @param score A string specifying the score attribute to be displayed. Default
+#'   is "fit_".
+#'
+#' @return A string representing the model summary in the chosen format.
+#'
+#' @details
+#' - The "short" method provides a brief overview of the model with information such as the coefficients,
+#' intercept, decision boundary, and evaluation score (if available).
+#' - The "long" method gives a more detailed version of the model summary, including the coefficients for
+#' both positive and negative terms, along with other model attributes such as
+#' learner type, language, and sparsity.
+#' - The "str" method prints the structure of the model using the `str()` function.
+#'
+#' If a SOTA (state-of-the-art) model is provided, the function adjusts the
+#' output accordingly, displaying the model's coefficients and attributes in a
+#' simplified format.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'mod' is a trained model
+#' printModel(mod, method = "short", score = "fit_")
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 printModel <- function(mod, method = "short", score = "fit_")
 {
@@ -2286,14 +2937,44 @@ printModel <- function(mod, method = "short", score = "fit_")
 }
 
 
-#' Prints a population of model objects as text.
+#' Print Information about a Population of Models
 #'
-#' @description Prints a population of model objects as text
-#' @param obj: a population of models to plot
-#' @param method: if "digested" a short sumary (one line) will be printed, otherwise the method will contain the 
-#' specific way to print a model through the printModel() routine
-#' @param score: which score to show in the fit (default:fit_)
-#' @param indent: a string (default:'tab---') that will precede each element of the object.
+#' This function prints detailed information about a population of models. It
+#' supports multiple methods for displaying the model summaries, such as
+#' providing a "digested" view, a "short" version, or a more detailed "long"
+#' view. It can also print the structure of each model within the population.
+#'
+#' @param obj A population of models. This should be a valid object returned by
+#'   a model training procedure.
+#' @param method A string specifying the format in which the population summary
+#'   will be printed. Possible values are "digested", "short", "long", and
+#'   "str". "digested" provides a summarized view of the population's
+#'   properties, "short" gives a brief summary of each model, "long" provides a
+#'   more detailed view, and "str" prints the structure of each model in the
+#'   population.
+#' @param score A string specifying the score attribute to be used when printing
+#'   models. Default is "fit_".
+#' @param indent A string used for indentation when printing information,
+#'   helpful when displaying hierarchical data.
+#'
+#' @return None. The function prints the information directly.
+#'
+#' @details
+#' - The "digested" method provides an overview of the population, summarizing key attributes such as the
+#' sparsity and learner type.
+#' - The "short" method gives a brief summary of each model, including its learner, language, and evaluation
+#' score.
+#' - The "long" method offers a detailed description of each model, including all relevant information about
+#' coefficients and evaluation metrics.
+#' - The "str" method prints the structure of each model using `str()`.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'population' is a valid population of models
+#' printPopulation(population, method = "short")
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 printPopulation <- function(obj, method = "short", score = "fit_", indent="")
 {
@@ -2337,12 +3018,36 @@ printPopulation <- function(obj, method = "short", score = "fit_", indent="")
 }
 
 
-#' Prints as text the detail on a given Classifier object
+#' Print Information about a Classifier Object
 #'
-#' @description This function prints a summary of a Classifier object.
-#' @param obj: a Classifier object
-#' @param indent: a string (default:'tab---') that will precede each element of the object.
-#' @return NULL if the object is not a valid Classifier
+#' This function prints detailed information about a classifier object,
+#' including information about the experiment, the learner settings, and the
+#' models within the classifier. It provides a structured view of the
+#' classifier's parameters and any relevant attributes to facilitate
+#' understanding and debugging.
+#'
+#' @param obj A classifier object, typically returned by a classifier training
+#'   function. The object should contain details about the experiment, model
+#'   parameters, and possibly a collection of models.
+#' @param indent A string for indentation used when printing information. It
+#'   allows for hierarchical display, making the output easier to read and
+#'   understand. Default is "   --- ".
+#'
+#' @return None. The function prints the information directly to the console.
+#'
+#' @details
+#' - If the classifier object contains an experiment attribute, the function prints details of the experiment.
+#' - If the classifier has parameters (`params`), it prints the learner type, its parameters, and, if applicable,
+#' any models used in the classifier.
+#' - If the classifier includes a model collection, details of the models are printed as well.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'classifier' is a valid classifier object
+#' printClassifier(classifier)
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 printClassifier <- function(obj, indent="\t--- ")
 {
@@ -2409,12 +3114,32 @@ printClassifier <- function(obj, indent="\t--- ")
   
 }
 
-#' Prints as text the detail on a given Experiment object
+#' Print Information about an Experiment Object
 #'
-#' @description This function prints a summary of an Experiment object.
-#' @param obj: an Experiment object
-#' @param indent: a string (default:'tab---') that will precede each element of the object.
-#' @return NULL if the object is not a valid Experiment
+#' This function prints detailed information about an experiment object,
+#' including details about the experiment, cross-validation, and the classifier
+#' used. It helps in understanding and inspecting the components of an
+#' experiment.
+#'
+#' @param obj An experiment object that contains information about the
+#'   classifier, cross-validation, and the models used in the experiment.
+#' @param indent A string for indentation, used to structure the printed output
+#'   in a hierarchical manner. Default is "   --- ".
+#'
+#' @return None. The function prints the information directly to the console.
+#'
+#' @details
+#' - Prints details about the experiment, including information about the classifier and the experiment settings.
+#' - If cross-validation data exists, prints the number of folds, times, and seeds used in the cross-validation.
+#' - Prints detailed learner options such as learner type, parameters, and the models involved in the experiment.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'experiment' is a valid experiment object
+#' printExperiment(experiment)
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 printExperiment <- function(obj, indent = "\t--- ")
 {
@@ -2493,15 +3218,33 @@ printExperiment <- function(obj, indent = "\t--- ")
 }
 
 
-#' Prints as text the detail on a given ModelCollection object
+#' Print Information about a Model Collection
 #'
-#' @description This function prints a ModelCollection object. For each k_sparsity it will show some detail of 
-#' the maximum first models
-#' @param obj: a ModelCollection object
-#' @param indent: a string (default:'tab---') that will precede each element of the object for the "long" method.
-#' @param method: the output method (default:long) will print for each k_sparsity a short information of the population of models, 
-#' while the short method will output the number of models for each k_sparsity
-#' @return NULL if the object is not a valid ModelCollection.
+#' This function prints detailed information about a collection of models. It
+#' allows for summarizing the model collection in either a short or long format,
+#' providing insights into the models' sparsity, performance, and other relevant
+#' details.
+#'
+#' @param obj A model collection object containing multiple models.
+#' @param indent A string for indentation, used to structure the printed output
+#'   in a hierarchical manner. Default is "   --- ".
+#' @param method A string specifying the format for printing. Valid options are
+#'   "short" and "long". Default is "long".
+#'
+#' @return None. The function prints the information directly to the console.
+#'
+#' @details
+#' - In "short" mode, it prints the names of the models in the collection along with the number of models in each category.
+#' - In "long" mode, it prints detailed information about each model, including the k-sparsity and a summary of the models' characteristics.
+#' - The "long" mode will call the `printPopulation` function for each model in the collection to show its details.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'model_collection' is a valid model collection object
+#' printModelCollection(model_collection, method = "short")
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 printModelCollection <- function(obj, indent = "\t--- ", method = "long")
 {
@@ -2529,12 +3272,40 @@ printModelCollection <- function(obj, indent = "\t--- ", method = "long")
 }
 
 
-#' Prints as text the detail on a given object from the predomics package. 
+#' Print Summary of Predomics Object
 #'
-#' @description This function will summarize any of the predomics package objects such as can be an Experiment, 
-#' a Model, a Population of models or a ModelCollection
-#' @param obj: an object from the predomics object
-#' @return NULL
+#' This function prints a summary of a given object, identifying its type
+#' (model, population, classifier, experiment, or model collection) and calling
+#' the appropriate print function to display relevant information about the
+#' object.
+#'
+#' @param obj An object that can be of type model, population, classifier,
+#'   experiment, or model collection.
+#'
+#' @return None. The function prints the summary of the object directly to the
+#'   console.
+#'
+#' @details The function checks the type of the provided object using `isModel`,
+#' `isPopulation`, `isClf`, `isExperiment`, and `isModelCollection` functions.
+#' Based on the object type, it prints a summary:
+#' - **Model**: Calls `printModel` with a detailed description of the model.
+#' - **Population**: Calls `printPopulation`, showing a summary of the population of models.
+#' - **Model Collection**: Calls `printModelCollection` to show a summary of a collection of models.
+#' - **Experiment**: Calls `printExperiment` to display experiment details.
+#' - **Classifier**: Calls `printClassifier` for classifier details.
+#' If the object type is not recognized, an error message is printed.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'model', 'population', 'classifier', 'experiment', and 'model_collection' are valid objects
+#' printy(model)
+#' printy(population)
+#' printy(classifier)
+#' printy(experiment)
+#' printy(model_collection)
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 printy <- function(obj)
 {
@@ -2591,27 +3362,68 @@ printy <- function(obj)
 
 
 
-#' Prints as text the detail on a given experiment along with summarized results (if computed)
+#' Analyze Features in a Population of Models
 #'
-#' @description This function takes a population of models and makes three plots, feature prevalence in population, 
-#' feature abundance by class and feature prevalence by class
-#' @param pop: a population of models
-#' @param X: the X dataset where to compute the abundance and prevalence
-#' @param y: the target class
-#' @param res_clf: the results of the classifier as well as the config object
-#' @param makeplot: make a pdf file with the resulting plots (default:TRUE)
-#' @param name: the suffix of the pdf file (default:"")
-#' @param ord.feat: which ordering approch to use for the features (default:importance) in the models, anything 
-#' else will compute automatic hierarchical ordering based on the manhattan distance
-#' @param make.network: build a network and print it out in the pdf
-#' @param network.layout: the network layout by default is circular (layout_in_circle) and will be a weighted Fruchterman-Reingold otherwise
-#' @param network.alpha: threshold of significance for the network (default:1e-4)
-#' @param verbose: print out informaiton
-#' @param pdf.dims: dimensions of the pdf object (default: c(w = 25, h = 20))
-#' @param filter.perc: filter by prevalence percentage in the population between 0 and 1 (default:0.05)
-#' @param k_penalty: the sparsity penalty needed to select the best models of the population (default:0.75/100).
-#' @param k_max: select the best population below a given threshold. If (default:0) no selection is performed.
-#' @return plots if makeplot is FALSE
+#' This function analyzes features in a population of models, allowing for the
+#' visualization and examination of feature importance, prevalence, and model
+#' coefficients. It can generate a variety of plots to understand the
+#' distribution and importance of features in the given population.
+#'
+#' @param pop A population of models, typically obtained from
+#'   `modelCollectionToPopulation` or similar functions.
+#' @param X The data matrix containing features (rows represent features,
+#'   columns represent samples).
+#' @param y The response variable (class labels or continuous values depending
+#'   on the model).
+#' @param res_clf The classifier used for the analysis, typically a result from
+#'   a classification experiment.
+#' @param makeplot Logical. If `TRUE`, the function generates plots and saves
+#'   them as a PDF. If `FALSE`, it returns the analysis results without
+#'   plotting.
+#' @param name A string representing the name of the analysis or output (used
+#'   for saving files).
+#' @param ord.feat A string indicating the ordering method for features. Options
+#'   are:
+#'   - "prevalence": Order by the prevalence of features across models.
+#'   - "importance": Order by feature importance based on cross-validation.
+#'   - "hierarchical": Order by hierarchical clustering of the feature-to-model coefficient matrix.
+#' @param make.network Logical. If `TRUE`, generates a network of feature
+#'   co-occurrence across the population of models.
+#' @param network.layout A string indicating the layout of the network. Default
+#'   is "circular". Other options may include "fr" for Fruchterman-Reingold
+#'   layout.
+#' @param network.alpha A numeric value controlling the alpha transparency of
+#'   the network plot.
+#' @param verbose Logical. If `TRUE`, prints additional information during
+#'   execution.
+#' @param pdf.dims A vector of two numbers specifying the width and height of
+#'   the PDF output (in inches).
+#' @param filter.perc A numeric value between 0 and 1 specifying the minimum
+#'   prevalence of a feature to be included in the analysis.
+#' @param k_penalty A penalty value for model selection in the population
+#'   filtering.
+#' @param k_max The maximum number of models to include in the final population
+#'   after filtering.
+#'
+#' @return If `makeplot = TRUE`, returns a PDF with visualizations of feature
+#'   importance, prevalence, and model coefficients. If `makeplot = FALSE`,
+#'   returns a list of the analysis results including the normalized scores and
+#'   feature importance.
+#'
+#' @details The function performs a variety of analyses on a population of
+#' models:
+#' - It filters models based on feature prevalence.
+#' - It orders features by various metrics such as prevalence, importance, or hierarchical clustering.
+#' - It generates plots of feature prevalence, model coefficients, and other characteristics.
+#' - If requested, it also generates a network of feature co-occurrence across the models.
+#'
+#' @examples
+#' \dontrun{
+#' # Assuming 'pop' is a valid population of models, 'X' is the feature matrix, and 'y' is the response variable
+#' analyzePopulationFeatures(pop = pop, X = X, y = y, res_clf = res_clf, makeplot = TRUE, name = "population_analysis")
+#' }
+#'
+#' @author Edi Prifti (IRD)
 #' @export
 analyzePopulationFeatures <- function(pop, X, y, res_clf, makeplot = TRUE, name = "", ord.feat = "importance", 
                                       make.network = TRUE, network.layout = "circular", network.alpha = 0.0001, 
@@ -2802,26 +3614,75 @@ analyzePopulationFeatures <- function(pop, X, y, res_clf, makeplot = TRUE, name 
 }
 
 
-#' Prints as text the detail on a given experiment along with summarized results (if computed)
+#' Analyze Feature Importance for Machine Learning Models
 #'
-#' @description This function takes a population of models and makes three plots, feature prevalence in population, 
-#' feature abundance by class and feature prevalence by class
-#' @param clf_res: the result of an experiment or multiple exmeriments (list of experimenets)
-#' @param X: the X dataset where to compute the abundance and prevalence
-#' @param y: the target class
-#' @param makeplot: make a pdf file with the resulting plots (default:TRUE)
-#' @param name: the suffix of the pdf file (default:"")
-#' @param verbose: print out informaiton
-#' @param pdf.dims: dimensions of the pdf object (default: c(w = 25, h = 20))
-#' @param filter.perc: filter by prevalence percentage in the population between 0 and 1 (default:0.05)
-#' @param filter.cv.prev: keep only features found in at least (default: 0.25, i.e 25 percent) of the cross validation experiments 
-#' @param nb.top.features: the maximum number (default: 100) of most important features to be shown. If this value is NULL 
-#' or NA, all features be returned
-#' @param scaled.importance: the scaled importance is the importance multipied by the prevalence in the folds. If (default = TRUE) this will be used, the mean mda 
-#' will be scaled by the prevalence of the feature in the folds and ordered subsequently 
-#' @param k_penalty: the sparsity penalty needed to select the best models of the population (default:0.75/100).
-#' @param k_max: select the best population below a given threshold. If (default:0) no selection is performed.
-#' @return plots if makeplot is FALSE
+#' This function analyzes the importance of features in a set of machine
+#' learning models. It computes various plots related to feature importance,
+#' prevalence, and effect sizes. The function can handle both classification and
+#' regression tasks. It can process a single experiment or multiple experiments
+#' and generate corresponding visualizations in a PDF file.
+#'
+#' @param clf_res An object of class \code{experiment} or a list of experiments
+#'   containing machine learning models to analyze.
+#' @param X A data frame or matrix containing the feature data used in the
+#'   model.
+#' @param y A vector containing the target variable (binary or continuous values
+#'   depending on the task).
+#' @param makeplot Logical, if `TRUE`, plots will be generated and saved as a
+#'   PDF. Default is `TRUE`.
+#' @param name A string to specify the name used in output files (e.g., for
+#'   saving the PDF).
+#' @param verbose Logical, if `TRUE`, the function will print progress messages.
+#'   Default is `TRUE`.
+#' @param pdf.dims Numeric vector specifying the dimensions of the output PDF
+#'   (width and height). Default is `c(width = 25, height = 20)`.
+#' @param filter.perc Numeric, percentage threshold used to filter out features
+#'   that appear in less than `filter.perc` of the models. Default is `0.05`
+#'   (5\%).
+#' @param filter.cv.prev Numeric, cross-validation threshold used to filter the
+#'   importance of features based on their performance. Default is `0.25`.
+#' @param nb.top.features Numeric, the number of top features to select based on
+#'   importance. Default is `100`.
+#' @param scaled.importance Logical, if `TRUE`, scales the feature importance
+#'   scores. Default is `FALSE`.
+#' @param k_penalty Numeric, penalty factor for selecting top features in
+#'   models. Default is `0.75/100`.
+#' @param k_max Numeric, the maximum number of features to consider. Default is
+#'   `0` (no limit).
+#'
+#' @details This function analyzes feature importance and creates visualizations
+#' of features that contribute most to the model predictions. It can handle
+#' classification and regression tasks. The function computes several types of
+#' graphics:
+#' \itemize{
+#'   \item Feature Importance: Plots the importance of features across models.
+#'   \item Prevalence of Features: Shows the prevalence of features across different groups (e.g., class 1 and class -1 in classification tasks).
+#'   \item Abundance of Features: Shows how frequently features appear across the dataset.
+#'   \item Feature Model Coefficients: Visualizes the coefficients of features in the models.
+#' }
+#' The results are saved as a PDF document and also plotted directly within R.
+#'
+#' @return The function returns `NULL` if no models are found or after the plot
+#' has been saved. It generates a PDF containing multiple plots: feature
+#' importance, prevalence, abundance, and model coefficients.
+#'
+#' @examples
+#' # Assume clf_res is a list of experiment results, and X and y are your data
+#' result <- analyzeImportanceFeatures(clf_res, X, y, makeplot = TRUE, name = "Feature_Analysis", verbose = TRUE)
+#'
+#' # You can access the plots via result if you choose not to save them as PDFs
+#'
+#' @author Edi Prifti (IRD)
+#'
+#' @seealso \code{\link{modelCollectionToPopulation}},
+#' \code{\link{plotPrevalence}}, \code{\link{plotAbundanceByClass}},
+#' \code{\link{plotFeatureModelCoeffs}}
+#'
+#' @import ggplot2
+#' @import gridExtra
+#' @importFrom stats dist hclust
+#' @importFrom reshape2 melt dcast
+#' @importFrom cowplot ggsave2
 #' @export
 analyzeImportanceFeatures <- function(clf_res, X, y, makeplot = TRUE, name = "", 
                                       verbose = TRUE, pdf.dims = c(width = 25, height = 20), 

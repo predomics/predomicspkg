@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{analyzePopulationFeatures}
 \alias{analyzePopulationFeatures}
-\title{Prints as text the detail on a given experiment along with summarized results (if computed)}
+\title{Analyze Features in a Population of Models}
 \usage{
 analyzePopulationFeatures(
   pop,
@@ -23,41 +23,83 @@ analyzePopulationFeatures(
 )
 }
 \arguments{
-\item{pop:}{a population of models}
+\item{pop}{A population of models, typically obtained from
+`modelCollectionToPopulation` or similar functions.}
 
-\item{X:}{the X dataset where to compute the abundance and prevalence}
+\item{X}{The data matrix containing features (rows represent features,
+columns represent samples).}
 
-\item{y:}{the target class}
+\item{y}{The response variable (class labels or continuous values depending
+on the model).}
 
-\item{res_clf:}{the results of the classifier as well as the config object}
+\item{res_clf}{The classifier used for the analysis, typically a result from
+a classification experiment.}
 
-\item{makeplot:}{make a pdf file with the resulting plots (default:TRUE)}
+\item{makeplot}{Logical. If `TRUE`, the function generates plots and saves
+them as a PDF. If `FALSE`, it returns the analysis results without
+plotting.}
 
-\item{name:}{the suffix of the pdf file (default:"")}
+\item{name}{A string representing the name of the analysis or output (used
+for saving files).}
 
-\item{ord.feat:}{which ordering approch to use for the features (default:importance) in the models, anything 
-else will compute automatic hierarchical ordering based on the manhattan distance}
+\item{ord.feat}{A string indicating the ordering method for features. Options
+are:
+- "prevalence": Order by the prevalence of features across models.
+- "importance": Order by feature importance based on cross-validation.
+- "hierarchical": Order by hierarchical clustering of the feature-to-model coefficient matrix.}
 
-\item{make.network:}{build a network and print it out in the pdf}
+\item{make.network}{Logical. If `TRUE`, generates a network of feature
+co-occurrence across the population of models.}
 
-\item{network.layout:}{the network layout by default is circular (layout_in_circle) and will be a weighted Fruchterman-Reingold otherwise}
+\item{network.layout}{A string indicating the layout of the network. Default
+is "circular". Other options may include "fr" for Fruchterman-Reingold
+layout.}
 
-\item{network.alpha:}{threshold of significance for the network (default:1e-4)}
+\item{network.alpha}{A numeric value controlling the alpha transparency of
+the network plot.}
 
-\item{verbose:}{print out informaiton}
+\item{verbose}{Logical. If `TRUE`, prints additional information during
+execution.}
 
-\item{pdf.dims:}{dimensions of the pdf object (default: c(w = 25, h = 20))}
+\item{pdf.dims}{A vector of two numbers specifying the width and height of
+the PDF output (in inches).}
 
-\item{filter.perc:}{filter by prevalence percentage in the population between 0 and 1 (default:0.05)}
+\item{filter.perc}{A numeric value between 0 and 1 specifying the minimum
+prevalence of a feature to be included in the analysis.}
 
-\item{k_penalty:}{the sparsity penalty needed to select the best models of the population (default:0.75/100).}
+\item{k_penalty}{A penalty value for model selection in the population
+filtering.}
 
-\item{k_max:}{select the best population below a given threshold. If (default:0) no selection is performed.}
+\item{k_max}{The maximum number of models to include in the final population
+after filtering.}
 }
 \value{
-plots if makeplot is FALSE
+If `makeplot = TRUE`, returns a PDF with visualizations of feature
+  importance, prevalence, and model coefficients. If `makeplot = FALSE`,
+  returns a list of the analysis results including the normalized scores and
+  feature importance.
 }
 \description{
-This function takes a population of models and makes three plots, feature prevalence in population, 
-feature abundance by class and feature prevalence by class
+This function analyzes features in a population of models, allowing for the
+visualization and examination of feature importance, prevalence, and model
+coefficients. It can generate a variety of plots to understand the
+distribution and importance of features in the given population.
+}
+\details{
+The function performs a variety of analyses on a population of
+models:
+- It filters models based on feature prevalence.
+- It orders features by various metrics such as prevalence, importance, or hierarchical clustering.
+- It generates plots of feature prevalence, model coefficients, and other characteristics.
+- If requested, it also generates a network of feature co-occurrence across the models.
+}
+\examples{
+\dontrun{
+# Assuming 'pop' is a valid population of models, 'X' is the feature matrix, and 'y' is the response variable
+analyzePopulationFeatures(pop = pop, X = X, y = y, res_clf = res_clf, makeplot = TRUE, name = "population_analysis")
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

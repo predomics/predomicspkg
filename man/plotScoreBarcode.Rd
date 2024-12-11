@@ -2,24 +2,49 @@
 % Please edit documentation in R/global.visu.R
 \name{plotScoreBarcode}
 \alias{plotScoreBarcode}
-\title{Plots the barcode of the total score as well as positive and negative components}
+\title{Plot a barcode representation of model scores}
 \usage{
 plotScoreBarcode(dscore, y, nb.col.levels = 30, main = "")
 }
 \arguments{
-\item{dscore:}{an object containing different statistics on a model}
+\item{dscore}{A matrix of model scores with rows representing different
+features (or samples) and columns representing the model's prediction
+scores for each sample.}
 
-\item{y:}{the class vector}
+\item{y}{A vector of class labels corresponding to the samples.}
 
-\item{clf:}{an object containing the different parameters of the classifier}
+\item{nb.col.levels}{An integer specifying the number of color levels to
+represent the scores. Default is 30.}
 
-\item{nb.col.levels:}{number of distinct colors from the viridis palette (default:30)}
-
-\item{main:}{a title for the graphic}
+\item{main}{A title for the plot. Default is an empty string.}
 }
 \value{
-nothing
+This function generates a barcode-style heatmap plot.
 }
 \description{
-Plots the barcode of the total score as well as positive and negative components
+This function creates a barcode-style heatmap to visualize the scores of a
+model, ordered by class labels. It uses color gradients to represent the
+score values and displays the relationship between the scores and the actual
+classes.
+}
+\details{
+The function visualizes the model scores by reordering them
+according to the class labels (`-1` and `1`). It uses a color gradient to
+represent the range of scores and adds a grid for better visual distinction.
+The plot also includes axes to indicate the feature names and the class
+labels.
+
+The color palette is generated using `viridis` for better visibility of
+scores across different value ranges. The breaks are set to cover the entire
+range of the scores.
+}
+\examples{
+\dontrun{
+# Assuming `dscore` is a matrix of scores and `y` is a vector of class labels
+plotScoreBarcode(dscore, y, nb.col.levels = 30, main = "Model Score Barcode")
+}
+
+}
+\author{
+Edi Prifti (IRD)
 }

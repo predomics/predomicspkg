@@ -2,7 +2,7 @@
 % Please edit documentation in R/analyzeImportantFeaturesFBM.R
 \name{analyzeImportanceFeaturesFBM}
 \alias{analyzeImportanceFeaturesFBM}
-\title{Visualize a summary of an experiment/set of experiments}
+\title{Analyze and Plot Feature Importance for Feature-Based Models (FBM)}
 \usage{
 analyzeImportanceFeaturesFBM(
   clf_res,
@@ -21,52 +21,68 @@ analyzeImportanceFeaturesFBM(
 )
 }
 \arguments{
-\item{clf_res}{The result of an experiment or multiple experiments 
-(list of experiments)}
+\item{clf_res}{A classifier result object or a list of classifier results.
+Each classifier result must contain the trained models and the classifier
+parameters.}
 
-\item{X}{The feature table used as input of fit function behind experiments 
-in clf_res}
+\item{X}{The feature matrix.}
 
-\item{y}{The target class (binary/continuous)}
+\item{y}{The response variable.}
 
-\item{makeplot}{make a pdf file with the resulting plots (default:TRUE)}
+\item{makeplot}{Logical, if `TRUE` (default), plots will be generated and
+displayed.}
 
-\item{saveplotobj}{make a .Rda file with a list of the individual plots 
-(default:TRUE)}
+\item{saveplotobj}{Logical, if `TRUE` (default), the plot objects will be
+saved as an RData file.}
 
-\item{name}{the suffix of the pdf file (default:"")}
+\item{name}{A character string for the output file name prefix.}
 
-\item{verbose}{print out informaiton}
+\item{verbose}{Logical, if `TRUE` (default), progress messages are printed.}
 
-\item{pdf.dims}{dimensions of the pdf object (default: c(w = 25, h = 20))}
+\item{pdf.dims}{A numeric vector specifying the width and height of the PDF
+output.}
 
-\item{filter.cv.prev}{keep only features found in at least (default: 0.25, 
-i.e 25 percent) of the cross validation experiments}
+\item{filter.cv.prev}{Numeric, a cutoff for the cross-validation prevalence
+filter.}
 
-\item{nb.top.features}{the maximum number (default: 100) of most important 
-features to be shown.
-If the number of features in FBM < nb.top.features, the number of features 
-in FBM will be shown instead}
+\item{nb.top.features}{Numeric, the number of top features to display.}
 
-\item{scaled.importance}{the scaled importance is the importance multiplied 
-by the prevalence in the folds. If (default = TRUE) this will be used, the 
-mean mda will be scaled by the prevalence of the feature in the folds and 
-ordered subsequently}
+\item{scaled.importance}{Logical, if `TRUE`, scales feature importance
+values.}
 
-\item{k_penalty}{the sparsity penalty needed to select the best models of 
-the population (default:0.75/100).}
+\item{k_penalty}{Numeric, a penalty factor applied to control model selection
+based on sparsity.}
 
-\item{k_max}{select the best population below a given threshold. 
-If (default:0) no selection is performed.}
+\item{k_max}{Numeric, maximum number of features to include.}
 }
 \value{
-plots if makeplot is FALSE; plot.list list object saved locally with 
-individual plots (including source data) if saveplotobj
+If `makeplot` is `TRUE`, a combined plot of feature importance,
+  prevalence, and effect sizes is returned. Otherwise, a list of individual
+  plot objects.
 }
 \description{
-Visualization of 4 panels corresponding to feature prevalence 
-in FBM, feature importance, feature prevalence in groups, effect sizes of 
-feature abundances vs y-variable (cliff's delta for binary y; 
-spearman rho for continuous y). Can be applied to single classification task 
-or to multiple classification tasks carried out on the same X-y dataset
+This function analyzes and visualizes feature importance for FBM models,
+creating plots for feature prevalence, importance, and effect size. It
+supports both single and multiple experiments, handling classification and
+regression modes.
+}
+\details{
+This function examines the FBM classifier results, retrieves the
+best population of models, calculates feature importance, and generates plots
+to visualize feature prevalence, importance, and effect size. If multiple
+experiments are provided, results are averaged across experiments.
+
+**Generated Plots**:
+  - **Feature Prevalence (FBM)**: Shows the frequency and orientation of features across models.
+  - **Feature Importance**: Visualizes feature importance scores.
+  - **Effect Sizes**: Displays the effect sizes of features.
+
+For classification, Cliff's delta is used for effect sizes, and Spearman's
+rho is used for regression.
+}
+\examples{
+\dontrun{
+analyzeImportanceFeaturesFBM(clf_res = my_clf_result, X = X_data, y = y_data, name = "example_analysis")
+}
+
 }

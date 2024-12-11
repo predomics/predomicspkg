@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.visu.R
 \name{analyzeImportanceFeatures}
 \alias{analyzeImportanceFeatures}
-\title{Prints as text the detail on a given experiment along with summarized results (if computed)}
+\title{Analyze Feature Importance for Machine Learning Models}
 \usage{
 analyzeImportanceFeatures(
   clf_res,
@@ -21,38 +21,83 @@ analyzeImportanceFeatures(
 )
 }
 \arguments{
-\item{clf_res:}{the result of an experiment or multiple exmeriments (list of experimenets)}
+\item{clf_res}{An object of class \code{experiment} or a list of experiments
+containing machine learning models to analyze.}
 
-\item{X:}{the X dataset where to compute the abundance and prevalence}
+\item{X}{A data frame or matrix containing the feature data used in the
+model.}
 
-\item{y:}{the target class}
+\item{y}{A vector containing the target variable (binary or continuous values
+depending on the task).}
 
-\item{makeplot:}{make a pdf file with the resulting plots (default:TRUE)}
+\item{makeplot}{Logical, if `TRUE`, plots will be generated and saved as a
+PDF. Default is `TRUE`.}
 
-\item{name:}{the suffix of the pdf file (default:"")}
+\item{name}{A string to specify the name used in output files (e.g., for
+saving the PDF).}
 
-\item{verbose:}{print out informaiton}
+\item{verbose}{Logical, if `TRUE`, the function will print progress messages.
+Default is `TRUE`.}
 
-\item{pdf.dims:}{dimensions of the pdf object (default: c(w = 25, h = 20))}
+\item{pdf.dims}{Numeric vector specifying the dimensions of the output PDF
+(width and height). Default is `c(width = 25, height = 20)`.}
 
-\item{filter.perc:}{filter by prevalence percentage in the population between 0 and 1 (default:0.05)}
+\item{filter.perc}{Numeric, percentage threshold used to filter out features
+that appear in less than `filter.perc` of the models. Default is `0.05`
+(5\%).}
 
-\item{filter.cv.prev:}{keep only features found in at least (default: 0.25, i.e 25 percent) of the cross validation experiments}
+\item{filter.cv.prev}{Numeric, cross-validation threshold used to filter the
+importance of features based on their performance. Default is `0.25`.}
 
-\item{nb.top.features:}{the maximum number (default: 100) of most important features to be shown. If this value is NULL 
-or NA, all features be returned}
+\item{nb.top.features}{Numeric, the number of top features to select based on
+importance. Default is `100`.}
 
-\item{scaled.importance:}{the scaled importance is the importance multipied by the prevalence in the folds. If (default = TRUE) this will be used, the mean mda 
-will be scaled by the prevalence of the feature in the folds and ordered subsequently}
+\item{scaled.importance}{Logical, if `TRUE`, scales the feature importance
+scores. Default is `FALSE`.}
 
-\item{k_penalty:}{the sparsity penalty needed to select the best models of the population (default:0.75/100).}
+\item{k_penalty}{Numeric, penalty factor for selecting top features in
+models. Default is `0.75/100`.}
 
-\item{k_max:}{select the best population below a given threshold. If (default:0) no selection is performed.}
+\item{k_max}{Numeric, the maximum number of features to consider. Default is
+`0` (no limit).}
 }
 \value{
-plots if makeplot is FALSE
+The function returns `NULL` if no models are found or after the plot
+has been saved. It generates a PDF containing multiple plots: feature
+importance, prevalence, abundance, and model coefficients.
 }
 \description{
-This function takes a population of models and makes three plots, feature prevalence in population, 
-feature abundance by class and feature prevalence by class
+This function analyzes the importance of features in a set of machine
+learning models. It computes various plots related to feature importance,
+prevalence, and effect sizes. The function can handle both classification and
+regression tasks. It can process a single experiment or multiple experiments
+and generate corresponding visualizations in a PDF file.
+}
+\details{
+This function analyzes feature importance and creates visualizations
+of features that contribute most to the model predictions. It can handle
+classification and regression tasks. The function computes several types of
+graphics:
+\itemize{
+  \item Feature Importance: Plots the importance of features across models.
+  \item Prevalence of Features: Shows the prevalence of features across different groups (e.g., class 1 and class -1 in classification tasks).
+  \item Abundance of Features: Shows how frequently features appear across the dataset.
+  \item Feature Model Coefficients: Visualizes the coefficients of features in the models.
+}
+The results are saved as a PDF document and also plotted directly within R.
+}
+\examples{
+# Assume clf_res is a list of experiment results, and X and y are your data
+result <- analyzeImportanceFeatures(clf_res, X, y, makeplot = TRUE, name = "Feature_Analysis", verbose = TRUE)
+
+# You can access the plots via result if you choose not to save them as PDFs
+
+}
+\seealso{
+\code{\link{modelCollectionToPopulation}},
+\code{\link{plotPrevalence}}, \code{\link{plotAbundanceByClass}},
+\code{\link{plotFeatureModelCoeffs}}
+}
+\author{
+Edi Prifti (IRD)
 }
